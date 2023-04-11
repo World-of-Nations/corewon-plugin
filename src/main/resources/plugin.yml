@@ -1,0 +1,8 @@
+name: WonCore
+version: '${version}'
+main: fr.world.nations.Core
+api-version: 1.18
+author: Holo795
+website: https://github.com/Holo795
+depend:
+  - Factions

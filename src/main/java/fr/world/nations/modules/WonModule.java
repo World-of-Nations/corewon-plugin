@@ -1,0 +1,83 @@
+package fr.world.nations.modules;
+
+import com.massivecraft.factions.cmd.FCommand;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+public abstract class WonModule {
+
+    private static WonModule instance;
+    private final String name;
+    private final Plugin loader;
+    private final File configFolder;
+
+    public WonModule(Plugin loader, String name, boolean created_dir) {
+        this.name = name;
+        this.loader = loader;
+
+        instance = this;
+
+        this.configFolder = new File(loader.getDataFolder(), name);
+
+        if (!configFolder.exists() && created_dir) {
+            configFolder.mkdir();
+        }
+
+    }
+
+    public WonModule(Plugin loader, String name) {
+        this(loader, name, true);
+    }
+
+    public static WonModule getInstance() {
+        return instance;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public File getConfigFolder() {
+        return configFolder;
+    }
+
+    public FileConfiguration getConfig(String name) {
+        return YamlConfiguration.loadConfiguration(new File(configFolder, name + ".yml"));
+    }
+
+    public FileConfiguration getConfig(File file) {
+        return YamlConfiguration.loadConfiguration(file);
+    }
+
+    public FileConfiguration getConfig() {
+        return getConfig("config");
+    }
+
+    public Plugin getLoader() {
+        return loader;
+    }
+
+    public abstract void load();
+
+    public abstract void unload();
+
+    public ArrayList<Listener> registerListeners() {
+        return new ArrayList<>();
+    }
+
+    public HashMap<String, CommandExecutor> registerCommands() {
+        return new HashMap<>();
+    }
+
+    public ArrayList<FCommand> registerFCommands() {
+        return new ArrayList<>();
+    }
+
+}

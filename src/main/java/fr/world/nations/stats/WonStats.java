@@ -1,0 +1,60 @@
+package fr.world.nations.stats;
+
+import com.massivecraft.factions.cmd.FCommand;
+import fr.world.nations.modules.WonModule;
+import fr.world.nations.stats.commands.StatsCommand;
+import fr.world.nations.stats.data.StatsManager;
+import fr.world.nations.stats.events.FactionListener;
+import fr.world.nations.stats.events.PlayerListener;
+import fr.world.nations.stats.sql.SQLManager;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
+
+import java.util.ArrayList;
+
+public final class WonStats extends WonModule {
+
+    private static WonStats instance;
+    private SQLManager sqlManager;
+    private StatsManager statsManager;
+
+    public WonStats(Plugin loader, String name) {
+        super(loader, name);
+    }
+
+    @Override
+    public void load() {
+        sqlManager = new SQLManager();
+        statsManager = new StatsManager();
+    }
+
+    @Override
+    public void unload() {
+
+    }
+
+    public SQLManager getSqlManager() {
+        return sqlManager;
+    }
+
+    public StatsManager getStatsManager() {
+        return statsManager;
+    }
+
+    @Override
+    public ArrayList<Listener> registerListeners() {
+        ArrayList<Listener> listeners = new ArrayList<>();
+        listeners.add(new FactionListener());
+        listeners.add(new PlayerListener());
+
+        return listeners;
+    }
+
+    @Override
+    public ArrayList<FCommand> registerFCommands() {
+        ArrayList<FCommand> commands = new ArrayList<>();
+        commands.add(new StatsCommand());
+
+        return commands;
+    }
+}
