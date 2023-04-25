@@ -33,7 +33,7 @@ public class MilestoneWarpsCommand extends FCommand {
             faction = commandContext.faction;
         }
 
-        if (FactionUtil.isNone(faction)) {
+        if (!FactionUtil.isPlayerFaction(faction)) {
             if (faction == commandContext.faction) {
                 commandContext.sender.sendMessage("Vous n'avez pas de faction !");
             } else {

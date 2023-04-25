@@ -30,7 +30,7 @@ public class MilestoneDiagnosisCommand extends FCommand {
 
         Faction faction = commandContext.argAsFaction(0, commandContext.faction);
 
-        if (FactionUtil.isNone(faction)) {
+        if (!FactionUtil.isPlayerFaction(faction)) {
             commandContext.sender.sendMessage("Faction invalide !");
             return;
         }

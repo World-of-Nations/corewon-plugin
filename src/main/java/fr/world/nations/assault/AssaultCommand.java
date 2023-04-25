@@ -48,7 +48,7 @@ public class AssaultCommand extends FCommand {
         }
         switch (commandContext.argAsString(0)) {
             case "join":
-                if (commandContext.faction == null || commandContext.faction.isNone()) {
+                if (commandContext.faction == null || commandContext.faction.isWilderness()) {
                     commandContext.sender.sendMessage("§cVous n'êtes dans aucune faction !");
                     return;
                 }
@@ -107,7 +107,7 @@ public class AssaultCommand extends FCommand {
                 commandContext.sender.sendMessage("§4[Assaut] §eVous avez envoyé votre demande à la faction §6" + faction.getTag() + " §e!");
                 break;
             case "accept":
-                if (commandContext.faction == null || commandContext.faction.isNone()) {
+                if (commandContext.faction == null || commandContext.faction.isWilderness()) {
                     commandContext.sender.sendMessage("§cVous n'êtes dans aucune faction !");
                     return;
                 }
@@ -243,8 +243,6 @@ public class AssaultCommand extends FCommand {
                 List<String> affectedFactions = new ArrayList<>();
                 for (Faction faction1 : FactionUtil.getAllPlayerFactions()) {
                     faction1.setPeacefulExplosionsEnabled(false);
-//                    faction1.setFlag(FFlag.EXPLOSIONS, false);
-//                    faction1.setFlag(FFlag.OFFLINE_EXPLOSIONS, false);
                     affectedFactions.add(faction1.getTag());
                 }
                 commandContext.sender.sendMessage("Explosions désactivées pour les factions : " + String.join(" ", affectedFactions));
@@ -252,7 +250,7 @@ public class AssaultCommand extends FCommand {
             default:
                 faction = commandContext.argAsFaction(0);
                 if (faction == null) return;
-                if (commandContext.faction == null || commandContext.faction.isNone()) {
+                if (commandContext.faction == null || commandContext.faction.isWilderness()) {
                     commandContext.sender.sendMessage("§cVous n'êtes dans aucune faction !");
                     return;
                 }

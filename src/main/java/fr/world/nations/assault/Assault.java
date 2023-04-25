@@ -636,9 +636,4 @@ public class Assault {
         if (faction == null) return false;
         return attackerList.contains(faction);
     }
-
-    private enum PrefixType {
-        PLAYER,
-        GROUP
-    }
 }

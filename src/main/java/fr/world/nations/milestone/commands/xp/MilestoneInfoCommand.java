@@ -28,7 +28,7 @@ public class MilestoneInfoCommand extends FCommand {
             faction = commandContext.faction;
         }
 
-        if (FactionUtil.isNone(faction)) {
+        if (!FactionUtil.isPlayerFaction(faction)) {
             if (faction == commandContext.faction) {
                 commandContext.sender.sendMessage("§cVous n'avez pas de faction !");
             } else {

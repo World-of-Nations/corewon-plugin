@@ -36,7 +36,7 @@ public class MilestoneTopCommand extends FCommand {
         List<Faction> factionList = FactionUtil.getAllPlayerFactions().stream()
                 .filter(faction -> faction != factions.getSafeZone() && faction != factions.getWarZone())
                 .sorted((f1, f2) -> (int) (plugin.getMilestoneData(f2).getTotalXp() - plugin.getMilestoneData(f1).getTotalXp()))
-                .collect(Collectors.toList());
+                .toList();
 
         int page = commandContext.argAsInt(0, 1);
 

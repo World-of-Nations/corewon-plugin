@@ -2,6 +2,7 @@ package fr.world.nations.assault;
 
 import com.google.common.collect.Lists;
 import com.massivecraft.factions.Faction;
+import fr.world.nations.util.FactionUtil;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public class AssaultManager {
     }
 
     public Assault getAssault(Faction faction) {
-        if (faction == null || faction.isNone()) return null;
+        if (!FactionUtil.isPlayerFaction(faction)) return null;
         for (Assault assault : assaults) {
             if (assault.contains(faction)) {
                 return assault;

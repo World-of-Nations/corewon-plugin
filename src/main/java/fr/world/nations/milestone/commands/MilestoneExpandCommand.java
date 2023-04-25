@@ -71,7 +71,7 @@ public class MilestoneExpandCommand extends FCommand {
                     } else if (!Permission.CLAIM_RADIUS.has(commandContext.sender, false)) {
                         commandContext.msg("<b>You do not have permission to claim in a radius.");
                     } else {
-                        SpiralTask var10001 = new SpiralTask(FLocation.wrap(commandContext.player), radius) {
+                        new SpiralTask(FLocation.wrap(commandContext.player), radius) {
                             private final int limit;
                             private int failCount = 0;
 

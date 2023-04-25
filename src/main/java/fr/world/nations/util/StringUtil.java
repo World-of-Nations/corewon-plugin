@@ -42,11 +42,7 @@ public class StringUtil {
 
     public static String mult(String input, int factor) {
         if (input == null) return null;
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < factor; i++) {
-            builder.append(input);
-        }
-        return builder.toString();
+        return input.repeat(Math.max(0, factor));
     }
 
     public static String round(double value, int digits) {

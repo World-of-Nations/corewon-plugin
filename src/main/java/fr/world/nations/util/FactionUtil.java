@@ -42,7 +42,7 @@ public class FactionUtil {
     public static Faction getFaction(String name) {
         if (name == null) return null;
         Faction faction = Factions.getInstance().getByTag(name);
-        if (isNone(faction)) return null;
+        if (!isPlayerFaction(faction)) return null;
         return faction;
     }
 
@@ -51,7 +51,7 @@ public class FactionUtil {
         Faction faction;
         if (args.size() >= 2 && sender.hasPermission("fac-milestone.warps.op")) {
             faction = getFaction(args.get(0));
-            if (faction == null || faction.isNone()) {
+            if (!isPlayerFaction(faction)) {
                 sender.sendMessage("La faction " + args.get(0) + " n'existe pas !");
                 return new AbstractMap.SimpleEntry<>(null, -1);
             }
@@ -60,7 +60,7 @@ public class FactionUtil {
         if (sender instanceof Player) {
             FPlayer uPlayer = FPlayers.getInstance().getByPlayer((Player) sender);
             faction = uPlayer.getFaction();
-            if (faction == null || faction.isNone()) { //TODO a tester
+            if (!isPlayerFaction(faction)) { //TODO a tester
                 sender.sendMessage("Vous n'êtes dans aucune faction !");
                 return new AbstractMap.SimpleEntry<>(null, -1);
             }
@@ -89,14 +89,14 @@ public class FactionUtil {
         return faction;
     }
 
-    public static boolean isNone(Faction faction) {
-        if (faction == null || faction.isNone()) return true;
-        return faction == Factions.getInstance().getSafeZone()
-                || faction == Factions.getInstance().getWarZone()
-                || faction == Factions.getInstance().getWilderness();
+    public static boolean isPlayerFaction(Faction faction) {
+        if (faction == null) return false;
+        return !faction.isWilderness()
+                && !faction.isWarZone()
+                && !faction.isSafeZone();
     }
 
     public static List<Faction> getAllPlayerFactions() {
-        return Factions.getInstance().getAllFactions().stream().filter(f -> !FactionUtil.isNone(f)).collect(Collectors.toList());
+        return Factions.getInstance().getAllFactions().stream().filter(FactionUtil::isPlayerFaction).collect(Collectors.toList());
     }
 }

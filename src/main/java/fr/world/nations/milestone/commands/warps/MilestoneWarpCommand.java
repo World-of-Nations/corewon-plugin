@@ -59,14 +59,13 @@ public class MilestoneWarpCommand extends FCommand {
     public void perform(CommandSender sender, String warpName, Location warp) {
         FPlayer uSender = FPlayers.getInstance().getByOfflinePlayer((Player) sender);
         Player player = (Player) sender;
-        Faction uSenderFaction = uSender.getFaction();
         if (!Conf.homesEnabled) {
             uSender.msg("<b>Sorry, Faction homes are disabled on this server.");
         } else if (!Conf.homesTeleportCommandEnabled) {
             uSender.msg("<b>Sorry, the ability to teleport to Faction homes is disabled on this server.");
         } else if (!Conf.homesTeleportAllowedFromEnemyTerritory && uSender.isInEnemyTerritory()) {
             uSender.msg("<b>You cannot teleport to your faction warp while in the territory of an enemy faction.");
-        } else if (!Conf.homesTeleportAllowedFromDifferentWorld && !player.getWorld().getName().equalsIgnoreCase(warp.getWorld().getName())) {
+        } else if (!Conf.homesTeleportAllowedFromDifferentWorld && !player.getWorld().equals(warp.getWorld())) {
             uSender.msg("<b>You cannot teleport to your faction warp while in a different world.");
         } else {
             Faction faction = Board.getInstance().getFactionAt(FLocation.wrap(player));

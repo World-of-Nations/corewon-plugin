@@ -67,7 +67,8 @@ public class WarpManager {
 
     private JsonNode locationNode(Location location) {
         ObjectNode objectNode = JsonNodeFactory.instance.objectNode();
-        objectNode.put("worldName", location.getWorld().getName());
+        objectNode.put("worldName",
+                location.getWorld() == null ? "world" : location.getWorld().getName());
         objectNode.put("x", location.getX());
         objectNode.put("y", location.getY());
         objectNode.put("z", location.getZ());

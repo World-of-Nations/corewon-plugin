@@ -151,9 +151,8 @@ public class ExplosionManager {
     }
 
     public void load() {
-
         JsonNode objectNode = JsonUtil.readFile(tokenFile, true);
-        if (objectNode instanceof MissingNode) return;
+        if (objectNode == null || objectNode instanceof MissingNode) return;
         Iterator<Map.Entry<String, JsonNode>> it = objectNode.fields();
         while (it.hasNext()) {
             Map.Entry<String, JsonNode> field = it.next();

@@ -148,7 +148,11 @@ public final class WonAssault extends WonModule {
     private boolean isInvalid(File databaseFile) {
         if (!databaseFile.exists()) return true;
         FileConfiguration databaseConfig = YamlConfiguration.loadConfiguration(databaseFile);
-        return databaseConfig.getString("Database.host").equals("") || databaseConfig.getString("Database.pass").equals("") || databaseConfig.getString("Database.user").equals("") || databaseConfig.getInt("Database.port") == 0 || databaseConfig.getString("Database.dbName").equals("");
+        return databaseConfig.getString("Database.host", "").equals("")
+                || databaseConfig.getString("Database.pass", "").equals("")
+                || databaseConfig.getString("Database.user", "").equals("")
+                || databaseConfig.getInt("Database.port") == 0
+                || databaseConfig.getString("Database.dbName", "").equals("");
     }
 
     private void loadConfig() {
