@@ -6,10 +6,12 @@ import fr.world.nations.stats.sql.SQLRequests;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class StatsManager {
 
-    protected final ArrayList<FactionData> factions = new ArrayList<>();
+    protected final List<FactionData> factions = new ArrayList<>();
 
     protected SQLRequests sqlRequests = new SQLRequests();
 
@@ -36,6 +38,9 @@ public class StatsManager {
                 if (resultSet.next()) {
                     factionData.setKills(resultSet.getInt("kills"));
                     factionData.setDeaths(resultSet.getInt("deaths"));
+//                    factionData.setAssaultWin(resultSet.getInt("assault_win"));
+//                    factionData.setAssaultLose(resultSet.getInt("assault_lose"));
+//                    factionData.setScoreZone(resultSet.getInt("scorezone"));
                 } else {
                     sqlRequests.createFaction(factionData.getFaction().getTag());
                 }
@@ -57,8 +62,12 @@ public class StatsManager {
 
     public void saveData() {
         for (FactionData factionData : factions) {
-            sqlRequests.updateFaction(factionData.getFaction().getTag(), "kills", factionData.getKills());
-            sqlRequests.updateFaction(factionData.getFaction().getTag(), "deaths", factionData.getDeaths());
+            Map<String, Object> map = factionData.getAsMap();
+            for (String column : map.keySet()) {
+                sqlRequests.updateFaction(factionData.getFaction().getTag(), column, map.get(column).toString());
+            }
+//            sqlRequests.updateFaction(factionData.getFaction().getTag(), "kills", factionData.getKills());
+//            sqlRequests.updateFaction(factionData.getFaction().getTag(), "deaths", factionData.getDeaths());
         }
     }
 
@@ -74,11 +83,14 @@ public class StatsManager {
     }
 
     public FactionData getFactionData(String faction) {
-        return factions.stream().filter(factionData -> factionData.getFaction().getTag().equals(faction)).findFirst().orElse(null);
+        return factions.stream().filter(factionData -> factionData.getFaction().getTag().equalsIgnoreCase(faction)).findFirst().orElse(null);
     }
 
     public FactionData getFactionData(Faction faction) {
         return factions.stream().filter(factionData -> factionData.getFaction().equals(faction)).findFirst().orElse(null);
     }
 
+    public List<FactionData> getFactionDatas() {
+        return factions;
+    }
 }

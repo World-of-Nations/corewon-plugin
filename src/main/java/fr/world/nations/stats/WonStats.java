@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public final class WonStats extends WonModule {
 
@@ -42,7 +43,7 @@ public final class WonStats extends WonModule {
     }
 
     @Override
-    public ArrayList<Listener> registerListeners() {
+    public List<Listener> registerListeners() {
         ArrayList<Listener> listeners = new ArrayList<>();
         listeners.add(new FactionListener());
         listeners.add(new PlayerListener());
@@ -51,7 +52,7 @@ public final class WonStats extends WonModule {
     }
 
     @Override
-    public ArrayList<FCommand> registerFCommands() {
+    public List<FCommand> registerFCommands() {
         ArrayList<FCommand> commands = new ArrayList<>();
         commands.add(new StatsCommand());
 
