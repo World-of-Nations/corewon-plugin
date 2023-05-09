@@ -10,6 +10,7 @@ import org.bukkit.plugin.Plugin;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public abstract class WonModule {
 
@@ -68,7 +69,7 @@ public abstract class WonModule {
 
     public abstract void unload();
 
-    public ArrayList<Listener> registerListeners() {
+    public List<Listener> registerListeners() {
         return new ArrayList<>();
     }
 
@@ -76,7 +77,7 @@ public abstract class WonModule {
         return new HashMap<>();
     }
 
-    public ArrayList<FCommand> registerFCommands() {
+    public List<FCommand> registerFCommands() {
         return new ArrayList<>();
     }
 

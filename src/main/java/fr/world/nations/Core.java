@@ -1,6 +1,7 @@
 package fr.world.nations;
 
 import com.massivecraft.factions.FactionsPlugin;
+import fr.world.nations.country.WonContry;
 import fr.world.nations.modules.ModuleManager;
 import fr.world.nations.stats.WonStats;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -46,6 +47,7 @@ public class Core extends JavaPlugin {
 
     public void loadModules() {
         moduleManager.addModule(new WonStats(this, "stats"));
+        moduleManager.addModule(new WonContry(this, "country"));
 
         moduleManager.loadModules();
         moduleManager.registerListeners();
