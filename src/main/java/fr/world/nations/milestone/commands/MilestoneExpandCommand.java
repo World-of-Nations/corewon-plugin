@@ -106,7 +106,6 @@ public class MilestoneExpandCommand extends FCommand {
         if (uPlayer == null) {
             return false;
         }
-        uPlayer.msg("tryclaim");
         if (newFaction == null) {
             return false;
         }

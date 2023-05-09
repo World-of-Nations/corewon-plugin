@@ -78,8 +78,10 @@ public class StatsManager {
     }
 
     public void removeFaction(Faction faction) {
+        FactionData data = getFactionData(faction);
+        if (data == null) return;
         sqlRequests.deleteFaction(faction.getTag());
-        factions.remove(getFactionData(faction));
+        factions.remove(data);
     }
 
     public FactionData getFactionData(String faction) {

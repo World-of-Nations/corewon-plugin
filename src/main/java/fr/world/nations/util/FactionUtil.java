@@ -60,7 +60,7 @@ public class FactionUtil {
         if (sender instanceof Player) {
             FPlayer uPlayer = FPlayers.getInstance().getByPlayer((Player) sender);
             faction = uPlayer.getFaction();
-            if (!isPlayerFaction(faction)) { //TODO a tester
+            if (!isPlayerFaction(faction)) {
                 sender.sendMessage("Vous n'êtes dans aucune faction !");
                 return new AbstractMap.SimpleEntry<>(null, -1);
             }

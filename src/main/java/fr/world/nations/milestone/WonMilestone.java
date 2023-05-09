@@ -128,21 +128,11 @@ public final class WonMilestone extends WonModule {
                 config.createNewFile();
             }
 
+
             file = new File(dataFolder, "xp_bonus.json");
             if (!file.exists()) {
                 file.createNewFile();
-            }
-            File oldFile = new File(dataFolder, "op-modifs.yml");
-            if (oldFile.exists()) {
-                FileConfiguration oldConfig = YamlConfiguration.loadConfiguration(oldFile);
-                ObjectNode toWrite = JsonUtil.getObjectNode(file);
-                for (String key : oldConfig.getKeys(false)) {
-                    ObjectNode toAdd = JsonNodeFactory.instance.objectNode();
-                    toAdd.put("op", oldConfig.getDouble(key));
-                    toWrite.put(key, toAdd);
-                }
-                new ObjectMapper().writeValue(file, toWrite);
-                oldFile.delete();
+                new ObjectMapper().writeValue(file, JsonNodeFactory.instance.objectNode());
             }
         } catch (IOException e) {
             e.printStackTrace();
