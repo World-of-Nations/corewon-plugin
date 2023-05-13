@@ -60,6 +60,25 @@ public class StatsManager {
 
     }
 
+    public void saveData(String factionTag) {
+        FactionData data = getFactionData(factionTag);
+        if (data == null) return;
+        saveData(data);
+    }
+
+    public void saveData(Faction faction) {
+        FactionData data = getFactionData(faction);
+        if (data == null) return;
+        saveData(data);
+    }
+
+    public void saveData(FactionData data) {
+        Map<String, Object> map = data.getAsMap();
+        for (String column : map.keySet()) {
+            sqlRequests.updateFaction(data.getFaction().getTag(), column, map.get(column).toString());
+        }
+    }
+
     public void saveData() {
         for (FactionData factionData : factions) {
             Map<String, Object> map = factionData.getAsMap();

@@ -33,7 +33,6 @@ public class PlayerListener implements Listener {
 
         if (factionKilled != null) {
             FactionData factionData = statsManager.getFactionData(factionKilled.getTag());
-
             if (factionData != null) {
                 factionData.setDeaths(factionData.getDeaths() + 1);
             }
@@ -41,14 +40,9 @@ public class PlayerListener implements Listener {
 
         if (factionKiller != null) {
             FactionData factionData = statsManager.getFactionData(factionKiller.getTag());
-
             if (factionData != null) {
                 factionData.setKills(factionData.getKills() + 1);
             }
         }
-
-        statsManager.saveData();
-
     }
-
 }

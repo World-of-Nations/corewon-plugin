@@ -1,14 +1,16 @@
 package fr.world.nations.stats.data;
 
 import com.massivecraft.factions.Faction;
+import fr.world.nations.Core;
+import fr.world.nations.stats.WonStats;
 
 import java.util.Map;
 
 public class FactionData {
 
     private final Faction faction;
-    private int kills;
-    private int deaths;
+    private int kills = 0;
+    private int deaths = 0;
 
     private double scoreZone = 0;
 
@@ -17,6 +19,7 @@ public class FactionData {
 
     public FactionData(Faction faction) {
         this.faction = faction;
+        save();
     }
 
     public Faction getFaction() {
@@ -29,6 +32,7 @@ public class FactionData {
 
     public void setKills(int kills) {
         this.kills = kills;
+        save();
     }
 
     public int getDeaths() {
@@ -37,6 +41,7 @@ public class FactionData {
 
     public void setDeaths(int deaths) {
         this.deaths = deaths;
+        save();
     }
 
     public double getKdr() {
@@ -52,6 +57,7 @@ public class FactionData {
 
     public void setAssaultLose(int assaultLose) {
         this.assaultLose = assaultLose;
+        save();
     }
 
     public int getAssaultWin() {
@@ -60,6 +66,7 @@ public class FactionData {
 
     public void setAssaultWin(int assaultWin) {
         this.assaultWin = assaultWin;
+        save();
     }
 
     public int addAssaultLose() {
@@ -90,10 +97,16 @@ public class FactionData {
 
     public void setScoreZone(double scoreZone) {
         this.scoreZone = scoreZone;
+        save();
     }
 
     public void addScoreZone(double delta) {
-        scoreZone += delta;
+        setScoreZone(getScoreZone() + delta);
+    }
+
+    public void save() {
+        StatsManager statsManager = Core.getInstance().getModuleManager().getModule(WonStats.class).getStatsManager();
+        statsManager.saveData(this);
     }
 
     public Map<String, Object> getAsMap() {
