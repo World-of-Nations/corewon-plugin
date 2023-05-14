@@ -2,7 +2,6 @@ package fr.world.nations.country.sql;
 
 import fr.world.nations.Core;
 import fr.world.nations.country.Country;
-import fr.world.nations.country.WonContry;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -18,13 +17,14 @@ public class SQLRequests {
     private final SQLManager sqlManager;
     private final String table = "countries";
 
-    public SQLRequests() {
-        this.sqlManager = Core.getInstance().getModuleManager().getModule(WonContry.class).getSqlManager();
+    public SQLRequests(SQLManager sqlManager) {
+        this.sqlManager = sqlManager;
         createTable();
     }
 
     public void createTable() {
-        try (Connection connection = sqlManager.getConnection()) {
+        Connection connection = sqlManager.getConnection();
+        try {
             connection.createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " ("
                     + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + "name VARCHAR(255) NOT NULL UNIQUE,"
@@ -41,7 +41,8 @@ public class SQLRequests {
     }
 
     public void createCountry(String country) {
-        try (Connection connection = sqlManager.getConnection()) {
+        Connection connection = sqlManager.getConnection();
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + table + " (name) VALUES (?);");
             preparedStatement.setString(1, country);
         } catch (SQLException e) {
@@ -53,8 +54,9 @@ public class SQLRequests {
     public List<Country> getAllCountries() {
 
         List<Country> contries = new ArrayList<>();
+        Connection connection = sqlManager.getConnection();
 
-        try (Connection connection = sqlManager.getConnection()) {
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM " + table + ";");
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -77,7 +79,8 @@ public class SQLRequests {
     }
 
     public void updateCountryAvailability(String country, boolean available) {
-        try (Connection connection = sqlManager.getConnection()) {
+        Connection connection = sqlManager.getConnection();
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE " + table + " SET available = ? WHERE name = ?;");
             preparedStatement.setInt(1, available ? 1 : 0);
             preparedStatement.setString(2, country);
@@ -92,8 +95,9 @@ public class SQLRequests {
             Core.getInstance().getLogger().info("WonCountry | Impossible de mettre à jour le spawn du pays " + country + " car le monde n'existe pas...");
             return;
         }
+        Connection connection = sqlManager.getConnection();
 
-        try (Connection connection = sqlManager.getConnection()) {
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE " + table + " SET x = ?, y = ?, z = ?, world = ? WHERE name = ?;");
             preparedStatement.setInt(1, spawn.getBlockX());
             preparedStatement.setInt(2, spawn.getBlockY());

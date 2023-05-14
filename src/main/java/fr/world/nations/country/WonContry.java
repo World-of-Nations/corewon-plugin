@@ -8,6 +8,7 @@ import fr.world.nations.modules.WonModule;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,13 +22,18 @@ public class WonContry extends WonModule {
 
     @Override
     public void load() {
-        countryManager = new CountryManager();
         sqlManager = new SQLManager();
+        countryManager = new CountryManager(sqlManager);
     }
 
     @Override
     public void unload() {
         countryManager.saveData();
+        try {
+            sqlManager.closeConnection();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -38,9 +44,5 @@ public class WonContry extends WonModule {
     @Override
     public List<Listener> registerListeners() {
         return Collections.singletonList(new FactionListener(this.countryManager));
-    }
-
-    public SQLManager getSqlManager() {
-        return sqlManager;
     }
 }

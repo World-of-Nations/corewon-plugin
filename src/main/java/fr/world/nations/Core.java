@@ -36,7 +36,7 @@ public class Core extends JavaPlugin {
 
         loadModules();
 
-        getServer().getLogger().info("WonStats | Plugin activé !");
+        getServer().getLogger().info("WonCore | Plugin activé !");
     }
 
     @Override
@@ -46,8 +46,8 @@ public class Core extends JavaPlugin {
     }
 
     public void loadModules() {
-        moduleManager.addModule(new WonStats(this, "stats"));
         moduleManager.addModule(new WonContry(this, "country"));
+        moduleManager.addModule(new WonStats(this, "stats"));
 
         moduleManager.loadModules();
         moduleManager.registerListeners();

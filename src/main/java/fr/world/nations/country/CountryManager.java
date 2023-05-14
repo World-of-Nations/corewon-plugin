@@ -1,5 +1,6 @@
 package fr.world.nations.country;
 
+import fr.world.nations.country.sql.SQLManager;
 import fr.world.nations.country.sql.SQLRequests;
 
 import java.util.HashMap;
@@ -9,9 +10,10 @@ import java.util.Map;
 public class CountryManager {
     protected final Map<String, Country> countries = new HashMap<>();
 
-    protected SQLRequests sqlRequests = new SQLRequests();
+    protected final SQLRequests sqlRequests;
 
-    public CountryManager() {
+    public CountryManager(SQLManager sqlManager) {
+        this.sqlRequests = new SQLRequests(sqlManager);
         loadData();
     }
 
