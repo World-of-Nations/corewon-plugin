@@ -1,9 +1,13 @@
 package fr.world.nations;
 
 import com.massivecraft.factions.FactionsPlugin;
+
+import fr.world.nations.country.WonContry;
+
 import fr.world.nations.assault.WonAssault;
 import fr.world.nations.koth.WonKoth;
 import fr.world.nations.milestone.WonMilestone;
+
 import fr.world.nations.modules.ModuleManager;
 import fr.world.nations.stats.WonStats;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -39,7 +43,7 @@ public class Core extends JavaPlugin {
 
         loadModules();
 
-        getServer().getLogger().info("WonStats | Plugin activé !");
+        getServer().getLogger().info("WonCore | Plugin activé !");
     }
 
     @Override
@@ -49,6 +53,7 @@ public class Core extends JavaPlugin {
     }
 
     public void loadModules() {
+        moduleManager.addModule(new WonContry(this, "country"));
         moduleManager.addModule(new WonStats(this, "stats"));
         moduleManager.addModule(new WonKoth(this));
         moduleManager.addModule(new WonAssault(this));
