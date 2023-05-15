@@ -22,7 +22,7 @@ public class WonContry extends WonModule {
 
     @Override
     public void load() {
-        sqlManager = new SQLManager();
+        sqlManager = new SQLManager(this);
         countryManager = new CountryManager(sqlManager);
     }
 

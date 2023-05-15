@@ -45,6 +45,7 @@ public class SQLRequests {
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO " + table + " (name) VALUES (?);");
             preparedStatement.setString(1, country);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             Core.getInstance().getLogger().severe("WonCountry | Impossible de créer le pays " + country + " dans la table SQL...");
             e.printStackTrace();
@@ -84,6 +85,7 @@ public class SQLRequests {
             PreparedStatement preparedStatement = connection.prepareStatement("UPDATE " + table + " SET available = ? WHERE name = ?;");
             preparedStatement.setInt(1, available ? 1 : 0);
             preparedStatement.setString(2, country);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             Core.getInstance().getLogger().severe("WonCountry | Impossible de mettre à jour le pays " + country + " dans la table SQL...");
             e.printStackTrace();
@@ -104,6 +106,7 @@ public class SQLRequests {
             preparedStatement.setInt(3, spawn.getBlockZ());
             preparedStatement.setString(4, spawn.getWorld().getName());
             preparedStatement.setString(5, country);
+            preparedStatement.executeUpdate();
         } catch (SQLException e) {
             Core.getInstance().getLogger().severe("WonCountry | Impossible de mettre à jour le pays " + country + " dans la table SQL...");
             e.printStackTrace();
