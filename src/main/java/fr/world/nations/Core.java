@@ -1,7 +1,13 @@
 package fr.world.nations;
 
 import com.massivecraft.factions.FactionsPlugin;
+
 import fr.world.nations.country.WonContry;
+
+import fr.world.nations.assault.WonAssault;
+import fr.world.nations.koth.WonKoth;
+import fr.world.nations.milestone.WonMilestone;
+
 import fr.world.nations.modules.ModuleManager;
 import fr.world.nations.stats.WonStats;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -9,6 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Core extends JavaPlugin {
 
+    //test
     private static Core instance;
     public FileConfiguration config = getConfig();
     private FactionsPlugin factionsPlugin;
@@ -48,6 +55,9 @@ public class Core extends JavaPlugin {
     public void loadModules() {
         moduleManager.addModule(new WonContry(this, "country"));
         moduleManager.addModule(new WonStats(this, "stats"));
+        moduleManager.addModule(new WonKoth(this));
+        moduleManager.addModule(new WonAssault(this));
+        moduleManager.addModule(new WonMilestone(this, "milestone"));
 
         moduleManager.loadModules();
         moduleManager.registerListeners();

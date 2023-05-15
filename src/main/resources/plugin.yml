@@ -6,3 +6,6 @@ author: Holo795
 website: https://github.com/Holo795
 depend:
   - Factions
+commands:
+  warzone:
+    description: warzone
