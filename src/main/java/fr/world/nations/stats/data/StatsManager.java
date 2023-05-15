@@ -24,7 +24,7 @@ public class StatsManager {
 
         Factions.getInstance().getAllFactions().forEach(faction -> {
             if (!faction.isWilderness() && !faction.isSafeZone() && !faction.isWarZone()) {
-                factions.add(new FactionData(faction));
+                factions.add(new FactionData(faction, this));
             }
         });
     }
@@ -93,7 +93,7 @@ public class StatsManager {
     public void addFaction(Faction faction) {
         if (faction.isWilderness() || faction.isSafeZone() || faction.isWarZone()) return;
         sqlRequests.createFaction(faction.getTag());
-        factions.add(new FactionData(faction));
+        factions.add(new FactionData(faction, this));
     }
 
     public void removeFaction(Faction faction) {

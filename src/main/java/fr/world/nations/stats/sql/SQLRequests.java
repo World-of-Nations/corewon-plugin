@@ -23,7 +23,10 @@ public class SQLRequests {
                     + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                     + "faction VARCHAR(255),"
                     + "kills INTEGER,"
-                    + "deaths INTEGER"
+                    + "deaths INTEGER,"
+                    + "assault_lose INTEGER,"
+                    + "assault_win INTEGER,"
+                    + "score_zone FLOAT"
                     + ");");
         } catch (SQLException e) {
             Core.getInstance().getLogger().severe("WonStats | Impossible de créer la table SQL...");

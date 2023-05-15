@@ -17,9 +17,9 @@ public class FactionData {
     private int assaultLose = 0;
     private int assaultWin = 0;
 
-    public FactionData(Faction faction) {
+    public FactionData(Faction faction, StatsManager statsManager) {
         this.faction = faction;
-        save();
+        statsManager.saveData(this);
     }
 
     public Faction getFaction() {
@@ -106,6 +106,10 @@ public class FactionData {
 
     public void save() {
         StatsManager statsManager = Core.getInstance().getModuleManager().getModule(WonStats.class).getStatsManager();
+        if (statsManager == null) {
+            Core.getInstance().getLogger().warning("tried to save a factiondata while initializing stats manager");
+            return;
+        }
         statsManager.saveData(this);
     }
 
