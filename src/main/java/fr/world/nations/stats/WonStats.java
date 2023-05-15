@@ -10,7 +10,10 @@ import fr.world.nations.stats.sql.SQLManager;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public final class WonStats extends WonModule {
 
@@ -26,6 +29,15 @@ public final class WonStats extends WonModule {
     public void load() {
         sqlManager = new SQLManager();
         statsManager = new StatsManager();
+
+//        File dbFile = new File(getConfigFolder(), "wonstats.db");
+//        if (!dbFile.exists()) {
+//            try {
+//                dbFile.createNewFile();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     @Override
@@ -42,7 +54,7 @@ public final class WonStats extends WonModule {
     }
 
     @Override
-    public ArrayList<Listener> registerListeners() {
+    public List<Listener> registerListeners() {
         ArrayList<Listener> listeners = new ArrayList<>();
         listeners.add(new FactionListener());
         listeners.add(new PlayerListener());
@@ -51,7 +63,7 @@ public final class WonStats extends WonModule {
     }
 
     @Override
-    public ArrayList<FCommand> registerFCommands() {
+    public List<FCommand> registerFCommands() {
         ArrayList<FCommand> commands = new ArrayList<>();
         commands.add(new StatsCommand());
 

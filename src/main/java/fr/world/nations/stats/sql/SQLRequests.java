@@ -19,12 +19,16 @@ public class SQLRequests {
 
     public void createTable() {
         try {
-            sqlManager.getConnection().createStatement().executeUpdate("CREATE TABLE IF NOT EXISTS " + table + " ("
-                    + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+            String statement = "CREATE TABLE IF NOT EXISTS " + table + " ("
+                    + "id INTEGER PRIMARY KEY AUTO_INCREMENT,"
                     + "faction VARCHAR(255),"
                     + "kills INTEGER,"
-                    + "deaths INTEGER"
-                    + ");");
+                    + "deaths INTEGER,"
+                    + "assault_lose INTEGER,"
+                    + "assault_win INTEGER,"
+                    + "score_zone FLOAT"
+                    + ");";
+            sqlManager.getConnection().createStatement().executeUpdate(statement);
         } catch (SQLException e) {
             Core.getInstance().getLogger().severe("WonStats | Impossible de créer la table SQL...");
             e.printStackTrace();
@@ -67,6 +71,15 @@ public class SQLRequests {
             return factions;
         }
 
+    }
+
+    public void updateFaction(String faction, String column, String value) {
+        try {
+            sqlManager.getConnection().createStatement().executeUpdate("UPDATE " + table + " SET " + column + " = " + value + " WHERE faction = '" + faction + "';");
+        } catch (SQLException e) {
+            Core.getInstance().getLogger().severe("WonStats | Impossible de mettre à jour la faction " + faction + " dans la table SQL...");
+            e.printStackTrace();
+        }
     }
 
     public void updateFaction(String faction, String column, int value) {

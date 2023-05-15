@@ -1,7 +1,7 @@
 package fr.world.nations.stats.events;
 
-import com.massivecraft.factions.event.FactionCreateEvent;
-import com.massivecraft.factions.event.FactionDisbandEvent;
+import com.massivecraft.factions.event.FPlayerJoinEvent;
+import com.massivecraft.factions.event.FPlayerLeaveEvent;
 import fr.world.nations.Core;
 import fr.world.nations.stats.WonStats;
 import fr.world.nations.stats.data.StatsManager;
@@ -12,15 +12,17 @@ public class FactionListener implements Listener {
 
 
     @EventHandler
-    public void onFactionCreate(FactionCreateEvent faction) {
+    public void onFactionCreate(FPlayerJoinEvent event) {
+        if (event.getReason() != FPlayerJoinEvent.PlayerJoinReason.CREATE) return;
         StatsManager statsManager = Core.getInstance().getModuleManager().getModule(WonStats.class).getStatsManager();
-        statsManager.addFaction(faction.getFPlayer().getFaction());
+        statsManager.addFaction(event.getFaction());
     }
 
     @EventHandler
-    public void onFactionDisband(FactionDisbandEvent faction) {
+    public void onFactionDisband(FPlayerLeaveEvent event) {
+        if (event.getReason() != FPlayerLeaveEvent.PlayerLeaveReason.DISBAND) return;
         StatsManager statsManager = Core.getInstance().getModuleManager().getModule(WonStats.class).getStatsManager();
-        statsManager.removeFaction(faction.getFaction());
+        statsManager.removeFaction(event.getFaction());
     }
 
 }
