@@ -107,7 +107,7 @@ public class FactionData {
     public void save() {
         StatsManager statsManager = Core.getInstance().getModuleManager().getModule(WonStats.class).getStatsManager();
         if (statsManager == null) {
-            Core.getInstance().getLogger().warning("tried to save a factiondata while initializing stats manager");
+            //Is expected to happen while StatsManager is being initialized
             return;
         }
         statsManager.saveData(this);
