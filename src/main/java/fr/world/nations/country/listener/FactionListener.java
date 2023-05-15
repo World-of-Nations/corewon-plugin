@@ -1,5 +1,7 @@
 package fr.world.nations.country.listener;
 
+import com.massivecraft.factions.Board;
+import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.event.FPlayerJoinEvent;
 import com.massivecraft.factions.event.FactionCreateEvent;
 import com.massivecraft.factions.event.FactionDisbandEvent;
@@ -37,6 +39,7 @@ public class FactionListener implements Listener {
             Country country = countryManager.getCountry(event.getFaction().getTag());
             if (country != null) {
                 event.getFaction().setHome(country.getSpawn());
+                Board.getInstance().setFactionAt(event.getFaction(), FLocation.wrap(country.getSpawn()));
             }
         }
     }
