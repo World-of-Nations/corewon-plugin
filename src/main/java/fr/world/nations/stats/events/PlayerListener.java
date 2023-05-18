@@ -7,10 +7,13 @@ import fr.world.nations.Core;
 import fr.world.nations.stats.WonStats;
 import fr.world.nations.stats.data.FactionData;
 import fr.world.nations.stats.data.StatsManager;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+
+import java.util.List;
 
 public class PlayerListener implements Listener {
 
@@ -21,7 +24,19 @@ public class PlayerListener implements Listener {
         Player killer = killed.getKiller();
         if (killer == null) return;
 
-        StatsManager statsManager = Core.getInstance().getModuleManager().getModule(WonStats.class).getStatsManager();
+        WonStats wonStats = Core.getInstance().getModuleManager().getModule(WonStats.class);
+        StatsManager statsManager = wonStats.getStatsManager();
+
+        World world = killed.getWorld();
+        List<String> allowedWorlds = wonStats.getConfig().getStringList("player-kills.allowed-worlds");
+        if (allowedWorlds.isEmpty()) {
+            boolean shouldWarn = wonStats.getConfig().getBoolean("player-kills.no-world-warn");
+            if (shouldWarn) {
+                Core.getInstance().getLogger().warning("No world specified for player kills tracking ! " +
+                        "If done on purpose, you can disable this warning in the config file");
+            }
+        }
+        if (!allowedWorlds.contains(world.getName())) return;
 
         FPlayer fKilled = FPlayers.getInstance().getByPlayer(killed);
         Faction factionKilled = fKilled.getFaction();

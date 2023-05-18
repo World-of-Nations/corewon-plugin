@@ -74,6 +74,10 @@ public class SQLRequests {
     }
 
     public void updateFaction(String faction, String column, String value) {
+        if (value == null) {
+            Core.getInstance().getLogger().warning("Tried to save null value : " + column + " for faction " + faction);
+            return;
+        }
         try {
             sqlManager.getConnection().createStatement().executeUpdate("UPDATE " + table + " SET " + column + " = " + value + " WHERE faction = '" + faction + "';");
         } catch (SQLException e) {
