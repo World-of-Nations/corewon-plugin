@@ -31,21 +31,21 @@ public abstract class WonModule {
 
         if (!configFolder.exists() && created_dir) {
             configFolder.mkdir();
-        }
-
-        File defaultConfigFile = getFile("config.yml");
-        if (!defaultConfigFile.exists()) {
-            try {
-                defaultConfigFile.createNewFile();
-                FileConfiguration config = getDefaultConfig();
-                Map<String, Object> defaultConfigValues = getDefaultConfigValues();
-                for (String key : defaultConfigValues.keySet()) {
-                    config.set(key, defaultConfigValues.get(key));
+            Map<String, Object> defaultConfigValues = getDefaultConfigValues();
+            if (!defaultConfigValues.isEmpty()) {
+                File defaultConfigFile = getFile("config.yml");
+                if (!defaultConfigFile.exists()) {
+                    try {
+                        defaultConfigFile.createNewFile();
+                        FileConfiguration config = getDefaultConfig();
+                        for (String key : defaultConfigValues.keySet()) {
+                            config.set(key, defaultConfigValues.get(key));
+                        }
+                        config.save(defaultConfigFile);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-                config.save(defaultConfigFile);
-            }
-            catch (IOException e) {
-                e.printStackTrace();
             }
         }
     }
