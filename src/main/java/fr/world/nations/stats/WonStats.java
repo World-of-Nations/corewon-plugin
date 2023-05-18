@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public final class WonStats extends WonModule {
 
@@ -68,5 +69,13 @@ public final class WonStats extends WonModule {
         commands.add(new StatsCommand());
 
         return commands;
+    }
+
+    @Override
+    protected Map<String, Object> getDefaultConfigValues() {
+        return Map.of(
+                "player-kills.allowed-worlds", List.of("world"),
+                "player-kills.no-world-warn", true
+        );
     }
 }
