@@ -136,7 +136,7 @@ public final class WonMilestone extends WonModule {
             e.printStackTrace();
         }
 
-        int delay = this.getConfig().getInt("milestone.check_delay_seconds", 5) * 20;
+        int delay = this.getDefaultConfig().getInt("milestone.check_delay_seconds", 5) * 20;
         if (delay < 1) delay = 1;
 
         BukkitTask task = new BukkitRunnable() {

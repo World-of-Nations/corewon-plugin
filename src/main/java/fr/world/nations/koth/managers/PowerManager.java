@@ -119,12 +119,12 @@ public class PowerManager {
             }
             JsonNode factionNode = node.get(factionName);
             long coolDownStart = factionNode.asLong();
-            String updateCoolDown = WonKoth.getInstance().getConfig().getString("config.power-update-cooldown", "1we");
+            String updateCoolDown = WonKoth.getInstance().getDefaultConfig().getString("config.power-update-cooldown", "1we");
             long updateCoolDownLong = StringUtil.toMillis(updateCoolDown);
             long timeDelta = System.currentTimeMillis() - coolDownStart;
             int steps = (int) Math.floor(timeDelta / updateCoolDownLong);
             double percentage = 1;
-            double stepFactor = WonKoth.getInstance().getConfig().getDouble("config.power-update-factor", 0.75);
+            double stepFactor = WonKoth.getInstance().getDefaultConfig().getDouble("config.power-update-factor", 0.75);
             for (int i = 0; i < steps; i++) {
                 percentage *= stepFactor;
             }

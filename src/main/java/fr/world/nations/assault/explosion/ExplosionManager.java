@@ -104,7 +104,7 @@ public class ExplosionManager {
     }
 
     public boolean enemiesSinceSufficientTime(Faction f1, Faction f2) {
-        long timeRequiredMillis = (long) (plugin.getConfig().getDouble("explosions.enemy-required-time-days") * 24 * 60 * 60 * 1000);
+        long timeRequiredMillis = (long) (plugin.getDefaultConfig().getDouble("explosions.enemy-required-time-days") * 24 * 60 * 60 * 1000);
         return enemySinceMillis(f1, f2) > timeRequiredMillis;
     }
 

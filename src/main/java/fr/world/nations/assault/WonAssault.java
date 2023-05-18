@@ -112,7 +112,7 @@ public final class WonAssault extends WonModule {
     }
 
     public void addAttackCoolDown(Faction attacker, Faction defendant) {
-        double cdHours = getConfig().getDouble("assault.attack-cooldown-hour");
+        double cdHours = getDefaultConfig().getDouble("assault.attack-cooldown-hour");
         coolDownManager.addCoolDownHour(attacker, "assault-attack-" + defendant.getId(), cdHours);
     }
 
@@ -129,7 +129,7 @@ public final class WonAssault extends WonModule {
     }
 
     public void addClaimCoolDown(Faction faction) {
-        double cdHours = getConfig().getDouble("assault.claim-disabled-cooldown-hours");
+        double cdHours = getDefaultConfig().getDouble("assault.claim-disabled-cooldown-hours");
         coolDownManager.addCoolDownHour(faction, "assault-claim", cdHours);
     }
 
@@ -156,7 +156,7 @@ public final class WonAssault extends WonModule {
     }
 
     private void loadConfig() {
-        FileConfiguration config = getConfig();
+        FileConfiguration config = getDefaultConfig();
         config.set("assault.duration-min", 30);
         config.set("assault.target-chunk-start-delay-mins", 10);
         config.set("assault.target-chunk-unclaim-delay-sec", 180);

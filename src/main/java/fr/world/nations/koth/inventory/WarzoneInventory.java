@@ -40,7 +40,7 @@ public class WarzoneInventory extends FastInv {
         if (hasArmor) {
             player.teleport(koth.getTeleportPoint());
         } else {
-            for (String msg : WonKoth.getInstance().getConfig().getStringList("messages.players.tp-warzone-noarmor")) {
+            for (String msg : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.tp-warzone-noarmor")) {
                 player.sendMessage(msg);
             }
         }

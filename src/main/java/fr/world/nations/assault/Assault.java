@@ -88,7 +88,7 @@ public class Assault {
         broadcastRaw("§cFaites des kills pour gagner des points !");
         broadcastRaw("");
         broadcastRaw("§4Que le meilleur gagne !");
-        long durationMin = plugin.getConfig().getLong("assault.duration-min");
+        long durationMin = plugin.getDefaultConfig().getLong("assault.duration-min");
         broadcastRaw("§cFin dans §6" + durationMin + " §cminutes");
         broadcastRaw("");
 
@@ -96,7 +96,7 @@ public class Assault {
         broadcastRaw("");
         broadcastRaw("§4" + StringUtil.mult("-", msgLength));
 
-        double targetChunkStartDelayMins = plugin.getConfig().getDouble("assault.target-chunk-start-delay-mins");
+        double targetChunkStartDelayMins = plugin.getDefaultConfig().getDouble("assault.target-chunk-start-delay-mins");
         broadcast("§cChunk à capturer désigné dans §6" + StringUtil.numb(targetChunkStartDelayMins) + " §cminutes !");
 
         if (explosionsAllowed) {
@@ -109,7 +109,7 @@ public class Assault {
         if (Board.getInstance().getAllClaims(defendant).isEmpty()) return; //TODO
         int delayTick = 5;
         this.taskId = new BukkitRunnable() {
-            final long scoreBroadCastDelayMillis = plugin.getConfig().getLong("assault.score-broadcast-delay-secs") * 1000;
+            final long scoreBroadCastDelayMillis = plugin.getDefaultConfig().getLong("assault.score-broadcast-delay-secs") * 1000;
             long lastTimeBroadCastedScoreMillis = System.currentTimeMillis();
             long targetedClaimScoreMillis = 0;
             boolean claiming = false;
@@ -117,7 +117,7 @@ public class Assault {
             @Override
             public void run() {
                 //Si l'event est terminé la tâche s'annule
-                long assaultDurationMin = plugin.getConfig().getLong("assault.duration-min");
+                long assaultDurationMin = plugin.getDefaultConfig().getLong("assault.duration-min");
                 if (TimerUtil.deltaUpMins(assaultStartedMillis, assaultDurationMin) || !running) {
                     end(false, true);
                     this.cancel();
@@ -128,7 +128,7 @@ public class Assault {
                     lastTimeBroadCastedScoreMillis = System.currentTimeMillis();
                 }
                 if (!targetedClaimSuccess) {
-                    double targetChunkStartDelayMins = plugin.getConfig().getDouble("assault.target-chunk-start-delay-mins");
+                    double targetChunkStartDelayMins = plugin.getDefaultConfig().getDouble("assault.target-chunk-start-delay-mins");
                     //System.out.println("targetChunkStartDelayMins : " + targetChunkStartDelayMins);
                     long targetChunkStartDelayMillis = (long) (targetChunkStartDelayMins * 60 * 1000);
                     if (TimerUtil.deltaUpMillis(assaultStartedMillis, targetChunkStartDelayMillis)) {
@@ -157,7 +157,7 @@ public class Assault {
                                     attackerNumb += 1;
                                 }
                             }
-                            long requiredTimeMillis = plugin.getConfig().getLong("assault.target-chunk-unclaim-delay-sec") * 1000;
+                            long requiredTimeMillis = plugin.getDefaultConfig().getLong("assault.target-chunk-unclaim-delay-sec") * 1000;
                             if ((defenderNumb >= attackerNumb)) {
                                 if (claiming) {
                                     broadcast("§cIl n'y a plus assez d'attaquant dans le claim cible ! Le compteur redescend...");
@@ -181,14 +181,14 @@ public class Assault {
                                     //Envoi du message de log
                                     String chunkString = targetedClaim.toString();
                                     broadcast("§6Les attaquants §4ont détruit le claim cible ! §6(" + chunkString + ")");
-                                    double cdHours = plugin.getConfig().getDouble("assault.claim-disabled-cooldown-hours");
+                                    double cdHours = plugin.getDefaultConfig().getDouble("assault.claim-disabled-cooldown-hours");
                                     broadcast("§cLe pays §6" + defendant.getTag() + " §cn'a pas réussi à défendre" +
                                             " le claim cible ! Il est incapable de claim pendant §6" + StringUtil.numb(cdHours) +
                                             " §cheures.");
                                     plugin.addClaimCoolDown(defendant);
 
                                     //Ajout des points
-                                    addAttackerPoint(plugin.getConfig().getInt("assault.target-chunk-success-points"));
+                                    addAttackerPoint(plugin.getDefaultConfig().getInt("assault.target-chunk-success-points"));
                                     //Unclaim
                                     if (Board.getInstance().getFactionAt(targetedClaim) == defendant) {
                                         Board.getInstance().setFactionAt(Factions.getInstance().getWilderness(), targetedClaim);
@@ -220,7 +220,7 @@ public class Assault {
         //Si le chunk n'a pas réussi à être capturé
         if (!targetedClaimSuccess && calculateChunkPoints) {
             broadcast("§cLes attaquants n'ont pas réussi à détruire le claim cible !");
-            addDefendantPoint(plugin.getConfig().getInt("assault.target-chuck-fail-points"));
+            addDefendantPoint(plugin.getDefaultConfig().getInt("assault.target-chuck-fail-points"));
         }
 
         if (attackerPoints == defendantPoints) {
@@ -260,7 +260,7 @@ public class Assault {
         if (!force) {
             winnerData.addAssaultWin();
             loserData.addAssaultLose();
-            bankTransferPercentage = plugin.getConfig().getInt("assault.bank-transfer-percentage");
+            bankTransferPercentage = plugin.getDefaultConfig().getInt("assault.bank-transfer-percentage");
             double winnerBalance = fWinner.getFactionBalance();
             double loserBalance = fLoser.getFactionBalance();
             toTransfer = (bankTransferPercentage / 100d) * fLoser.getFactionBalance();
@@ -383,7 +383,7 @@ public class Assault {
     public void onLogout(Player player) {
         if (!contains(player)) return;
         int timeBfEndMin = 1;
-        long assaultDurationMin = plugin.getConfig().getLong("assault.duration-min");
+        long assaultDurationMin = plugin.getDefaultConfig().getLong("assault.duration-min");
         if (TimerUtil.deltaUpMins(assaultStartedMillis, assaultDurationMin - timeBfEndMin))
             return;
         Faction faction = FactionUtil.getFaction(player);
@@ -396,7 +396,7 @@ public class Assault {
                 return;
             }
         }
-        double logoutPenTime = plugin.getConfig().getDouble("assault.logout-penality-time-minutes");
+        double logoutPenTime = plugin.getDefaultConfig().getDouble("assault.logout-penality-time-minutes");
         broadcast("§6" + player.getName() + " §cs'est déconecté ! Il a §6" + (int) logoutPenTime + " §cminutes pour se reconnecter ou il sera considéré comme mort !");
         int taskId = new BukkitRunnable() {
             @Override
@@ -573,7 +573,7 @@ public class Assault {
     }
 
     public void onFactionQuit(Faction faction) {
-        int stopCdMin = plugin.getConfig().getInt("assault.quit-stop-min");
+        int stopCdMin = plugin.getDefaultConfig().getInt("assault.quit-stop-min");
         if (faction == attacker || faction == defendant) {
             boolean isAttacker = faction == attacker;
             String facState = isAttacker ? "Les attaquants" : "Les défenseurs";

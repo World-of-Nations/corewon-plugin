@@ -8,6 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -32,6 +33,21 @@ public abstract class WonModule {
             configFolder.mkdir();
         }
 
+        File defaultConfigFile = getFile("config.yml");
+        if (!defaultConfigFile.exists()) {
+            try {
+                defaultConfigFile.createNewFile();
+                FileConfiguration config = getDefaultConfig();
+                Map<String, Object> defaultConfigValues = getDefaultConfigValues();
+                for (String key : defaultConfigValues.keySet()) {
+                    config.set(key, defaultConfigValues.get(key));
+                }
+                config.save(defaultConfigFile);
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public WonModule(Plugin loader, String name) {
@@ -50,15 +66,19 @@ public abstract class WonModule {
         return configFolder;
     }
 
+    public File getFile(String fileName) {
+        return new File(configFolder, fileName);
+    }
+
     public FileConfiguration getConfig(String name) {
-        return YamlConfiguration.loadConfiguration(new File(configFolder, name + ".yml"));
+        return getConfig(getFile(name + ".yml"));
     }
 
     public FileConfiguration getConfig(File file) {
         return YamlConfiguration.loadConfiguration(file);
     }
 
-    public FileConfiguration getConfig() {
+    public FileConfiguration getDefaultConfig() {
         return getConfig("config");
     }
 
@@ -82,4 +102,7 @@ public abstract class WonModule {
         return new ArrayList<>();
     }
 
+    protected Map<String, Object> getDefaultConfigValues() {
+        return Map.of();
+    }
 }

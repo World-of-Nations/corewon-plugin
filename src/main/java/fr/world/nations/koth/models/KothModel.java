@@ -157,7 +157,7 @@ public class KothModel {
                                             sendLoseControl(onlinePlayer, uPlayer.getFaction().getTag());
                                         }
                                     }
-                                    for (String s : WonKoth.getInstance().getConfig().getStringList("messages.players.area-status-decrease")) {
+                                    for (String s : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.area-status-decrease")) {
                                         uPlayer.getPlayer().sendMessage(s.replace("%faction%", Factions.getInstance().getFactionById(currentFactionIdCap).getTag()).replace("%area_name%", kothName).replace("%control%", String.valueOf(kothCurrentCapPercent)));
                                     }
 
@@ -187,7 +187,7 @@ public class KothModel {
                         if (!currentPlayerCap.equals(player.getName())) mutliplier++;
                     } else ennemy = true;
 
-                    for (String s : WonKoth.getInstance().getConfig().getStringList("messages.players.area-status")) {
+                    for (String s : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.area-status")) {
                         player.sendMessage(s.replace("%faction%", Factions.getInstance().getFactionById(currentFactionIdCap).getTag()).replace("%area_name%", kothName).replace("%control%", String.valueOf(kothCurrentCapPercent)));
                     }
                 }
@@ -216,7 +216,7 @@ public class KothModel {
                             for (FPlayer uPlayer : faction.getFPlayers()) {
                                 if (!uPlayer.isOnline()) continue;
                                 if (!contains(uPlayer.getPlayer())) continue;
-                                for (String msg : WonKoth.getInstance().getConfig().getStringList("messages.players.koth-reward-power")) {
+                                for (String msg : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.koth-reward-power")) {
                                     uPlayer.getPlayer().sendMessage(msg
                                             .replace("%power_amount%", String.valueOf((int) rewardAmount))
                                             .replace("%total_power%", String.valueOf((int) faction.getPowerBoost())));
@@ -234,7 +234,7 @@ public class KothModel {
                             if (!mPlayer.isOnline()) continue;
                             if (!contains(mPlayer.getPlayer())) continue;
                             double money = faction.getFactionBalance();
-                            for (String msg : WonKoth.getInstance().getConfig().getStringList("messages.players.koth-reward-money")) {
+                            for (String msg : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.koth-reward-money")) {
                                 mPlayer.getPlayer().sendMessage(msg
                                         .replace("%money_amount%", String.valueOf(rewardAmount))
                                         .replace("%total_money%", String.valueOf(money)));
@@ -283,32 +283,32 @@ public class KothModel {
 
     private void broadcastStatus() {
         if ((currentFactionIdCap != null && !currentFactionIdCap.isEmpty()) && kothCurrentCapPercent != 0) {
-            for (String msg : WonKoth.getInstance().getConfig().getStringList("messages.players.area-status")) {
+            for (String msg : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.area-status")) {
                 Bukkit.broadcastMessage(msg.replace("%area_name%", kothName).replace("%faction%", Factions.getInstance().getFactionById(currentFactionIdCap).getTag()).replace("%control%", String.valueOf(kothCurrentCapPercent)));
             }
         }
     }
 
     private void broadcastStartCap() {
-        for (String msg : WonKoth.getInstance().getConfig().getStringList("messages.players.faction-start-control")) {
+        for (String msg : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.faction-start-control")) {
             Bukkit.broadcastMessage(msg.replace("%area_name%", kothName).replace("%faction%", Factions.getInstance().getFactionById(currentFactionIdCap).getTag()));
         }
     }
 
     private void broadcastEndCap() {
-        for (String msg : WonKoth.getInstance().getConfig().getStringList("messages.players.faction-end-control")) {
+        for (String msg : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.faction-end-control")) {
             Bukkit.broadcastMessage(msg.replace("%area_name%", kothName).replace("%faction%", Factions.getInstance().getFactionById(currentFactionIdCap).getTag()));
         }
     }
 
     private void sendLoseControl(Player player, String f) {
-        for (String msg : WonKoth.getInstance().getConfig().getStringList("messages.players.faction-lose-control")) {
+        for (String msg : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.faction-lose-control")) {
             player.sendMessage(msg.replace("%area_name%", kothName).replace("%faction%", f).replace("%control%", String.valueOf(kothCurrentCapPercent)));
         }
     }
 
     private void sendFactionError(Player player) {
-        for (String msg : WonKoth.getInstance().getConfig().getStringList("messages.players.no-faction")) {
+        for (String msg : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.no-faction")) {
             player.sendMessage(msg);
         }
     }

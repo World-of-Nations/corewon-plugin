@@ -45,7 +45,7 @@ public class WonKoth extends WonModule {
         if (!configFile.exists()) {
             try {
                 configFile.createNewFile();
-                FileConfiguration configuration = getConfig();
+                FileConfiguration configuration = getDefaultConfig();
                 configuration.set("messages.players.no-faction",
                         List.of("Sorry, you must have a faction.", "§8§m----------------------"));
                 configuration.set("messages.players.faction-start-control",

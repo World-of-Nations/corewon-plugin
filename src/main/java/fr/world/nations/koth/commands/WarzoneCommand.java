@@ -145,12 +145,12 @@ public class WarzoneCommand implements CommandExecutor {
 
                         KothModel kothModel = plugin.getKothManager().getKothFromCache(args[1]);
                         if (kothModel == null) {
-                            sender.sendMessage(plugin.getConfig().getString("messages.admins.no-koth").replace("%area_name%", args[1]));
+                            sender.sendMessage(plugin.getDefaultConfig().getString("messages.admins.no-koth").replace("%area_name%", args[1]));
                             return false;
                         }
                         kothModel.setTeleportPoint(player.getLocation());
                         plugin.getKothManager().saveKoth(kothModel, false);
-                        sender.sendMessage(plugin.getConfig().getString("messages.admins.koth-spawn-set").replace("%area_name%", args[1]));
+                        sender.sendMessage(plugin.getDefaultConfig().getString("messages.admins.koth-spawn-set").replace("%area_name%", args[1]));
 
                         return true;
                     }
@@ -159,7 +159,7 @@ public class WarzoneCommand implements CommandExecutor {
 
                         KothModel kothModel = plugin.getKothManager().getKothFromCache(args[1]);
                         if (kothModel == null) {
-                            sender.sendMessage(plugin.getConfig().getString("messages.admins.no-koth").replace("%area_name%", args[1]));
+                            sender.sendMessage(plugin.getDefaultConfig().getString("messages.admins.no-koth").replace("%area_name%", args[1]));
                             return false;
                         }
                         if (kothModel.isStarted()) {
@@ -224,7 +224,7 @@ public class WarzoneCommand implements CommandExecutor {
 
                     KothModel kothModel = plugin.getKothManager().getKothFromCache(args[1]);
                     if (kothModel == null) {
-                        sender.sendMessage(plugin.getConfig().getString("messages.admins.no-koth").replace("%area_name%", args[1]));
+                        sender.sendMessage(plugin.getDefaultConfig().getString("messages.admins.no-koth").replace("%area_name%", args[1]));
                         return false;
                     }
                     if (!kothModel.isStarted()) {
@@ -241,7 +241,7 @@ public class WarzoneCommand implements CommandExecutor {
                 if (args[0].equalsIgnoreCase("delete")) {
                     KothModel kothModel = plugin.getKothManager().getKothFromCache(args[1]);
                     if (kothModel == null) {
-                        sender.sendMessage(plugin.getConfig().getString("messages.admins.no-koth").replace("%area_name%", args[1]));
+                        sender.sendMessage(plugin.getDefaultConfig().getString("messages.admins.no-koth").replace("%area_name%", args[1]));
                         return false;
                     }
                     KothHandler.deleteKothFromName(args[1], sender);
@@ -295,7 +295,7 @@ public class WarzoneCommand implements CommandExecutor {
 
                     KothModel kothModel = plugin.getKothManager().getKothFromCache(args[4]);
                     if (kothModel == null) {
-                        sender.sendMessage(plugin.getConfig().getString("messages.admins.no-koth").replace("%area_name%", args[4]));
+                        sender.sendMessage(plugin.getDefaultConfig().getString("messages.admins.no-koth").replace("%area_name%", args[4]));
                         return false;
                     }
 
@@ -314,7 +314,7 @@ public class WarzoneCommand implements CommandExecutor {
                     kothModel.setRewardType(args[1]);
                     kothModel.setRewardAmount(amount);
                     kothModel.setRewardTime(second);
-                    sender.sendMessage(plugin.getConfig().getString("messages.admins.koth-reward-set").replace("%area_name%", args[4]));
+                    sender.sendMessage(plugin.getDefaultConfig().getString("messages.admins.koth-reward-set").replace("%area_name%", args[4]));
                     plugin.getKothManager().saveKoth(kothModel, false);
 
 

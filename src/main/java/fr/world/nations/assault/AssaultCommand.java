@@ -56,7 +56,7 @@ public class AssaultCommand extends FCommand {
                     commandContext.sender.sendMessage("§cVous n'avez pas les permissions pour effectuer cette commande !");
                     return;
                 }
-                int factionAgeRequiredDays = plugin.getConfig().getInt("assault.faction-age-required-days");
+                int factionAgeRequiredDays = plugin.getDefaultConfig().getInt("assault.faction-age-required-days");
                 if (!TimerUtil.deltaUpDays(commandContext.faction.getFoundedDate(), factionAgeRequiredDays)) {
                     commandContext.sender.sendMessage("§cVotre pays doit avoir été créé depuis au moins §6" + factionAgeRequiredDays + "§c jours pour lancer un assaut !");
                     return;
@@ -286,7 +286,7 @@ public class AssaultCommand extends FCommand {
                     commandContext.sender.sendMessage("§cVous devez être au moins 2 joueurs connectés dans votre pays pour lancer un assaut !");
                     return;
                 }
-                factionAgeRequiredDays = plugin.getConfig().getInt("assault.faction-age-required-days");
+                factionAgeRequiredDays = plugin.getDefaultConfig().getInt("assault.faction-age-required-days");
                 if (!TimerUtil.deltaUpDays(commandContext.faction.getFoundedDate(), factionAgeRequiredDays)) {
                     commandContext.sender.sendMessage("§cVotre pays doit avoir été créé depuis au moins §6" + factionAgeRequiredDays + "§c jours pour lancer un assaut !");
                     return;
@@ -302,7 +302,7 @@ public class AssaultCommand extends FCommand {
                 if (commandContext.argAsString(1) != null) {
                     if (commandContext.argAsString(1).equalsIgnoreCase("explosions")) {
                         if (!enemyOk) {
-                            long daysRequired = plugin.getConfig().getLong("explosions.enemy-required-time-days");
+                            long daysRequired = plugin.getDefaultConfig().getLong("explosions.enemy-required-time-days");
                             DateFormat format = new SimpleDateFormat("dd hh mm");
                             String time = format.format(new Date(plugin.getExplosionManager().enemySinceMillis(commandContext.faction, faction)));
                             commandContext.sender.sendMessage("§cVos deux pays doivent être ennemis depuis au moins §6" + daysRequired + " §cjours !");

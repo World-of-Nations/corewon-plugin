@@ -38,7 +38,7 @@ public class MilestoneCalculator {
     public MilestoneCalculator(WonMilestone plugin, Faction faction) {
         this.faction = faction;
 
-        FileConfiguration config = WonMilestone.getInstance().getConfig();
+        FileConfiguration config = WonMilestone.getInstance().getDefaultConfig();
         playersXp = faction.getFPlayers().size() * config.getDouble("milestone.experience.per_player", 50);
         landXp = faction.getLandRounded() * config.getDouble("milestone.experience.per_land", 25);
         FactionData factionData = Core.getInstance().getModuleManager().getModule(WonStats.class).getStatsManager().getFactionData(faction);

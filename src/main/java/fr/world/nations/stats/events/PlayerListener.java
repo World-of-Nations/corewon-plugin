@@ -28,9 +28,9 @@ public class PlayerListener implements Listener {
         StatsManager statsManager = wonStats.getStatsManager();
 
         World world = killed.getWorld();
-        List<String> allowedWorlds = wonStats.getConfig().getStringList("player-kills.allowed-worlds");
+        List<String> allowedWorlds = wonStats.getDefaultConfig().getStringList("player-kills.allowed-worlds");
         if (allowedWorlds.isEmpty()) {
-            boolean shouldWarn = wonStats.getConfig().getBoolean("player-kills.no-world-warn");
+            boolean shouldWarn = wonStats.getDefaultConfig().getBoolean("player-kills.no-world-warn");
             if (shouldWarn) {
                 Core.getInstance().getLogger().warning("No world specified for player kills tracking ! " +
                         "If done on purpose, you can disable this warning in the config file");

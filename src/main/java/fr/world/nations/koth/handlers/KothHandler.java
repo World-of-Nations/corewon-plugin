@@ -35,13 +35,13 @@ public class KothHandler {
 
                 WonKoth plugin = WonKoth.getInstance();
                 if (plugin.getKothManager().getKothFromCache(kothModel.getKothName()) != null) {
-                    player.sendMessage(plugin.getConfig().getString("messages.admins.koth-already-exists").replace("%area_name%", name));
+                    player.sendMessage(plugin.getDefaultConfig().getString("messages.admins.koth-already-exists").replace("%area_name%", name));
                     return;
                 }
                 plugin.getKothManager().saveKoth(kothModel, false);
                 plugin.getKothManager().addKothCache(kothModel);
                 kothModel.start();
-                player.sendMessage(plugin.getConfig().getString("messages.admins.koth-created").replace("%area_name%", name));
+                player.sendMessage(plugin.getDefaultConfig().getString("messages.admins.koth-created").replace("%area_name%", name));
             }
 
         } catch (final IncompleteRegionException e) {
@@ -54,7 +54,7 @@ public class KothHandler {
         KothModel koth = new KothModel();
         koth.setKothName(kothName);
         plugin.getKothManager().removeKothFile(kothName);
-        sender.sendMessage(plugin.getConfig().getString("messages.admins.koth-delete").replace("%area_name%", kothName));
+        sender.sendMessage(plugin.getDefaultConfig().getString("messages.admins.koth-delete").replace("%area_name%", kothName));
     }
 
 }
