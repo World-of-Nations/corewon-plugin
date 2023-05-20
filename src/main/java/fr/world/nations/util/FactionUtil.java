@@ -23,7 +23,7 @@ public class FactionUtil {
         MilestoneCalculator data = plugin.getMilestoneData(faction);
         String msg = "\n§cInformations sur la faction §6" + faction.getTag() + "§c\n";
         msg += "§4Palier : §6" + data.getMilestone() + "\n";
-        msg += "§4Avancement : §6" + data.getProgressXp() + "§c/§6" + data.getNextMilestoneXp() + "\n";
+        msg += "§4Avancement : §6" + StringUtil.round(data.getProgressXp(), 2) + "§c/§6" + data.getNextMilestoneXp() + "\n";
 
         Map<String, Double> bonuses = plugin.getBonuses(faction);
 

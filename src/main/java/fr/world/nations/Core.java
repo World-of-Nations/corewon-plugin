@@ -1,13 +1,10 @@
 package fr.world.nations;
 
 import com.massivecraft.factions.FactionsPlugin;
-
-import fr.world.nations.country.WonContry;
-
 import fr.world.nations.assault.WonAssault;
+import fr.world.nations.country.WonContry;
 import fr.world.nations.koth.WonKoth;
 import fr.world.nations.milestone.WonMilestone;
-
 import fr.world.nations.modules.ModuleManager;
 import fr.world.nations.stats.WonStats;
 import org.bukkit.configuration.file.FileConfiguration;

@@ -23,6 +23,7 @@ public class CountryCommand extends FCommand {
                 .brigadier(CountryBrigadier.class)
                 .build();
     }
+
     @Override
     public void perform(CommandContext commandContext) {
     }

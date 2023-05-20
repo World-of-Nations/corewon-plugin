@@ -11,12 +11,7 @@ import com.massivecraft.factions.cmd.FCommand;
 import fr.world.nations.Core;
 import fr.world.nations.milestone.commands.MilestoneExpandCommand;
 import fr.world.nations.milestone.commands.MilestoneHelpCommand;
-import fr.world.nations.milestone.commands.warps.MilestoneDelwarpCommand;
-import fr.world.nations.milestone.commands.warps.MilestoneSetwarpCommand;
-import fr.world.nations.milestone.commands.warps.MilestoneWarpCommand;
-import fr.world.nations.milestone.commands.warps.MilestoneWarpsCommand;
 import fr.world.nations.milestone.commands.xp.*;
-import fr.world.nations.milestone.warps.WarpManager;
 import fr.world.nations.modules.WonModule;
 import fr.world.nations.util.FactionUtil;
 import fr.world.nations.util.JsonUtil;
@@ -39,7 +34,6 @@ public final class WonMilestone extends WonModule {
     private static WonMilestone instance;
     private File file;
     private int regularCheckTaskId;
-    private WarpManager warpManager;
 
     public WonMilestone(Plugin loader, String name) {
         super(loader, name);
@@ -49,9 +43,6 @@ public final class WonMilestone extends WonModule {
         return instance;
     }
 
-    public WarpManager getWarpManager() {
-        return warpManager;
-    }
 
     public double getOpModif(Faction faction) {
         return getXpBonus(faction, "op");
@@ -114,7 +105,6 @@ public final class WonMilestone extends WonModule {
     @Override
     public void load() {
         instance = this;
-        warpManager = new WarpManager(this);
         // Plugin startup logic
 
         try {
@@ -147,6 +137,7 @@ public final class WonMilestone extends WonModule {
                 for (Faction faction : FactionUtil.getAllPlayerFactions()) {
                     String factionName = faction.getTag();
                     int currentMilestone = getMilestoneData(faction).getMilestone();
+                    faction.setWarpsLimit(getDefaultConfig().getInt("warps.limit." + currentMilestone));
                     if (!map.containsKey(factionName)) {
                         map.put(factionName, currentMilestone);
                         continue;
@@ -177,10 +168,7 @@ public final class WonMilestone extends WonModule {
 
     @Override
     public List<FCommand> registerFCommands() {
-        return Lists.newArrayList(new MilestoneDelwarpCommand(this),
-                new MilestoneWarpCommand(this),
-                new MilestoneWarpsCommand(this),
-                new MilestoneSetwarpCommand(this),
+        return Lists.newArrayList(
                 new MilestoneAddXpCommand(this),
                 new MilestoneInfoCommand(),
                 new MilestoneRemoveXpCommand(this),

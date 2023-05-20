@@ -11,14 +11,6 @@ public class Country {
         this.name = name;
     }
 
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
-
-    public void setSpawn(Location spawn) {
-        this.spawn = spawn;
-    }
-
     public String getName() {
         return name;
     }
@@ -27,7 +19,15 @@ public class Country {
         return available;
     }
 
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
+
     public Location getSpawn() {
         return spawn;
+    }
+
+    public void setSpawn(Location spawn) {
+        this.spawn = spawn;
     }
 }

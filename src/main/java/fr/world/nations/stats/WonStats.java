@@ -1,5 +1,6 @@
 package fr.world.nations.stats;
 
+import com.massivecraft.factions.cmd.FCmdRoot;
 import com.massivecraft.factions.cmd.FCommand;
 import fr.world.nations.modules.WonModule;
 import fr.world.nations.stats.commands.StatsCommand;
@@ -10,8 +11,6 @@ import fr.world.nations.stats.sql.SQLManager;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +58,7 @@ public final class WonStats extends WonModule {
         ArrayList<Listener> listeners = new ArrayList<>();
         listeners.add(new FactionListener());
         listeners.add(new PlayerListener());
+        FCmdRoot.instance.cmdShow.aliases.add("f");
 
         return listeners;
     }
