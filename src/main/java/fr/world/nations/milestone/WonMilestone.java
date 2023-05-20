@@ -18,6 +18,7 @@ import fr.world.nations.util.JsonUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -197,5 +198,10 @@ public final class WonMilestone extends WonModule {
         values.put("milestone.experience.bank_factor", 0.01);
         values.put("milestone.check_delay_seconds", 5);
         return values;
+    }
+
+    @Override
+    public List<Listener> registerListeners() {
+        return List.of(new WarpCommandListener(this));
     }
 }
