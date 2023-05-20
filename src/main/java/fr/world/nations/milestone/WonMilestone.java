@@ -178,4 +178,24 @@ public final class WonMilestone extends WonModule {
                 new MilestoneDiagnosisCommand(this),
                 new MilestoneExpandCommand(this));
     }
+
+    @Override
+    protected Map<String, Object> getDefaultConfigValues() {
+        Map<String, Object> values = new HashMap<>(Map.of(
+                "warps.limit.0", 0,
+                "warps.limit.1", 0,
+                "warps.limit.2", 1,
+                "warps.limit.3", 2,
+                "warps.limit.4", 3,
+                "warps.limit.5", 4,
+                "milestone.experience.per_player", 50,
+                "milestone.experience.per_land", 25,
+                "milestone.experience.kdr_factor", 250,
+                "milestone.experience.assault_score_factor", 25
+        ));
+        values.put("milestone.experience.scorezone_factor", 1.5);
+        values.put("milestone.experience.bank_factor", 0.01);
+        values.put("milestone.check_delay_seconds", 5);
+        return values;
+    }
 }
