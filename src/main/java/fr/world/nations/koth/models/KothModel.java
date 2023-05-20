@@ -124,7 +124,7 @@ public class KothModel {
                                     if (!fPlayer.hasFaction()) return;
                                     stealerFactions.add(fPlayer.getFaction());
                                 }).count();
-                        if (Math.floor(kothCurrentCapPercent / 10d) != Math.floor((kothCurrentCapPercent - opponentCount) / 10d)) {
+                        if (shouldSendLoseControl((int)opponentCount)) { //Assuming there wont be 2b players in the warzone ;)
                             for (Player onlinePlayer : capperFaction.getOnlinePlayers()) {
                                 sendLoseControl(onlinePlayer, String.join(", ", stealerFactions.stream().map(Faction::getTag).toList()));
                             }
@@ -156,6 +156,7 @@ public class KothModel {
     }
 
     public void incrementCapPercent() {
+        int initPercent = kothCurrentCapPercent;
         if (kothCurrentCapPercent < 100) {
             boolean ennemy = getContainedPlayers().stream().anyMatch(p -> !isFromCapperFaction(p));
             for (Player player : getContainedPlayers()) {
@@ -171,9 +172,11 @@ public class KothModel {
                     kothCurrentCapPercent = 0;
                 }
                 this.kothCurrentCapPercent += mutliplier;
+                if (this.kothCurrentCapPercent > 100)
+                    this.kothCurrentCapPercent = 100;
             }
         }
-        if (kothCurrentCapPercent == 50) broadcastStatus();
+        if (kothCurrentCapPercent == 50 || (initPercent < 50 && kothCurrentCapPercent > 50)) broadcastStatus();
         if (kothCurrentCapPercent == 100 && rewardTaskId == 0) {
             broadcastEndCap();
             BukkitTask task = new BukkitRunnable() {
@@ -288,6 +291,17 @@ public class KothModel {
         for (String msg : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.faction-lose-control")) {
             player.sendMessage(msg.replace("%area_name%", kothName).replace("%faction%", f).replace("%control%", String.valueOf(kothCurrentCapPercent)));
         }
+    }
+
+    private boolean shouldSendLoseControl(int delta) {
+        int newX = kothCurrentCapPercent - delta;
+        if (kothCurrentCapPercent / 10 > newX / 10) {
+            if (kothCurrentCapPercent % 10 == 0) {
+                return newX % 10 == 0;
+            }
+            return true;
+        }
+        return newX % 10 == 0;
     }
 
     private void sendFactionError(Player player) {
