@@ -15,7 +15,9 @@ import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class WonAssault extends WonModule {
 
@@ -37,20 +39,6 @@ public final class WonAssault extends WonModule {
     public void load() {
         // Plugin startup logic
         instance = this;
-
-        if (!getConfigFolder().exists()) {
-            getConfigFolder().mkdir();
-        }
-
-        File configFile = new File(getConfigFolder(), "config.yml");
-        if (!configFile.exists()) {
-            try {
-                configFile.createNewFile();
-                loadConfig();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
 
         coolDownManager = new CoolDownManager();
         explosionManager = new ExplosionManager(this);
@@ -155,25 +143,22 @@ public final class WonAssault extends WonModule {
                 || databaseConfig.getString("Database.dbName", "").equals("");
     }
 
-    private void loadConfig() {
-        FileConfiguration config = getDefaultConfig();
-        config.set("assault.duration-min", 30);
-        config.set("assault.target-chunk-start-delay-mins", 10);
-        config.set("assault.target-chunk-unclaim-delay-sec", 180);
-        config.set("assault.target-chunk-success-points", 5);
-        config.set("assault.target-chuck-fail-points", 5);
-        config.set("assault.bank-transfer-percentage", 5);
-        config.set("assault.logout-penality-time-minutes", 3);
-        config.set("assault.faction-age-required-days", 7);
-        config.set("assault.attack-cooldown-hour", 2);
-        config.set("assault.claim-disabled-cooldown-hours", 1);
-        config.set("explosions.enemy-required-time-days", 7);
-        config.set("assault.score-broadcast-delay-secs", 300);
-        config.set("assault.quit-stop-min", 2);
-        try {
-            config.save(new File(getConfigFolder(), "config.yml"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    @Override
+    protected Map<String, Object> getDefaultConfigValues() {
+        Map<String, Object> values = new HashMap<>();
+        values.put("assault.duration-min", 30);
+        values.put("assault.target-chunk-start-delay-mins", 10);
+        values.put("assault.target-chunk-unclaim-delay-sec", 180);
+        values.put("assault.target-chunk-success-points", 5);
+        values.put("assault.target-chuck-fail-points", 5);
+        values.put("assault.bank-transfer-percentage", 5);
+        values.put("assault.logout-penality-time-minutes", 3);
+        values.put("assault.faction-age-required-days", 7);
+        values.put("assault.attack-cooldown-hour", 2);
+        values.put("assault.claim-disabled-cooldown-hours", 1);
+        values.put("explosions.enemy-required-time-days", 7);
+        values.put("assault.score-broadcast-delay-secs", 300);
+        values.put("assault.quit-stop-min", 2);
+        return values;
     }
 }
