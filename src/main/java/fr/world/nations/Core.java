@@ -18,6 +18,7 @@ public class Core extends JavaPlugin {
     private FactionsPlugin factionsPlugin;
     private ModuleManager moduleManager;
 
+
     public static Core getInstance() {
         return instance;
     }
@@ -39,6 +40,7 @@ public class Core extends JavaPlugin {
         factionsPlugin = FactionsPlugin.getInstance();
 
         loadModules();
+        getServer().getPluginManager().registerEvents(new FactionCommandsInterferer(), this);
 
         getServer().getLogger().info("WonCore | Plugin activé !");
     }
@@ -73,5 +75,4 @@ public class Core extends JavaPlugin {
     public FactionsPlugin getFactionsPlugin() {
         return factionsPlugin;
     }
-
 }

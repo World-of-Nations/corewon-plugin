@@ -124,7 +124,7 @@ public class KothModel {
                                     if (!fPlayer.hasFaction()) return;
                                     stealerFactions.add(fPlayer.getFaction());
                                 }).count();
-                        if (shouldSendLoseControl((int)opponentCount)) { //Assuming there wont be 2b players in the warzone ;)
+                        if (shouldSendLoseControl((int) opponentCount)) { //Assuming there wont be 2b players in the warzone ;)
                             for (Player onlinePlayer : capperFaction.getOnlinePlayers()) {
                                 sendLoseControl(onlinePlayer, String.join(", ", stealerFactions.stream().map(Faction::getTag).toList()));
                             }
