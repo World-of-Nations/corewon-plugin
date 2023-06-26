@@ -21,6 +21,7 @@ public class FactionListener implements Listener {
 
     @EventHandler
     public void onFactionCreate(FactionCreateEvent event) {
+        if (event.getFPlayer().isAdminBypassing()) return;
         Country country = countryManager.getCountry(event.getFactionTag());
         if (country == null) {
             event.getFPlayer().sendComponent(Component.text("Ce pays n'existe pas").color(NamedTextColor.RED));
