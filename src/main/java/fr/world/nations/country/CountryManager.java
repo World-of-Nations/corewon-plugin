@@ -6,6 +6,7 @@ import fr.world.nations.country.sql.SQLRequests;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class CountryManager {
     protected final Map<String, Country> countries = new HashMap<>();
@@ -40,5 +41,13 @@ public class CountryManager {
     public void addCountry(String name) {
         sqlRequests.createCountry(name);
         countries.put(name.toLowerCase(), new Country(name));
+    }
+
+    public List<String> getAvailableCountryNames() {
+        return countries.keySet().stream().filter(name -> countries.get(name).isAvailable()).collect(Collectors.toList());
+    }
+
+    public List<String> getCountryNames() {
+        return countries.keySet().stream().toList();
     }
 }
