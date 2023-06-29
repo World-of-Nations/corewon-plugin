@@ -136,6 +136,7 @@ public class ExplosionManager {
         ObjectNode objectNode = JsonNodeFactory.instance.objectNode();
         for (String factionId : tokens.keySet()) {
             Faction faction = Factions.getInstance().getFactionById(factionId);
+            if (faction == null) continue;
             long lastUpdatedMillis = lastUpdated.get(factionId);
             ObjectNode data = JsonNodeFactory.instance.objectNode();
             data.put("name", faction.getTag());

@@ -6,6 +6,7 @@ author: Holo795
 website: https://github.com/Holo795
 depend:
   - Factions
+  - Vault
 commands:
   warzone:
     description: warzone
