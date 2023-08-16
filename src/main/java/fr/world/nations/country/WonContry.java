@@ -12,37 +12,51 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
-public class WonContry extends WonModule {
+public class WonContry extends WonModule
+{
     private CountryManager countryManager;
     private SQLManager sqlManager;
 
-    public WonContry(Plugin loader, String name) {
+    public WonContry(Plugin loader, String name)
+    {
         super(loader, name);
     }
 
     @Override
-    public void load() {
+    public void load()
+    {
         sqlManager = new SQLManager(this);
         countryManager = new CountryManager(sqlManager);
     }
 
     @Override
-    public void unload() {
+    public void unload()
+    {
         countryManager.saveData();
-        try {
+        try
+        {
             sqlManager.closeConnection();
-        } catch (SQLException e) {
+        }
+        catch(SQLException e)
+        {
             e.printStackTrace();
         }
     }
 
+    public CountryManager getCountryManager()
+    {
+        return countryManager;
+    }
+
     @Override
-    public List<FCommand> registerFCommands() {
+    public List<FCommand> registerFCommands()
+    {
         return Collections.singletonList(new CountryCommand(this.countryManager));
     }
 
     @Override
-    public List<Listener> registerListeners() {
+    public List<Listener> registerListeners()
+    {
         return Collections.singletonList(new FactionListener(this.countryManager));
     }
 }
