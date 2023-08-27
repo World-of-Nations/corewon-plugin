@@ -29,6 +29,11 @@ public class FactionListener implements Listener {
         } else if (!country.isAvailable()) {
             event.getFPlayer().sendComponent(Component.text("Ce pays n'est pas disponible").color(NamedTextColor.RED));
             event.setCancelled(true);
+        } else if (country.getSpawn() == null) {
+            event.getFPlayer().sendComponent(Component.text("Veuillez d'abord préciser le home de ce pays " +
+                    "avec la commande \"/f country pos " + country.getName()
+                    + " quand vous vous trouvez sur le bloc choisi !\"").color(NamedTextColor.RED));
+            event.setCancelled(true);
         } else {
             country.setAvailable(false);
         }

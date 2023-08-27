@@ -25,7 +25,7 @@ public class CountryPosCommand extends FCommand {
         }
 
         country.setSpawn(commandContext.player.getLocation());
-        commandContext.msg("Country spawn" + name + " set");
+        commandContext.msg("Country spawn " + name + " set");
     }
 
     @Override

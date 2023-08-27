@@ -20,6 +20,10 @@ public class WonContry extends WonModule {
         super(loader, name);
     }
 
+    public CountryManager getCountryManager() {
+        return countryManager;
+    }
+
     @Override
     public void load() {
         sqlManager = new SQLManager(this);

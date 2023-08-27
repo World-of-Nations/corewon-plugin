@@ -13,7 +13,7 @@ public class SQLManager {
 
     public SQLManager(WonContry wonContry) {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
+            Class.forName("org.sqlite.JDBC");
         } catch (ClassNotFoundException e) {
             Core.getInstance().getLogger().severe("WonCountry | Impossible de charger le driver JDBC, désactivation du plugin...");
             Core.getInstance().getServer().getPluginManager().disablePlugin(Core.getInstance());

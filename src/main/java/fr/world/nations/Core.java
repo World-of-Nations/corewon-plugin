@@ -25,7 +25,7 @@ public class Core extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getServer().getLogger().setFilter(new ConsoleFilter());
+        FactionsPlugin.getInstance().getLogger().setFilter(new ConsoleFilter());
         instance = this;
         moduleManager = new ModuleManager(this);
 
