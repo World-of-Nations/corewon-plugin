@@ -47,11 +47,6 @@ public class WonContry extends WonModule
         }
     }
 
-    public CountryManager getCountryManager()
-    {
-        return countryManager;
-    }
-
     @Override
     public List<FCommand> registerFCommands()
     {
