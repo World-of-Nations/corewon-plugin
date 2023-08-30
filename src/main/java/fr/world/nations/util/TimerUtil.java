@@ -4,7 +4,7 @@ public class TimerUtil {
 
     public static boolean deltaUpMillis(long startMillis, long millis) {
         if (millis < 0) return true;
-        return System.currentTimeMillis() > (startMillis + millis);
+        return System.currentTimeMillis() - startMillis > millis;
     }
 
     public static boolean deltaUpSec(long startMillis, long secs) {
