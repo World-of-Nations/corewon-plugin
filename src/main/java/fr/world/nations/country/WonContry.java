@@ -22,6 +22,10 @@ public class WonContry extends WonModule
         super(loader, name);
     }
 
+    public CountryManager getCountryManager() {
+        return countryManager;
+    }
+
     @Override
     public void load()
     {
@@ -41,11 +45,6 @@ public class WonContry extends WonModule
         {
             e.printStackTrace();
         }
-    }
-
-    public CountryManager getCountryManager()
-    {
-        return countryManager;
     }
 
     @Override

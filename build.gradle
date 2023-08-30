@@ -24,6 +24,10 @@ repositories {
         name = "sk89q-repo"
         url = "https://maven.enginehub.org/repo/"
     }
+    maven {
+        name = "jitpack.io"
+        url = "https://jitpack.io"
+    }
 }
 
 configurations {
@@ -40,8 +44,9 @@ dependencies {
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.0.1'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.1'
+    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.42.0.0'
 
-    implementation 'org.projectlombok:lombok:1.18.26'
+    compileOnly 'org.projectlombok:lombok:1.18.26'
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
 }
 
@@ -86,6 +91,7 @@ shadowJar {
     mergeServiceFiles()
 
     configurations = [project.configurations.allDependencies]
+    append 'META-INF/services/java.sql.Driver'
 }
 
 tasks.withType(JavaCompile) {
