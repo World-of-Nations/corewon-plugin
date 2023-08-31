@@ -20,8 +20,8 @@ public class CountryManager {
 
     public void loadData() {
         List<Country> allCountries = sqlRequests.getAllCountries();
-        for (Country allCountry : allCountries) {
-            countries.put(allCountry.getName().toLowerCase(), allCountry);
+        for (Country country : allCountries) {
+            countries.put(country.getName(), country);
         }
     }
 
@@ -35,12 +35,12 @@ public class CountryManager {
     }
 
     public Country getCountry(String name) {
-        return countries.get(name.toLowerCase());
+        return countries.get(name);
     }
 
     public void addCountry(String name) {
         sqlRequests.createCountry(name);
-        countries.put(name.toLowerCase(), new Country(name));
+        countries.put(name, new Country(name));
     }
 
     public List<String> getAvailableCountryNames() {
