@@ -284,7 +284,7 @@ public class AssaultCommand extends FCommand {
                 }
                 int requiredOnlinePlayersNumb = plugin.getDefaultConfig().getInt("assault.required-online-players", 2);
                 if (commandContext.faction.getOnlinePlayers().size() < requiredOnlinePlayersNumb) {
-                    commandContext.sender.sendMessage("§cVous devez être au moins 2 joueurs connectés dans votre pays pour lancer un assaut !");
+                    commandContext.sender.sendMessage("§cVous devez être au moins "+ requiredOnlinePlayersNumb +" joueurs connectés dans votre pays pour lancer un assaut !");
                     return;
                 }
                 factionAgeRequiredDays = plugin.getDefaultConfig().getInt("assault.faction-age-required-days");
