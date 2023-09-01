@@ -282,7 +282,8 @@ public class AssaultCommand extends FCommand {
                             " §cen raison de votre défaite récente d'un assaut ! Temps restant : §c" + time);
                     return;
                 }
-                if (commandContext.faction.getOnlinePlayers().size() < 2) {
+                int requiredOnlinePlayersNumb = plugin.getDefaultConfig().getInt("assault.required-online-players", 2);
+                if (commandContext.faction.getOnlinePlayers().size() < requiredOnlinePlayersNumb) {
                     commandContext.sender.sendMessage("§cVous devez être au moins 2 joueurs connectés dans votre pays pour lancer un assaut !");
                     return;
                 }
