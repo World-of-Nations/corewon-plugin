@@ -415,7 +415,7 @@ public class Assault {
 
     public void onDeath(Player killed, Player killer) {
         if (!contains(killed)) return;
-        if (!contains(killer)) return;
+        if (!contains(killer) && killer != null) return;
         Faction faction = FactionUtil.getFaction(killed);
         if (attackerList.contains(faction)) {
             attackerDeaths.add(killed.getName());
