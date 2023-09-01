@@ -292,8 +292,9 @@ public class AssaultCommand extends FCommand {
                     commandContext.sender.sendMessage("§cVotre pays doit avoir été créé depuis au moins §6" + factionAgeRequiredDays + "§c jours pour lancer un assaut !");
                     return;
                 }
-                if (faction.getOnlinePlayers().size() < 2) {
-                    commandContext.sender.sendMessage("§cLe pays §6" + faction.getTag() + " §cdoit avoir au moins 2 joueurs connectés pour que vous puissiez lancer un assaut contre !");
+                int targetRequiredOnlinePlayersNumb = plugin.getDefaultConfig().getInt("assault.target-required-online-players", 2);
+                if (faction.getOnlinePlayers().size() < targetRequiredOnlinePlayersNumb) {
+                    commandContext.sender.sendMessage("§cLe pays §6" + faction.getTag() + " §cdoit avoir au moins "+ targetRequiredOnlinePlayersNumb +" joueurs connectés pour que vous puissiez lancer un assaut contre !");
                     return;
                 }
                 boolean explosions = false;
