@@ -284,7 +284,7 @@ public class AssaultCommand extends FCommand {
                 }
                 int requiredOnlinePlayersNumb = plugin.getDefaultConfig().getInt("assault.required-online-players", 2);
                 if (commandContext.faction.getOnlinePlayers().size() < requiredOnlinePlayersNumb) {
-                    commandContext.sender.sendMessage("§cVous devez être au moins "+ requiredOnlinePlayersNumb +" joueurs connectés dans votre pays pour lancer un assaut !");
+                    commandContext.sender.sendMessage("§cVous devez être au moins " + requiredOnlinePlayersNumb + " joueurs connectés dans votre pays pour lancer un assaut !");
                     return;
                 }
                 factionAgeRequiredDays = plugin.getDefaultConfig().getInt("assault.faction-age-required-days");
@@ -294,7 +294,7 @@ public class AssaultCommand extends FCommand {
                 }
                 int targetRequiredOnlinePlayersNumb = plugin.getDefaultConfig().getInt("assault.target-required-online-players", 2);
                 if (faction.getOnlinePlayers().size() < targetRequiredOnlinePlayersNumb) {
-                    commandContext.sender.sendMessage("§cLe pays §6" + faction.getTag() + " §cdoit avoir au moins "+ targetRequiredOnlinePlayersNumb +" joueurs connectés pour que vous puissiez lancer un assaut contre !");
+                    commandContext.sender.sendMessage("§cLe pays §6" + faction.getTag() + " §cdoit avoir au moins " + targetRequiredOnlinePlayersNumb + " joueurs connectés pour que vous puissiez lancer un assaut contre !");
                     return;
                 }
                 boolean explosions = false;

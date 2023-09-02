@@ -43,6 +43,11 @@ public class CountryManager {
         countries.put(name, new Country(name));
     }
 
+    public void removeCountry(String name) {
+        sqlRequests.removeCountry(name);
+        countries.remove(name);
+    }
+
     public List<String> getAvailableCountryNames() {
         return countries.keySet().stream().filter(name -> countries.get(name).isAvailable()).collect(Collectors.toList());
     }

@@ -52,6 +52,24 @@ public class SQLRequests {
         }
     }
 
+    public void removeCountry(String country) {
+        Connection connection = sqlManager.getConnection();
+        try {
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM " + table + " WHERE name = ?;");
+            preparedStatement.setString(1, country);
+            int rowsAffected = preparedStatement.executeUpdate();
+
+            if (rowsAffected == 0) {
+                // Log a message if no rows were deleted, which means the country was not found in the table.
+                Core.getInstance().getLogger().warning("WonCountry | No such country found: " + country);
+            }
+
+        } catch (SQLException e) {
+            Core.getInstance().getLogger().severe("WonCountry | Unable to remove the country " + country + " from the SQL table...");
+            e.printStackTrace();
+        }
+    }
+
     public List<Country> getAllCountries() {
 
         List<Country> contries = new ArrayList<>();

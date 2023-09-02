@@ -18,6 +18,7 @@ public class CountryCommand extends FCommand {
         this.aliases.addAll(Arrays.asList("country", "co"));
         addSubCommand(new CountryAddCommand(countryManager));
         addSubCommand(new CountryPosCommand(countryManager));
+        addSubCommand(new CountryRemoveCommand(countryManager));
         this.requirements = new CommandRequirements.Builder(Permission.ADMIN)
                 .playerOnly()
                 .brigadier(CountryBrigadier.class)
@@ -38,7 +39,10 @@ public class CountryCommand extends FCommand {
         }
 
         public ArgumentBuilder<Object, ?> get(ArgumentBuilder<Object, ?> parent) {
-            return parent.then(LiteralArgumentBuilder.literal("add")).then(LiteralArgumentBuilder.literal("pos"));
+            return parent
+                    .then(LiteralArgumentBuilder.literal("add"))
+                    .then(LiteralArgumentBuilder.literal("pos"))
+                    .then(LiteralArgumentBuilder.literal("remove"));
         }
     }
 }
