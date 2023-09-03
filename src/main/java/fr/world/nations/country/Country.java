@@ -1,18 +1,41 @@
 package fr.world.nations.country;
 
+import org.apache.commons.lang.Validate;
 import org.bukkit.Location;
 
 public class Country {
-    private final String name;
-    private Location spawn;
-    private boolean available = true;
 
-    public Country(String name) {
+    private final CountryManager countryManager;
+    private final String id;
+    private String name;
+    private Location spawn;
+    private boolean available;
+
+    protected Country(CountryManager countryManager, String id, String name) {
+        this(countryManager, id, name, null, true);
+    }
+
+    protected Country(CountryManager countryManager, String id, String name, Location spawn, boolean available) {
+        Validate.notNull(id);
+        Validate.notNull(name);
+        this.countryManager = countryManager;
+        this.id = id;
         this.name = name;
+        this.spawn = spawn;
+        this.available = available;
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+        countryManager.saveCountry(this);
     }
 
     public boolean isAvailable() {
@@ -21,6 +44,7 @@ public class Country {
 
     public void setAvailable(boolean available) {
         this.available = available;
+        countryManager.saveCountry(this);
     }
 
     public Location getSpawn() {
@@ -29,5 +53,6 @@ public class Country {
 
     public void setSpawn(Location spawn) {
         this.spawn = spawn;
+        countryManager.saveCountry(this);
     }
 }

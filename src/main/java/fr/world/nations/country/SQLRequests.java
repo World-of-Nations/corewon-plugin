@@ -1,7 +1,6 @@
-package fr.world.nations.country.sql;
+package fr.world.nations.country;
 
 import fr.world.nations.Core;
-import fr.world.nations.country.Country;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -70,23 +69,22 @@ public class SQLRequests {
         }
     }
 
-    public List<Country> getAllCountries() {
+    public List<Country> getAllCountries(CountryManager countryManager) {
 
         List<Country> contries = new ArrayList<>();
         Connection connection = sqlManager.getConnection();
-
         try {
             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM " + table + ";");
             ResultSet resultSet = preparedStatement.executeQuery();
 
             while (resultSet.next()) {
-                Country name = new Country(resultSet.getString("name"));
-                name.setAvailable(resultSet.getInt("available") != 0);
+                Country country = countryManager.createCountry(resultSet.getString("name"));
+                country.setAvailable(resultSet.getInt("available") != 0);
                 if (resultSet.getString("world") != null) {
-                    name.setSpawn(new Location(Bukkit.getWorld(resultSet.getString("world")),
+                    country.setSpawn(new Location(Bukkit.getWorld(resultSet.getString("world")),
                             resultSet.getInt("x"), resultSet.getInt("y"), resultSet.getInt("z")));
                 }
-                contries.add(name);
+                contries.add(country);
             }
             return contries;
         } catch (SQLException e) {

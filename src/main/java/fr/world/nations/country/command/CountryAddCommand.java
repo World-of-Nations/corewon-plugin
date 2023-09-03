@@ -11,18 +11,24 @@ public class CountryAddCommand extends FCommand {
     public CountryAddCommand(CountryManager countryManager) {
         this.countryManager = countryManager;
         this.aliases.add("add");
+        this.requiredArgs.add("id");
         this.requiredArgs.add("name");
     }
 
     @Override
     public void perform(CommandContext commandContext) {
-        String name = commandContext.argAsString(0);
-        if (countryManager.getCountry(name) != null) {
-            commandContext.msg("That country already exists");
+        String id = commandContext.argAsString(0);
+        if (!id.matches("[a-z]+")) {
+            commandContext.sendMessage("§cVeuillez entrer une id sous forme de succession de lettres de l'alphabet non majuscules ! Exemple : fr pour France");
             return;
         }
+        if (countryManager.getCountry(id) != null) {
+            commandContext.sendMessage("§cLe pays " + countryManager.getCountry(id).getName() + " possède déjà cette id !");
+            return;
+        }
+        String name = commandContext.argAsString(1);
 
-        countryManager.addCountry(name);
+        countryManager.addCountry(id, name);
         commandContext.msg("Country " + name + " added");
     }
 

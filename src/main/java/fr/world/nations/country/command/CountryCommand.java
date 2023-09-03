@@ -19,6 +19,7 @@ public class CountryCommand extends FCommand {
         addSubCommand(new CountryAddCommand(countryManager));
         addSubCommand(new CountryPosCommand(countryManager));
         addSubCommand(new CountryRemoveCommand(countryManager));
+        addSubCommand(new CountrySetidCommand(countryManager));
         this.requirements = new CommandRequirements.Builder(Permission.ADMIN)
                 .playerOnly()
                 .brigadier(CountryBrigadier.class)
@@ -42,7 +43,8 @@ public class CountryCommand extends FCommand {
             return parent
                     .then(LiteralArgumentBuilder.literal("add"))
                     .then(LiteralArgumentBuilder.literal("pos"))
-                    .then(LiteralArgumentBuilder.literal("remove"));
+                    .then(LiteralArgumentBuilder.literal("remove"))
+                    .then(LiteralArgumentBuilder.literal("setid"));
         }
     }
 }

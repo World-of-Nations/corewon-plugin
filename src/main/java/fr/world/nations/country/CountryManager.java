@@ -1,58 +1,166 @@
 package fr.world.nations.country;
 
-import fr.world.nations.country.sql.SQLManager;
-import fr.world.nations.country.sql.SQLRequests;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import fr.world.nations.util.JsonUtil;
+import org.bukkit.Location;
 
+import javax.annotation.Nullable;
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class CountryManager {
-    protected final Map<String, Country> countries = new HashMap<>();
 
-    protected final SQLRequests sqlRequests;
+    private final Map<String, Country> countryMap = new HashMap<>();
+    private final File folder;
+    private int emergencyIdNumb = 0;
 
-    public CountryManager(SQLManager sqlManager) {
-        this.sqlRequests = new SQLRequests(sqlManager);
-        loadData();
-    }
-
-    public void loadData() {
-        List<Country> allCountries = sqlRequests.getAllCountries();
-        for (Country country : allCountries) {
-            countries.put(country.getName(), country);
+    public CountryManager(WonContry module) {
+        folder = new File(module.getConfigFolder(), "storage");
+        if (!folder.exists()) {
+            folder.mkdir();
+        } else {
+            for (Country country : loadData()) {
+                countryMap.put(country.getId(), country);
+            }
         }
+        if (countryMap.isEmpty()) {
+            SQLManager sqlManager = new SQLManager(module);
+            SQLRequests sqlRequests = new SQLRequests(sqlManager);
+            for (Country country : sqlRequests.getAllCountries(this)) {
+                countryMap.put(country.getId(), country);
+            }
+            try {
+                sqlManager.closeConnection();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        saveData();
     }
 
     public void saveData() {
-        for (Country country : countries.values()) {
-            if (country.getSpawn() != null) {
-                sqlRequests.updateCountrySpawn(country.getName(), country.getSpawn());
+        for (Country country : getAllCountries())
+            saveCountry(country);
+    }
+
+    private File getFile(Country country) {
+        return getFile(country, false);
+    }
+
+    private File getFile(Country country, boolean create) {
+        File countryFile = new File(folder, country.getId() + ".json");
+        if (!countryFile.exists()) {
+            if (!create) return null;
+            try {
+                countryFile.createNewFile();
+                JsonUtil.write(countryFile, JsonNodeFactory.instance.objectNode());
+                return countryFile;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
             }
-            sqlRequests.updateCountryAvailability(country.getName(), country.isAvailable());
         }
+        return countryFile;
     }
 
-    public Country getCountry(String name) {
-        return countries.get(name);
+    public void saveCountry(Country country) {
+        File file = getFile(country, true);
+        if (file == null) {
+            System.err.println("Failed to save " + country.getName() + " country");
+            return;
+        }
+        ObjectNode objectNode = JsonUtil.getObjectNode(file);
+        objectNode.put("id", country.getId());
+        objectNode.put("name", country.getName());
+        objectNode.put("available", country.isAvailable());
+        objectNode.put("spawn_location", JsonUtil.wrapLocation(country.getSpawn(), true));
+        JsonUtil.write(file, objectNode);
     }
 
-    public void addCountry(String name) {
-        sqlRequests.createCountry(name);
-        countries.put(name, new Country(name));
+    @Nullable
+    public Country createCountry(String countryId, String countryName, Location spawn, boolean available) throws IllegalArgumentException {
+        if (getCountry(countryId) != null)
+            throw new IllegalArgumentException("Country with id " + countryId + " already exists");
+        if (getCountryByName(countryName) != null)
+            throw new IllegalArgumentException("Country with name " + countryName + " already exists");
+        Country country = new Country(this, countryId, countryName, spawn, available);
+        saveCountry(country);
+        return country;
     }
 
-    public void removeCountry(String name) {
-        sqlRequests.removeCountry(name);
-        countries.remove(name);
+    @Deprecated
+    public Country createCountry(String name) throws IllegalArgumentException {
+        if (getCountryByName(name) != null)
+            throw new IllegalArgumentException("Country with name " + name + " already exists");
+        System.err.println("Le pays " + name + " n'a pas d'id définie ! Veuillez effectuer la commande /f country setid " + name + " <id> !");
+        Country country = new Country(this, String.valueOf(emergencyIdNumb++), name);
+        saveCountry(country);
+        return country;
+    }
+
+    public void removeCountry(Country country) {
+        countryMap.remove(country.getId());
+        File file = getFile(country);
+        if (file == null) return;
+        file.delete();
+    }
+
+    public List<Country> getAllCountries() {
+        return countryMap.values().stream().toList();
+    }
+
+    private List<Country> loadData() {
+        File[] files = folder.listFiles();
+        if (files == null) return new ArrayList<>();
+        List<Country> countries = new ArrayList<>();
+        for (File file : files) {
+            JsonNode node = JsonUtil.readFile(file);
+            String id = node.get("id").asText();
+            String name = node.get("name").asText();
+            boolean available = node.get("available").asBoolean();
+            Location spawnLocation = JsonUtil.getLocation(node.get("spawn_location"));
+            countries.add(new Country(this, id, name, spawnLocation, available));
+        }
+        return countries;
+    }
+
+    public Country getCountry(String id) {
+        return countryMap.get(id);
+    }
+
+    public Country getCountryByName(String name) {
+        return countryMap.values().stream()
+                .filter(country -> country.getName().equalsIgnoreCase(name))
+                .findAny().orElse(null);
+    }
+
+    public void addCountry(String id, String name) throws IllegalArgumentException {
+        addCountry(id, name, null, true);
+    }
+
+    public void addCountry(String id, String name, Location spawn, boolean available) throws IllegalArgumentException {
+        Country country = createCountry(id, name, spawn, available);
+        countryMap.put(name, country);
     }
 
     public List<String> getAvailableCountryNames() {
-        return countries.keySet().stream().filter(name -> countries.get(name).isAvailable()).collect(Collectors.toList());
+        return countryMap.values().stream().filter(Country::isAvailable).map(Country::getName).toList();
     }
 
     public List<String> getCountryNames() {
-        return countries.keySet().stream().toList();
+        return countryMap.values().stream().map(Country::getName).toList();
+    }
+
+    @Deprecated
+    public void setId(Country country, String id) throws IllegalArgumentException {
+        removeCountry(country);
+        addCountry(id, country.getName(), country.getSpawn(), country.isAvailable());
     }
 }

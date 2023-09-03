@@ -12,20 +12,23 @@ public class CountryPosCommand extends FCommand {
     public CountryPosCommand(CountryManager countryManager) {
         this.countryManager = countryManager;
         this.aliases.add("pos");
-        this.requiredArgs.add("name");
+        this.requiredArgs.add("id or name");
     }
 
     @Override
     public void perform(CommandContext commandContext) {
-        String name = commandContext.argAsString(0);
-        Country country = countryManager.getCountry(name);
+        String id = commandContext.argAsString(0);
+        Country country = countryManager.getCountry(id);
         if (country == null) {
-            commandContext.msg("That country doesn't exists");
-            return;
+            country = countryManager.getCountryByName(id);
+            if (country == null) {
+                commandContext.msg("That country doesn't exists");
+                return;
+            }
         }
 
         country.setSpawn(commandContext.player.getLocation());
-        commandContext.msg("Country spawn " + name + " set");
+        commandContext.msg("Le spawn du pays " + country.getName() + " a été défini !");
     }
 
     @Override

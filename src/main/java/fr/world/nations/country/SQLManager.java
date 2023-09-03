@@ -1,7 +1,6 @@
-package fr.world.nations.country.sql;
+package fr.world.nations.country;
 
 import fr.world.nations.Core;
-import fr.world.nations.country.WonContry;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

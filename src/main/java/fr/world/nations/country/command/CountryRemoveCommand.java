@@ -3,6 +3,7 @@ package fr.world.nations.country.command;
 import com.massivecraft.factions.cmd.CommandContext;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.zcore.util.TL;
+import fr.world.nations.country.Country;
 import fr.world.nations.country.CountryManager;
 
 public class CountryRemoveCommand extends FCommand {
@@ -18,14 +19,18 @@ public class CountryRemoveCommand extends FCommand {
 
     @Override
     public void perform(CommandContext commandContext) {
-        String name = commandContext.argAsString(0);
-        if (countryManager.getCountry(name) == null) {
-            commandContext.msg("That country does not exists");
-            return;
+        String id = commandContext.argAsString(0);
+        Country country = countryManager.getCountry(id);
+        if (country == null) {
+            country = countryManager.getCountryByName(id);
+            if (country == null) {
+                commandContext.msg("That country doesn't exists");
+                return;
+            }
         }
 
-        countryManager.removeCountry(name);
-        commandContext.msg("Country " + name + " removed");
+        countryManager.removeCountry(country);
+        commandContext.msg("Country " + country.getName() + " removed");
     }
 
     @Override
