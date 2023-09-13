@@ -22,8 +22,8 @@ public class CountryAddCommand extends FCommand {
             commandContext.sendMessage("§cVeuillez entrer une id sous forme de succession de lettres de l'alphabet non majuscules ! Exemple : fr pour France");
             return;
         }
-        if (countryManager.getCountry(id) != null) {
-            commandContext.sendMessage("§cLe pays " + countryManager.getCountry(id).getName() + " possède déjà cette id !");
+        if (countryManager.getCountryById(id) != null) {
+            commandContext.sendMessage("§cLe pays " + countryManager.getCountryById(id).getName() + " possède déjà cette id !");
             return;
         }
         String name = commandContext.argAsString(1);

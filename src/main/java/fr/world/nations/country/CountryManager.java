@@ -86,9 +86,9 @@ public class CountryManager {
 
     @Nullable
     public Country createCountry(String countryId, String countryName, Location spawn, boolean available) throws IllegalArgumentException {
-        if (getCountry(countryId) != null)
+        if (getCountryById(countryId) != null)
             throw new IllegalArgumentException("Country with id " + countryId + " already exists");
-        if (getCountryByName(countryName) != null)
+        if (getCountry(countryName) != null)
             throw new IllegalArgumentException("Country with name " + countryName + " already exists");
         Country country = new Country(this, countryId, countryName, spawn, available);
         saveCountry(country);
@@ -97,7 +97,7 @@ public class CountryManager {
 
     @Deprecated
     public Country createCountry(String name) throws IllegalArgumentException {
-        if (getCountryByName(name) != null)
+        if (getCountry(name) != null)
             throw new IllegalArgumentException("Country with name " + name + " already exists");
         System.err.println("Le pays " + name + " n'a pas d'id définie ! Veuillez effectuer la commande /f country setid " + name + " <id> !");
         Country country = new Country(this, String.valueOf(emergencyIdNumb++), name);
@@ -131,11 +131,11 @@ public class CountryManager {
         return countries;
     }
 
-    public Country getCountry(String id) {
+    public Country getCountryById(String id) {
         return countryMap.get(id);
     }
 
-    public Country getCountryByName(String name) {
+    public Country getCountry(String name) {
         return countryMap.values().stream()
                 .filter(country -> country.getName().equalsIgnoreCase(name))
                 .findAny().orElse(null);

@@ -25,7 +25,7 @@ public class CountrySetidCommand extends FCommand {
             return;
         }
         String countryName = commandContext.argAsString(0);
-        Country country = countryManager.getCountryByName(countryName);
+        Country country = countryManager.getCountry(countryName);
         if (country == null) {
             commandContext.sendMessage("§cLe pays " + countryName + " n'existe pas !");
             return;
@@ -37,7 +37,7 @@ public class CountrySetidCommand extends FCommand {
                     "Si vous voulez tout de même la changer, veuillez effectuer la commande " +
                     "/f country setid " + country.getName() + " " + id + " force");
         }
-        Country country1 = countryManager.getCountry(id);
+        Country country1 = countryManager.getCountryById(id);
         if (country1 != null) {
             commandContext.sendMessage("§cL'id " + id + " est déjà possédée par le pays " + country1.getName() + " !");
         }

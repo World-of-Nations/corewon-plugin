@@ -18,9 +18,9 @@ public class CountryPosCommand extends FCommand {
     @Override
     public void perform(CommandContext commandContext) {
         String id = commandContext.argAsString(0);
-        Country country = countryManager.getCountry(id);
+        Country country = countryManager.getCountryById(id);
         if (country == null) {
-            country = countryManager.getCountryByName(id);
+            country = countryManager.getCountry(id);
             if (country == null) {
                 commandContext.msg("That country doesn't exists");
                 return;
