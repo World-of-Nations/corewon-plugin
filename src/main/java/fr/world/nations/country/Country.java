@@ -10,12 +10,13 @@ public class Country {
     private String name;
     private Location spawn;
     private boolean available;
+    private int[] flag;
 
     protected Country(CountryManager countryManager, String id, String name) {
-        this(countryManager, id, name, null, true);
+        this(countryManager, id, name, null, true, new int[512]);
     }
 
-    protected Country(CountryManager countryManager, String id, String name, Location spawn, boolean available) {
+    protected Country(CountryManager countryManager, String id, String name, Location spawn, boolean available, int[] flag) {
         Validate.notNull(id);
         Validate.notNull(name);
         this.countryManager = countryManager;
@@ -23,6 +24,7 @@ public class Country {
         this.name = name;
         this.spawn = spawn;
         this.available = available;
+        this.flag = flag;
     }
 
     public String getId() {
@@ -53,6 +55,18 @@ public class Country {
 
     public void setSpawn(Location spawn) {
         this.spawn = spawn;
+        countryManager.saveCountry(this);
+    }
+
+    public int[] getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int[] flag) {
+        if (flag.length != 512) {
+            throw new IllegalArgumentException("Flag should be a 512 length array");
+        }
+        this.flag = flag;
         countryManager.saveCountry(this);
     }
 }

@@ -1,6 +1,7 @@
 package fr.world.nations.country;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import fr.world.nations.util.JsonUtil;
@@ -81,18 +82,28 @@ public class CountryManager {
         objectNode.put("name", country.getName());
         objectNode.put("available", country.isAvailable());
         objectNode.put("spawn_location", JsonUtil.wrapLocation(country.getSpawn(), true));
+        try {
+            objectNode.put("flag", new ObjectMapper().writeValueAsString(country.getFlag()));
+        } catch (IOException e) {
+            System.err.println("Could not write country " + country.getName() + "'s flag");
+        }
         JsonUtil.write(file, objectNode);
     }
 
     @Nullable
-    public Country createCountry(String countryId, String countryName, Location spawn, boolean available) throws IllegalArgumentException {
+    public Country createCountry(String countryId, String countryName, Location spawn, boolean available, int[] flag) throws IllegalArgumentException {
         if (getCountryById(countryId) != null)
             throw new IllegalArgumentException("Country with id " + countryId + " already exists");
         if (getCountry(countryName) != null)
             throw new IllegalArgumentException("Country with name " + countryName + " already exists");
-        Country country = new Country(this, countryId, countryName, spawn, available);
+        Country country = new Country(this, countryId, countryName, spawn, available, flag);
         saveCountry(country);
         return country;
+    }
+
+    @Nullable
+    public Country createCountry(String countryId, String countryName, Location spawn, boolean available) throws IllegalArgumentException {
+        return createCountry(countryId, countryName, spawn, available, new int[512]);
     }
 
     @Deprecated
@@ -126,7 +137,15 @@ public class CountryManager {
             String name = node.get("name").asText();
             boolean available = node.get("available").asBoolean();
             Location spawnLocation = JsonUtil.getLocation(node.get("spawn_location"));
-            countries.add(new Country(this, id, name, spawnLocation, available));
+            int[] flag = new int[512];
+            if (node.has("flag")) {
+                try {
+                    new ObjectMapper().readValue(node.get("flag").asText(), int[].class);
+                } catch (IOException e) {
+                    System.err.println("Could not read country " + name + "'s flag");
+                }
+            }
+            countries.add(new Country(this, id, name, spawnLocation, available, flag));
         }
         return countries;
     }
