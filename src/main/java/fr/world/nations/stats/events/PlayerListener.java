@@ -16,13 +16,14 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import java.util.List;
 
 public class PlayerListener implements Listener {
-
     @EventHandler
     public void playerKillEvent(PlayerDeathEvent event) {
 
         Player killed = event.getEntity();
         Player killer = killed.getKiller();
-        if (killer == null) return;
+        if (killer == null) {
+            return;
+        }
 
         WonStats wonStats = Core.getInstance().getModuleManager().getModule(WonStats.class);
         StatsManager statsManager = wonStats.getStatsManager();

@@ -11,6 +11,7 @@ import fr.world.nations.milestone.WonMilestone;
 import fr.world.nations.stats.WonStats;
 import fr.world.nations.stats.data.FactionData;
 import fr.world.nations.stats.data.StatsManager;
+import fr.world.nations.util.StringUtil;
 
 import java.util.Arrays;
 
@@ -51,7 +52,7 @@ public class StatsCommand extends FCommand {
         context.sendMessage("§eMorts§7: §c" + factionData.getDeaths());
         context.sendMessage("§eRatio K/M§7: §r" + factionData.getKdr());
         context.sendMessage("§eBanque§7: §r" + faction.getFactionBalance());
-        context.sendMessage("§eScore zone§7: §r" + factionData.getScoreZone());
+        context.sendMessage("§eScore zone§7: §r" + StringUtil.round(factionData.getScoreZone(), 2));
         context.sendMessage("§eAssauts gagnés§7: §r" + factionData.getAssaultWin());
         context.sendMessage("§eAssauts perdus§7: §r" + factionData.getAssaultLose());
         context.sendMessage("§eScore assaut§7: §r" + factionData.getAssaultScore());
