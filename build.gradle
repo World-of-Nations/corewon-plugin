@@ -17,16 +17,16 @@ repositories {
         url = "https://oss.sonatype.org/content/groups/public/"
     }
     maven {
-        name = "upstream"
-        url = "https://ci.nametagedit.com/plugin/repository/everything/"
-    }
-    maven {
         name = "sk89q-repo"
         url = "https://maven.enginehub.org/repo/"
     }
     maven {
         name = "jitpack.io"
         url = "https://jitpack.io"
+    }
+    maven {
+        name = "Codemc Public"
+        url = "https://repo.codemc.io/repository/maven-public/"
     }
 }
 
@@ -39,8 +39,9 @@ configurations {
 
 dependencies {
     compileOnly "org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT"
-    compileOnly fileTree(dir: 'libs', include: '*.jar')
-    compileOnly "com.sk89q.worldedit:worldedit-bukkit:7.2.10"
+    compileOnly "com.sk89q.worldedit:worldedit-bukkit:7.2.15"
+    compileOnly group: 'com.massivecraft', name: 'Factions', version: '1.6.9.5-4.1.3-STABLE'
+
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.0.1'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.1'
