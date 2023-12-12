@@ -215,7 +215,7 @@ public class KothModel {
                             }
                         }
                     } else if (rewardType.equalsIgnoreCase("money")) {
-                        String cmd = "f bank give " + (int) (rewardAmount) + " " + faction.getTag();
+                        String cmd = "f ecogivef " + ((int) (rewardAmount)) + " " + faction.getTag();
                         //System.out.println(cmd);
                         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
                         for (FPlayer mPlayer : faction.getFPlayers()) {
