@@ -1,6 +1,7 @@
 package fr.world.nations.assault;
 
 import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.cmd.CommandContext;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.struct.Relation;
@@ -35,10 +36,10 @@ public class AssaultCommand extends FCommand {
 
     @Override
     public void perform(CommandContext commandContext) {
-        if (!commandContext.sender.hasPermission("assault")) {
+        /*if (!commandContext.sender.hasPermission("assault")) {
             commandContext.sender.sendMessage("§cVous n'avez pas les permissions !");
             return;
-        }
+        }*/
         if (commandContext.argAsString(0) == null) {
             if (plugin.getAssaultManager().isInAssault(commandContext.player)) {
                 commandContext.sender.sendMessage("§cLes interfaces d'assaut arrivent bientôt !");
@@ -249,13 +250,16 @@ public class AssaultCommand extends FCommand {
                 break;
             default:
                 faction = commandContext.argAsFaction(0);
-                if (faction == null) return;
                 if (commandContext.faction == null || commandContext.faction.isWilderness()) {
                     commandContext.sender.sendMessage("§cVous n'êtes dans aucune faction !");
                     return;
                 }
                 if (!commandContext.fPlayer.getRole().isAtLeast(Role.MODERATOR)) {
                     commandContext.sender.sendMessage("§cVous n'avez pas les permissions pour effectuer cette commande !");
+                    return;
+                }
+                if (faction == null) {
+                    commandContext.sender.sendMessage("§cLa faction §6" + commandContext.argAsString(0) + " §cn'existe pas !");
                     return;
                 }
                 if (faction == commandContext.faction) {

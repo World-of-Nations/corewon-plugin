@@ -63,6 +63,8 @@ public class WonKoth extends WonModule {
                 configuration.set("messages.players.area-status-decrease",
                         List.of("Decrease in possession of %faction% in progress %control% %",
                                 "§8§m-------------------------------------------"));
+                configuration.set("messages.players.tp-warzone-noarmor",
+                        List.of("You must be equipped to enter into the warzone"));
                 configuration.set("messages.admins.koth-already-exists",
                         List.of("Area %area_name% already exists."));
                 configuration.set("messages.admins.koth-created",

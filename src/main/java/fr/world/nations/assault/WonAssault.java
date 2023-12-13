@@ -159,6 +159,8 @@ public final class WonAssault extends WonModule {
         values.put("explosions.enemy-required-time-days", 7);
         values.put("assault.score-broadcast-delay-secs", 300);
         values.put("assault.quit-stop-min", 2);
+        values.put("assault.required-online-players", 2);
+        values.put("assault.target-required-online-players", 2);
         return values;
     }
 }

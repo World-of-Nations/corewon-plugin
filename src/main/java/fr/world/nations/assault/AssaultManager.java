@@ -57,14 +57,14 @@ public class AssaultManager {
     }
 
     public void remove(Assault assault) {
-        if (!assault.getCTags().isEmpty()) {
+        /*if (!assault.getCTags().isEmpty()) {
             this.pending.add(assault);
 
-        }
+        }*/
         this.assaults.remove(assault);
     }
 
-    public void updateCTag(Player player) {
+    /*public void updateCTag(Player player) {
         for (Assault assault : pending) {
             if (assault.removeCTag(player)) {
                 if (assault.getCTags().isEmpty()) {
@@ -73,5 +73,5 @@ public class AssaultManager {
                 return;
             }
         }
-    }
+    }*/
 }

@@ -5,8 +5,6 @@ import com.massivecraft.factions.Board;
 import com.massivecraft.factions.FLocation;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
-import com.nametagedit.plugin.NametagEdit;
-import com.nametagedit.plugin.api.data.Nametag;
 import fr.world.nations.Core;
 import fr.world.nations.assault.database.DatabaseManager;
 import fr.world.nations.stats.WonStats;
@@ -41,8 +39,10 @@ public class Assault {
     private final boolean explosionsAllowed;
     private final boolean initExplosionAllowed;
     private final Map<UUID, Integer> logoutTaskIds = new HashMap<>();
+    /*
     @Getter
     private final Map<UUID, Nametag> cTags = new HashMap<>();
+    */
     private final String SHOULD_CLEAR_PREFIX = "CLEAR";
     private long assaultStartedMillis;
     private int taskId;
@@ -60,8 +60,8 @@ public class Assault {
         this.defendant = defendant;
         this.attackerList = Lists.newArrayList(attacker);
         this.defendantList = Lists.newArrayList(defendant);
-        setPrefixes(attacker);
-        setPrefixes(defendant);
+        //setPrefixes(attacker);
+        //setPrefixes(defendant);
         this.attackerDeaths = Lists.newArrayList();
         this.defendantDeaths = Lists.newArrayList();
         this.attackerPoints = 0;
@@ -207,7 +207,7 @@ public class Assault {
         //Au cas où l'assaut devait être annulé
         Bukkit.getScheduler().cancelTask(taskId);
 
-        for (Player player : getOnlinePlayers()) {
+        /*for (Player player : getOnlinePlayers()) {
             UUID uniqueId = player.getUniqueId();
             if (cTags.containsKey(uniqueId)) {
                 NametagEdit.getApi().setNametag(player, cTags.get(uniqueId).getPrefix(), cTags.get(uniqueId).getSuffix());
@@ -215,7 +215,7 @@ public class Assault {
             } else {
                 NametagEdit.getApi().clearNametag(player);
             }
-        }
+        }*/
 
         //Si le chunk n'a pas réussi à être capturé
         if (!targetedClaimSuccess && calculateChunkPoints) {
@@ -457,7 +457,7 @@ public class Assault {
     public void join(Faction inviter, Faction arrivant) {
         if (!contains(inviter)) return;
         if (contains(arrivant)) return;
-        setPrefixes(arrivant);
+        //setPrefixes(arrivant);
         if (attackerList.contains(inviter)) {
             attackerList.add(arrivant);
             broadcast("§cLa faction §6" + arrivant.getTag() + " §ca rejoint les attaquants !");
@@ -467,11 +467,11 @@ public class Assault {
         }
     }
 
-    private void setPrefixes(Faction faction) {
+    /*private void setPrefixes(Faction faction) {
         faction.getOnlinePlayers().forEach(this::setAssaultCTag);
-    }
+    }*/
 
-    private void setAssaultCTag(Player player) {
+    /*private void setAssaultCTag(Player player) {
         String attackerPrefix = "&4[&cAttaquant&4] &c";
         String defenderPrefix = "&2[&aDefenseur&2] &a";
         Nametag playerNt = NametagEdit.getApi().getNametag(player);
@@ -486,9 +486,9 @@ public class Assault {
         } else {
             NametagEdit.getApi().setPrefix(player, defenderPrefix);
         }
-    }
+    }*/
 
-    public boolean removeCTag(Player player) {
+    /*public boolean removeCTag(Player player) {
         UUID uniqueId = player.getUniqueId();
         if (!cTags.containsKey(uniqueId)) return false;
         Nametag nametag = cTags.get(uniqueId);
@@ -499,7 +499,7 @@ public class Assault {
         }
         cTags.remove(uniqueId);
         return true;
-    }
+    }*/
 
     public FLocation getTargetedClaim() {
         return targetedClaim;
@@ -606,7 +606,7 @@ public class Assault {
 
     public void onLogin(Player player) {
         boolean isAttacker = isAttacker(player);
-        setAssaultCTag(player);
+        //setAssaultCTag(player);
         if (isAttacker) {
             broadcast("§cL'attaquant §6" + player.getName() + "§c s'est reconnecté !");
         } else {

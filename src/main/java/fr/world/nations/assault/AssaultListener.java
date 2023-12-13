@@ -38,7 +38,7 @@ public class AssaultListener implements Listener {
         Player player = event.getPlayer();
         AssaultManager assaultManager = plugin.getAssaultManager();
         if (!assaultManager.isInAssault(player)) {
-            assaultManager.updateCTag(player);
+            //assaultManager.updateCTag(player);
             return;
         }
         Assault assault = assaultManager.getAssault(player);
