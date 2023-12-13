@@ -19,7 +19,7 @@ public class AssaultHelpCommand extends FCommand {
         lines.add("§eUtilisation de la commande assault : ");
         if (commandContext.sender.hasPermission("assault")) {
             lines.add("§e/f §cassault");
-            lines.add("§e/f §cassault <faction>");
+            lines.add("§e/f §cassault start <faction>");
             lines.add("§e/f §cassault join <allié en assaut>");
             lines.add("§e/f §cassault accept <allié>");
             lines.add("§e/f §cassault list");

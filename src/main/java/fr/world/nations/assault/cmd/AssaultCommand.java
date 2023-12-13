@@ -1,6 +1,7 @@
 package fr.world.nations.assault.cmd;
 
 import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.cmd.CommandContext;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.zcore.util.TL;
@@ -12,8 +13,6 @@ public class AssaultCommand extends FCommand {
 
     private final WonAssault plugin;
     private final HashMap<Faction, Faction> joinRequests; //Demandant - Demandé
-    private final AssaultHelpCommand assaultHelpCommand;
-
     public AssaultCommand(WonAssault plugin) {
         aliases.add("assault");
         this.plugin = plugin;
@@ -21,8 +20,7 @@ public class AssaultCommand extends FCommand {
         this.requirements.playerOnly = true;
         this.addSubCommand(new AssaultAcceptCommand(this));
         this.addSubCommand(new AssaultDisableexplosionsCommand());
-        assaultHelpCommand = new AssaultHelpCommand();
-        this.addSubCommand(assaultHelpCommand);
+        this.addSubCommand(new AssaultHelpCommand());
         this.addSubCommand(new AssaultJoinCommand(this));
         this.addSubCommand(new AssaultListCommand(this));
         this.addSubCommand(new AssaultModoCommand(this));
@@ -43,7 +41,8 @@ public class AssaultCommand extends FCommand {
 
     @Override
     public void perform(CommandContext commandContext) {
-        assaultHelpCommand.perform(commandContext);
+        commandContext.commandChain.add(this);
+        FactionsPlugin.getInstance().cmdAutoHelp.execute(commandContext);
     }
 
     @Override
