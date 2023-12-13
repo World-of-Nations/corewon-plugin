@@ -36,7 +36,7 @@ public class MilestoneAddXpCommand extends FCommand {
             return;
         }
         plugin.addOpModif(faction, arg);
-        commandContext.sender.getServer().dispatchCommand(commandContext.sender, "f minfo " + faction.getTag());
+        commandContext.sender.getServer().dispatchCommand(commandContext.sender, "f level " + faction.getTag());
     }
 
     @Override

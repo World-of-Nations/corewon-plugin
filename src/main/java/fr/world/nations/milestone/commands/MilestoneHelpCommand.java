@@ -48,10 +48,10 @@ public class MilestoneHelpCommand extends FCommand {
                 lines.add("§e/f §caddxp <nombre> [faction]");
                 lines.add("§e/f §cremovexp <nombre> [faction]");
                 lines.add("§e/f §cresetopmodifier [faction]");
-                lines.add("§e/f §cminfo [faction]");
+                lines.add("§e/f §clevel [faction]");
                 lines.add("§e/f §cdiagnosis [faction]");
             } else {
-                lines.add("§e/f §cminfo");
+                lines.add("§e/f §clevel");
             }
             lines.add("§e/f §cmtop");
         }

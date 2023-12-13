@@ -27,7 +27,7 @@ public class MilestoneResetOMCommand extends FCommand {
         }
         Faction faction = commandContext.argAsFaction(0, commandContext.faction);
         plugin.setOpModif(faction, 0);
-        commandContext.sender.getServer().dispatchCommand(commandContext.sender, "f minfo " + faction.getTag());
+        commandContext.sender.getServer().dispatchCommand(commandContext.sender, "f level " + faction.getTag());
     }
 
     @Override

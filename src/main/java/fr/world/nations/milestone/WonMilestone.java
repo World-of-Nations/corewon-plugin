@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.cmd.FCommand;
 import fr.world.nations.Core;
 import fr.world.nations.milestone.commands.MilestoneExpandCommand;
@@ -25,10 +26,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class WonMilestone extends WonModule {
 
@@ -135,15 +133,23 @@ public final class WonMilestone extends WonModule {
 
             @Override
             public void run() {
+                List<String> toRemove = new ArrayList<>();
+                for (String factionId : map.keySet()) {
+                    if (Factions.getInstance().getFactionById(factionId) == null) {
+                        toRemove.add(factionId);
+                    }
+                }
+                toRemove.forEach(map::remove);
                 for (Faction faction : FactionUtil.getAllPlayerFactions()) {
                     String factionName = faction.getTag();
+                    String factionId = faction.getId();
                     int currentMilestone = getMilestoneData(faction).getMilestone();
                     faction.setWarpsLimit(getDefaultConfig().getInt("warps.limit." + currentMilestone));
-                    if (!map.containsKey(factionName)) {
-                        map.put(factionName, currentMilestone);
+                    if (!map.containsKey(factionId)) {
+                        map.put(factionId, currentMilestone);
                         continue;
                     }
-                    if (currentMilestone > map.get(factionName)) {
+                    if (currentMilestone > map.get(factionId)) {
                         if (currentMilestone == 5) {
                             Bukkit.broadcastMessage("§cLe pays §e" + factionName + " §cpasse au §ePalier V §c! C'est désormais un §4§oEmpire §6!");
                             for (Player player : Bukkit.getOnlinePlayers()) {
@@ -154,7 +160,7 @@ public final class WonMilestone extends WonModule {
                         for (Player player : faction.getOnlinePlayers()) {
                             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
                         }
-                        map.put(factionName, currentMilestone);
+                        map.put(factionId, currentMilestone);
                     }
                 }
             }

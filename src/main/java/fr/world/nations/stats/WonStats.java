@@ -11,6 +11,7 @@ import fr.world.nations.stats.sql.SQLManager;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,11 @@ public final class WonStats extends WonModule {
 
     @Override
     public void unload() {
-
+        try {
+            sqlManager.closeConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public SQLManager getSqlManager() {

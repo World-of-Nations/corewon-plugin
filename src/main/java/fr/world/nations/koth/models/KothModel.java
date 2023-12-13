@@ -40,7 +40,7 @@ public class KothModel {
     private String kothName;
     @JsonIgnore
     private int kothCurrentCapPercent;
-    private CuboidRegion kothCuboid;
+        private CuboidRegion kothCuboid;
     private Location teleportPoint;
     @JsonIgnore
     private String currentFactionIdCap, currentPlayerCap;

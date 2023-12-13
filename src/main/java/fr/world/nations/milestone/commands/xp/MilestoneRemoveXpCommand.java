@@ -31,7 +31,7 @@ public class MilestoneRemoveXpCommand extends FCommand {
         Faction faction = commandContext.argAsFaction(1, commandContext.faction);
         if (faction == null) return;
         plugin.addOpModif(faction, -arg);
-        commandContext.sender.getServer().dispatchCommand(commandContext.sender, "f minfo " + faction.getTag());
+        commandContext.sender.getServer().dispatchCommand(commandContext.sender, "f level " + faction.getTag());
     }
 
     @Override

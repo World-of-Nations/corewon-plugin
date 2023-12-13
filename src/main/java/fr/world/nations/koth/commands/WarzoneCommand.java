@@ -29,6 +29,7 @@ import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -59,7 +60,7 @@ public class WarzoneCommand implements CommandExecutor {
 
                         Bukkit.getScheduler().runTask(Core.getInstance(), () -> {
                             List<FactionData> factionDatas = Core.getInstance().getModuleManager().getModule(WonStats.class).getStatsManager().getFactionDatas();
-                            factionDatas.sort(Collections.reverseOrder());
+                            factionDatas.sort(Collections.reverseOrder(Comparator.comparingDouble(FactionData::getScoreZone)));
                             FPlayer uplayer = FPlayers.getInstance().getByPlayer((Player) sender);
                             String playerFactionName = uplayer.getFaction().getTag();
                             boolean topContainPlayerFaction = false;
