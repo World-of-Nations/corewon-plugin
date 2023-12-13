@@ -115,6 +115,7 @@ public class Assault {
 
             @Override
             public void run() {
+                try {
                 //Si l'event est terminé la tâche s'annule
                 long assaultDurationMin = plugin.getDefaultConfig().getLong("assault.duration-min");
                 if (TimerUtil.deltaUpMins(assaultStartedMillis, assaultDurationMin) || !running) {
@@ -197,6 +198,10 @@ public class Assault {
                             }
                         }
                     }
+                }
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }.runTaskTimer(plugin.getLoader(), delayTick, delayTick).getTaskId();

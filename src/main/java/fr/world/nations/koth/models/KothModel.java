@@ -185,43 +185,48 @@ public class KothModel {
 
                 @Override
                 public void run() {
-                    if (rewardType == null || rewardType.isEmpty()) return;
-                    if (!RewardType.exists(rewardType)) {
-                        if (++warningCount % 10 == 0) {
-                            Core.getInstance().getLogger().warning("KOTH reward type \"" + rewardType + "\" does not exist ! Possible reward types : "
-                                    + String.join(", ", Arrays.stream(RewardType.values()).map(type -> type.name().toLowerCase()).toList()));
-                        }
-                        return;
-                    }
-                    Faction faction = Factions.getInstance().getFactionById(currentFactionIdCap);
-                    double rewardAmount = (int) Math.floor(getRewardAmount() * PowerManager.getInstance().getFactionFactor(faction, true));
-                    if (rewardType.equalsIgnoreCase("power")) {
-                        if (faction.getPowerBoost() < 300) {
-                            if ((faction.getPowerBoost() + rewardAmount) > 300) {
-                                rewardAmount = 300 - faction.getPowerBoost();
+                    try {
+                        if (rewardType == null || rewardType.isEmpty()) return;
+                        if (!RewardType.exists(rewardType)) {
+                            if (++warningCount % 10 == 0) {
+                                Core.getInstance().getLogger().warning("KOTH reward type \"" + rewardType + "\" does not exist ! Possible reward types : "
+                                        + String.join(", ", Arrays.stream(RewardType.values()).map(type -> type.name().toLowerCase()).toList()));
                             }
-                            faction.setPowerBoost(faction.getPowerBoost() + rewardAmount);
-                            PowerManager.getInstance().addPower(new PowerAddedModel(faction.getId(), System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1), rewardAmount));
-                            for (FPlayer uPlayer : faction.getFPlayers()) {
-                                if (!uPlayer.isOnline()) continue;
-                                if (!contains(uPlayer.getPlayer())) continue;
+                            return;
+                        }
+                        Faction faction = Factions.getInstance().getFactionById(currentFactionIdCap);
+                        double rewardAmount = (int) Math.floor(getRewardAmount() * PowerManager.getInstance().getFactionFactor(faction, true));
+                        if (rewardType.equalsIgnoreCase("power")) {
+                            if (faction.getPowerBoost() < 300) {
+                                if ((faction.getPowerBoost() + rewardAmount) > 300) {
+                                    rewardAmount = 300 - faction.getPowerBoost();
+                                }
+                                faction.setPowerBoost(faction.getPowerBoost() + rewardAmount);
+                                PowerManager.getInstance().addPower(new PowerAddedModel(faction.getId(), System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1), rewardAmount));
+                                for (FPlayer uPlayer : faction.getFPlayers()) {
+                                    if (!uPlayer.isOnline()) continue;
+                                    if (!contains(uPlayer.getPlayer())) continue;
 
+                                }
+                            }
+                        } else if (rewardType.equalsIgnoreCase("money")) {
+                            String cmd = "f ecogivef " + ((int) (rewardAmount)) + " " + faction.getTag();
+                            //System.out.println(cmd);
+                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
+                            for (FPlayer mPlayer : faction.getFPlayers()) {
+                                if (!mPlayer.isOnline()) continue;
+                                if (!contains(mPlayer.getPlayer())) continue;
+                                double money = faction.getFactionBalance();
+                                for (String msg : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.koth-reward-money")) {
+                                    mPlayer.getPlayer().sendMessage(msg
+                                            .replace("%money_amount%", String.valueOf(rewardAmount))
+                                            .replace("%total_money%", String.valueOf(money)));
+                                }
                             }
                         }
-                    } else if (rewardType.equalsIgnoreCase("money")) {
-                        String cmd = "f ecogivef " + ((int) (rewardAmount)) + " " + faction.getTag();
-                        //System.out.println(cmd);
-                        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
-                        for (FPlayer mPlayer : faction.getFPlayers()) {
-                            if (!mPlayer.isOnline()) continue;
-                            if (!contains(mPlayer.getPlayer())) continue;
-                            double money = faction.getFactionBalance();
-                            for (String msg : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.koth-reward-money")) {
-                                mPlayer.getPlayer().sendMessage(msg
-                                        .replace("%money_amount%", String.valueOf(rewardAmount))
-                                        .replace("%total_money%", String.valueOf(money)));
-                            }
-                        }
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             }.runTaskTimer(Core.getInstance(), 20L * rewardTime, 20L * rewardTime);
@@ -230,8 +235,13 @@ public class KothModel {
 
                 @Override
                 public void run() {
-                    FactionData data = Core.getInstance().getModuleManager().getModule(WonStats.class).getStatsManager().getFactionData(Factions.getInstance().getFactionById(currentFactionIdCap).getTag());
-                    if (data != null) data.addScoreZone(0.01D);
+                    try {
+                        FactionData data = Core.getInstance().getModuleManager().getModule(WonStats.class).getStatsManager().getFactionData(Factions.getInstance().getFactionById(currentFactionIdCap).getTag());
+                        if (data != null) data.addScoreZone(0.01D);
+                    }
+                    catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }.runTaskTimerAsynchronously(Core.getInstance(), 20 * 5, 20 * 5);
 

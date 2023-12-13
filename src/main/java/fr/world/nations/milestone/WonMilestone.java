@@ -133,6 +133,7 @@ public final class WonMilestone extends WonModule {
 
             @Override
             public void run() {
+                try {
                 List<String> toRemove = new ArrayList<>();
                 for (String factionId : map.keySet()) {
                     if (Factions.getInstance().getFactionById(factionId) == null) {
@@ -162,6 +163,10 @@ public final class WonMilestone extends WonModule {
                         }
                         map.put(factionId, currentMilestone);
                     }
+                }
+                }
+                catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }.runTaskTimerAsynchronously(Core.getInstance(), delay, delay);
