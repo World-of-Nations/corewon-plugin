@@ -91,12 +91,6 @@ public class KothModel {
                 }
             }
             case CAPPED -> {
-                if (getContainedPlayers().size() == 0) {
-                    this.currentFactionIdCap = null;
-                    this.currentPlayerCap = null;
-                    this.kothState = State.EMPTY;
-                    return;
-                }
                 for (Player player : getContainedPlayers()) {
                     FPlayer uPlayer = FPlayers.getInstance().getByPlayer(player);
                     if (uPlayer.hasFaction()) {

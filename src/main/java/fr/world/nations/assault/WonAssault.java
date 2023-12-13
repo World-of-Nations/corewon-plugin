@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.cmd.FCommand;
 import fr.world.nations.Core;
+import fr.world.nations.assault.cmd.AssaultCommand;
 import fr.world.nations.assault.explosion.ExplosionListener;
 import fr.world.nations.assault.explosion.ExplosionManager;
 import fr.world.nations.modules.WonModule;

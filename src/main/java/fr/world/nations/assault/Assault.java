@@ -13,7 +13,6 @@ import fr.world.nations.stats.data.StatsManager;
 import fr.world.nations.util.FactionUtil;
 import fr.world.nations.util.StringUtil;
 import fr.world.nations.util.TimerUtil;
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
