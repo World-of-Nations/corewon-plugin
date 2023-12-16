@@ -20,8 +20,6 @@ import lombok.ToString;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -40,7 +38,7 @@ public class KothModel {
     private String kothName;
     //@JsonIgnore
     //private int kothCurrentCapPercent;
-        private CuboidRegion kothCuboid;
+    private CuboidRegion kothCuboid;
     private Location teleportPoint;
     //@JsonIgnore
     //private String currentFactionIdCap, currentPlayerCap;
@@ -57,7 +55,7 @@ public class KothModel {
     private Integer rewardTaskId;
     @JsonIgnore
     private boolean started;
-//    @JsonIgnore
+    //    @JsonIgnore
 //    private boolean steal;
     @JsonIgnore
     private String capturingFactionId;
@@ -69,11 +67,12 @@ public class KothModel {
 
     public void start() {
         clear();
-        kothTaskId = Bukkit.getScheduler().runTaskTimerAsynchronously(Core.getInstance(), this::newCheck, 5L, 5L).getTaskId();
+        kothTaskId = Bukkit.getScheduler().runTaskTimerAsynchronously(Core.getInstance(), this::newCheck, 40L, 40L).getTaskId();
         statusTaskId = Bukkit.getScheduler().runTaskTimerAsynchronously(Core.getInstance(), this::broadcastStatus, (20 * 60) * 5, (20 * 60) * 5).getTaskId();
         started = true;
     }
 
+    @JsonIgnore
     public Faction getCapturingFaction() {
         Factions factions = Factions.getInstance();
         if (capturingFactionId == null)
@@ -100,9 +99,7 @@ public class KothModel {
                 .map(player -> FPlayers.getInstance().getByPlayer(player).getFaction())
                 .distinct()
                 .sorted(Comparator.comparingLong(
-                        faction -> getContainedPlayers().stream()
-                                .filter(player -> FPlayers.getInstance().getByPlayer(player).getFaction() == faction)
-                                .count()).reversed()
+                        faction -> getContainedPlayers((Faction) faction).size()).reversed()
                 )
                 .filter(Faction::isNormal)
                 .toList();
@@ -111,13 +108,30 @@ public class KothModel {
         Faction bestFaction = bestFactions.get(0);
         //If the faction is alone in the zone then the capping
         //increases depending on how many player the zone contains
+        if (bestFactions.size() > 1) {
+            int firstFactionPlayerAmount = getContainedPlayers(bestFactions.get(0)).size();
+            int secFactionPlayerAmount = getContainedPlayers(bestFactions.get(1)).size();
+            if (firstFactionPlayerAmount == secFactionPlayerAmount) {
+                for (Player player : getContainedPlayers()) {
+                    for (String msg : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.factions-clash")) {
+                        player.sendMessage(msg
+                                .replace("%area_name%", kothName)
+                                .replace("%faction1%", bestFaction.getTag())
+                                .replace("%faction1%", currentFaction.getTag())
+                                .replace("%current_controller%", currentFaction.getTag())
+                                .replace("%control%", String.valueOf(this.capPercentage))
+                        );
+                    }
+                }
+                return;
+            }
+        }
         int playerDifference = bestFactions.size() > 1 ? 1 : getContainedPlayers().size();
         boolean shouldIncreasePercentage = bestFaction == currentFaction;
         int newCapPercentage;
         if (shouldIncreasePercentage) {
             newCapPercentage = this.capPercentage + playerDifference;
-        }
-        else {
+        } else {
             newCapPercentage = this.capPercentage - playerDifference;
         }
         if (!shouldIncreasePercentage) {
@@ -147,27 +161,33 @@ public class KothModel {
             }
             return;
         }
-        capPercentage = Math.min(newCapPercentage, 100);
-        sendCaptureUpdate(bestFaction);
-        if (this.capPercentage < 50 && newCapPercentage >= 50) {
+        int futureCapPercentage = Math.min(newCapPercentage, 100);
+        if (this.capPercentage < 50 && futureCapPercentage >= 50) {
             broadcastStatus();
         }
-        if (capPercentage == 100 && (rewardTaskId == null || scorezoneTaskId == null)) {
-            cancelRewardScoreZoneTasks();
-            this.rewardTaskId = Bukkit.getScheduler().runTaskTimer(
-                    Core.getInstance(), this::sendRewards, 20L * rewardTime, 20L * rewardTime
-            ).getTaskId();
-            this.scorezoneTaskId = Bukkit.getScheduler().runTaskTimer(
-                    Core.getInstance(), this::addScore, 20L * rewardTime, 20L * rewardTime
-            ).getTaskId();
-            //Sends message saying that bestFaction is now fully controlling the zone
-            for (String msg : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.faction-full-control")) {
-                Bukkit.broadcastMessage(msg
-                        .replace("%area_name%", kothName)
-                        .replace("%faction%", getCapturingFaction().getTag())
-                );
+
+        if (capPercentage == 100) {
+            if (rewardTaskId == null || scorezoneTaskId == null) {
+                cancelRewardScoreZoneTasks();
+                this.rewardTaskId = Bukkit.getScheduler().runTaskTimer(
+                        Core.getInstance(), this::sendRewards, 20L * rewardTime, 20L * rewardTime
+                ).getTaskId();
+                this.scorezoneTaskId = Bukkit.getScheduler().runTaskTimer(
+                        Core.getInstance(), this::addScore, 20L * rewardTime, 20L * rewardTime
+                ).getTaskId();
+            }
+            if (capPercentage < 100 && futureCapPercentage == 100) {
+                //Sends message saying that bestFaction is now fully controlling the zone
+                for (String msg : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.faction-full-control")) {
+                    Bukkit.broadcastMessage(msg
+                            .replace("%area_name%", kothName)
+                            .replace("%faction%", getCapturingFaction().getTag())
+                    );
+                }
             }
         }
+        capPercentage = futureCapPercentage;
+        sendCaptureUpdate(bestFaction);
     }
 
     public void sendCaptureUpdate(Faction capturer) {
@@ -310,6 +330,14 @@ public class KothModel {
 
     private List<Player> getContainedPlayers() {
         return Bukkit.getOnlinePlayers().stream().filter(this::contains).map(v -> (Player) v).toList();
+    }
+
+    private List<Player> getContainedPlayers(Faction faction) {
+        return Bukkit.getOnlinePlayers().stream()
+                .filter(this::contains)
+                .map(v -> (Player) v)
+                .filter(player -> FPlayers.getInstance().getByPlayer(player).getFaction() == faction)
+                .toList();
     }
 
     private boolean isFromCapperFaction(Player player) {

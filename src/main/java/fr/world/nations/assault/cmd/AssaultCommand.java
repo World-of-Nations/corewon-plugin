@@ -13,6 +13,7 @@ public class AssaultCommand extends FCommand {
 
     private final WonAssault plugin;
     private final HashMap<Faction, Faction> joinRequests; //Demandant - Demandé
+
     public AssaultCommand(WonAssault plugin) {
         aliases.add("assault");
         this.plugin = plugin;

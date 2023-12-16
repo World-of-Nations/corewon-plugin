@@ -315,10 +315,9 @@ public class WarzoneCommand implements CommandExecutor {
                     kothModel.setRewardType(args[1]);
                     kothModel.setRewardAmount(amount);
                     kothModel.setRewardTime(second);
-                    sender.sendMessage(plugin.getDefaultConfig().getString("messages.admins.koth-reward-set").replace("%area_name%", args[4]));
+                    sender.sendMessage(plugin.getDefaultConfig().getString("messages.admins.koth-reward-set")
+                            .replace("%area_name%", args[4]));
                     plugin.getKothManager().saveKoth(kothModel, false);
-
-
                 }
             }
             return false;

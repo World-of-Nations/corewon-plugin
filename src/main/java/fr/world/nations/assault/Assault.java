@@ -116,91 +116,90 @@ public class Assault {
             @Override
             public void run() {
                 try {
-                //Si l'event est terminé la tâche s'annule
-                long assaultDurationMin = plugin.getDefaultConfig().getLong("assault.duration-min");
-                if (TimerUtil.deltaUpMins(assaultStartedMillis, assaultDurationMin) || !running) {
-                    end(false, true);
-                    this.cancel();
-                    return;
-                }
-                if (TimerUtil.deltaUpMillis(lastTimeBroadCastedScoreMillis, scoreBroadCastDelayMillis)) {
-                    broadcastScore();
-                    lastTimeBroadCastedScoreMillis = System.currentTimeMillis();
-                }
-                if (!targetedClaimSuccess) {
-                    double targetChunkStartDelayMins = plugin.getDefaultConfig().getDouble("assault.target-chunk-start-delay-mins");
-                    //System.out.println("targetChunkStartDelayMins : " + targetChunkStartDelayMins);
-                    long targetChunkStartDelayMillis = (long) (targetChunkStartDelayMins * 60 * 1000);
-                    if (TimerUtil.deltaUpMillis(assaultStartedMillis, targetChunkStartDelayMillis)) {
-                        if (targetedClaim == null) {
-                            //Sélectionner un chunk au hasard dans les claims de la faction attaquée
-                            List<FLocation> claims = Lists.newArrayList(Board.getInstance().getAllClaims(defendant));
-                            if (claims.isEmpty()) return;
-                            Random random = new Random();
-                            targetedClaim = claims.get(random.nextInt(claims.size()));
-                            String locString = "§c(§6x:§r " + (targetedClaim.getChunk().getX() * 16 + 8)
-                                    + " §6z:§r " + (targetedClaim.getChunk().getZ() * 16 + 8) + "§c)§r";
-                            String chunkString = targetedClaim.toString() + locString;
-                            broadcast("§cChunk à capturer désigné ! Il s'agit du chunk §6" + chunkString);
-                        } else {
-                            int attackerNumb = 0;
-                            int defenderNumb = 0;
-                            //Scanner toutes les entités dans le chunk
-                            for (Entity entity : targetedClaim.getChunk().getEntities()) {
-                                if (!(entity instanceof Player player)) continue;
-                                if (!contains(player)) continue;
-                                Faction faction = FactionUtil.getFaction(player);
-                                //Si un seul n'appartient pas aux attaquants le timer est reset
-                                if (defendantList.contains(faction)) {
-                                    defenderNumb += 1;
-                                } else if (attackerList.contains(faction)) {
-                                    attackerNumb += 1;
-                                }
-                            }
-                            long requiredTimeMillis = plugin.getDefaultConfig().getLong("assault.target-chunk-unclaim-delay-sec") * 1000;
-                            if ((defenderNumb >= attackerNumb)) {
-                                if (claiming) {
-                                    broadcast("§cIl n'y a plus assez d'attaquant dans le claim cible ! Le compteur redescend...");
-                                }
-                                if (targetedClaimScoreMillis < 0) return;
-                                targetedClaimScoreMillis -= (50L * delayTick);
-                                if (targetedClaimScoreMillis < 0)
-                                    targetedClaimScoreMillis = 0;
-                                targetedClaimPercentage = (float) targetedClaimScoreMillis / requiredTimeMillis * 100;
-                                claiming = false;
+                    //Si l'event est terminé la tâche s'annule
+                    long assaultDurationMin = plugin.getDefaultConfig().getLong("assault.duration-min");
+                    if (TimerUtil.deltaUpMins(assaultStartedMillis, assaultDurationMin) || !running) {
+                        end(false, true);
+                        this.cancel();
+                        return;
+                    }
+                    if (TimerUtil.deltaUpMillis(lastTimeBroadCastedScoreMillis, scoreBroadCastDelayMillis)) {
+                        broadcastScore();
+                        lastTimeBroadCastedScoreMillis = System.currentTimeMillis();
+                    }
+                    if (!targetedClaimSuccess) {
+                        double targetChunkStartDelayMins = plugin.getDefaultConfig().getDouble("assault.target-chunk-start-delay-mins");
+                        //System.out.println("targetChunkStartDelayMins : " + targetChunkStartDelayMins);
+                        long targetChunkStartDelayMillis = (long) (targetChunkStartDelayMins * 60 * 1000);
+                        if (TimerUtil.deltaUpMillis(assaultStartedMillis, targetChunkStartDelayMillis)) {
+                            if (targetedClaim == null) {
+                                //Sélectionner un chunk au hasard dans les claims de la faction attaquée
+                                List<FLocation> claims = Lists.newArrayList(Board.getInstance().getAllClaims(defendant));
+                                if (claims.isEmpty()) return;
+                                Random random = new Random();
+                                targetedClaim = claims.get(random.nextInt(claims.size()));
+                                String locString = "§c(§6x:§r " + (targetedClaim.getChunk().getX() * 16 + 8)
+                                        + " §6z:§r " + (targetedClaim.getChunk().getZ() * 16 + 8) + "§c)§r";
+                                String chunkString = targetedClaim.toString() + locString;
+                                broadcast("§cChunk à capturer désigné ! Il s'agit du chunk §6" + chunkString);
                             } else {
-                                claiming = true;
-                                if (targetedClaimScoreMillis == 0) {
-                                    broadcast("§6Les attaquants §ccommencent à prendre le claim cible...");
-                                }
-                                targetedClaimScoreMillis += (50L * delayTick);
-                                targetedClaimPercentage = (float) targetedClaimScoreMillis / requiredTimeMillis * 100;
-                                if (targetedClaimScoreMillis >= requiredTimeMillis) {
-                                    targetedClaimScoreMillis = requiredTimeMillis;
-                                    targetedClaimPercentage = 1;
-                                    //Envoi du message de log
-                                    String chunkString = targetedClaim.toString();
-                                    broadcast("§6Les attaquants §4ont détruit le claim cible ! §6(" + chunkString + ")");
-                                    double cdHours = plugin.getDefaultConfig().getDouble("assault.claim-disabled-cooldown-hours");
-                                    broadcast("§cLe pays §6" + defendant.getTag() + " §cn'a pas réussi à défendre" +
-                                            " le claim cible ! Il est incapable de claim pendant §6" + StringUtil.numb(cdHours) +
-                                            " §cheures.");
-                                    plugin.addClaimCoolDown(defendant);
-
-                                    //Ajout des points
-                                    addAttackerPoint(plugin.getDefaultConfig().getInt("assault.target-chunk-success-points"));
-                                    //Unclaim
-                                    if (Board.getInstance().getFactionAt(targetedClaim) == defendant) {
-                                        Board.getInstance().setFactionAt(Factions.getInstance().getWilderness(), targetedClaim);
+                                int attackerNumb = 0;
+                                int defenderNumb = 0;
+                                //Scanner toutes les entités dans le chunk
+                                for (Entity entity : targetedClaim.getChunk().getEntities()) {
+                                    if (!(entity instanceof Player player)) continue;
+                                    if (!contains(player)) continue;
+                                    Faction faction = FactionUtil.getFaction(player);
+                                    //Si un seul n'appartient pas aux attaquants le timer est reset
+                                    if (defendantList.contains(faction)) {
+                                        defenderNumb += 1;
+                                    } else if (attackerList.contains(faction)) {
+                                        attackerNumb += 1;
                                     }
-                                    targetedClaimSuccess = true;
+                                }
+                                long requiredTimeMillis = plugin.getDefaultConfig().getLong("assault.target-chunk-unclaim-delay-sec") * 1000;
+                                if ((defenderNumb >= attackerNumb)) {
+                                    if (claiming) {
+                                        broadcast("§cIl n'y a plus assez d'attaquant dans le claim cible ! Le compteur redescend...");
+                                    }
+                                    if (targetedClaimScoreMillis < 0) return;
+                                    targetedClaimScoreMillis -= (50L * delayTick);
+                                    if (targetedClaimScoreMillis < 0)
+                                        targetedClaimScoreMillis = 0;
+                                    targetedClaimPercentage = (float) targetedClaimScoreMillis / requiredTimeMillis * 100;
+                                    claiming = false;
+                                } else {
+                                    claiming = true;
+                                    if (targetedClaimScoreMillis == 0) {
+                                        broadcast("§6Les attaquants §ccommencent à prendre le claim cible...");
+                                    }
+                                    targetedClaimScoreMillis += (50L * delayTick);
+                                    targetedClaimPercentage = (float) targetedClaimScoreMillis / requiredTimeMillis * 100;
+                                    if (targetedClaimScoreMillis >= requiredTimeMillis) {
+                                        targetedClaimScoreMillis = requiredTimeMillis;
+                                        targetedClaimPercentage = 1;
+                                        //Envoi du message de log
+                                        String chunkString = targetedClaim.toString();
+                                        broadcast("§6Les attaquants §4ont détruit le claim cible ! §6(" + chunkString + ")");
+                                        double cdHours = plugin.getDefaultConfig().getDouble("assault.claim-disabled-cooldown-hours");
+                                        broadcast("§cLe pays §6" + defendant.getTag() + " §cn'a pas réussi à défendre" +
+                                                " le claim cible ! Il est incapable de claim pendant §6" + StringUtil.numb(cdHours) +
+                                                " §cheures.");
+                                        plugin.addClaimCoolDown(defendant);
+
+                                        //Ajout des points
+                                        addAttackerPoint(plugin.getDefaultConfig().getInt("assault.target-chunk-success-points"));
+                                        //Unclaim
+                                        if (Board.getInstance().getFactionAt(targetedClaim) == defendant) {
+                                            Board.getInstance().setFactionAt(Factions.getInstance().getWilderness(), targetedClaim);
+                                        }
+                                        targetedClaimSuccess = true;
+                                    }
                                 }
                             }
                         }
                     }
-                }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

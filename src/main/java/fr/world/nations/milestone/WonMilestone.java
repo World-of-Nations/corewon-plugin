@@ -134,38 +134,37 @@ public final class WonMilestone extends WonModule {
             @Override
             public void run() {
                 try {
-                List<String> toRemove = new ArrayList<>();
-                for (String factionId : map.keySet()) {
-                    if (Factions.getInstance().getFactionById(factionId) == null) {
-                        toRemove.add(factionId);
+                    List<String> toRemove = new ArrayList<>();
+                    for (String factionId : map.keySet()) {
+                        if (Factions.getInstance().getFactionById(factionId) == null) {
+                            toRemove.add(factionId);
+                        }
                     }
-                }
-                toRemove.forEach(map::remove);
-                for (Faction faction : FactionUtil.getAllPlayerFactions()) {
-                    String factionName = faction.getTag();
-                    String factionId = faction.getId();
-                    int currentMilestone = getMilestoneData(faction).getMilestone();
-                    faction.setWarpsLimit(getDefaultConfig().getInt("warps.limit." + currentMilestone));
-                    if (!map.containsKey(factionId)) {
-                        map.put(factionId, currentMilestone);
-                        continue;
-                    }
-                    if (currentMilestone > map.get(factionId)) {
-                        if (currentMilestone == 5) {
-                            Bukkit.broadcastMessage("§cLe pays §e" + factionName + " §cpasse au §ePalier V §c! C'est désormais un §4§oEmpire §6!");
-                            for (Player player : Bukkit.getOnlinePlayers()) {
-                                player.playSound(player.getLocation(), Sound.ENTITY_WITHER_SPAWN, 1, 1);
+                    toRemove.forEach(map::remove);
+                    for (Faction faction : FactionUtil.getAllPlayerFactions()) {
+                        String factionName = faction.getTag();
+                        String factionId = faction.getId();
+                        int currentMilestone = getMilestoneData(faction).getMilestone();
+                        faction.setWarpsLimit(getDefaultConfig().getInt("warps.limit." + currentMilestone));
+                        if (!map.containsKey(factionId)) {
+                            map.put(factionId, currentMilestone);
+                            continue;
+                        }
+                        if (currentMilestone > map.get(factionId)) {
+                            if (currentMilestone == 5) {
+                                Bukkit.broadcastMessage("§cLe pays §e" + factionName + " §cpasse au §ePalier V §c! C'est désormais un §4§oEmpire §6!");
+                                for (Player player : Bukkit.getOnlinePlayers()) {
+                                    player.playSound(player.getLocation(), Sound.ENTITY_WITHER_SPAWN, 1, 1);
+                                }
                             }
+                            faction.sendMessage("§aVotre pays est passé au palier supérieur !");
+                            for (Player player : faction.getOnlinePlayers()) {
+                                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+                            }
+                            map.put(factionId, currentMilestone);
                         }
-                        faction.sendMessage("§aVotre pays est passé au palier supérieur !");
-                        for (Player player : faction.getOnlinePlayers()) {
-                            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
-                        }
-                        map.put(factionId, currentMilestone);
                     }
-                }
-                }
-                catch (Exception e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

@@ -96,6 +96,8 @@ public class CountryManager {
             throw new IllegalArgumentException("Country with id " + countryId + " already exists");
         if (getCountry(countryName) != null)
             throw new IllegalArgumentException("Country with name " + countryName + " already exists");
+        if (spawn.getWorld() == null)
+            throw new IllegalArgumentException("Tried to create country with null world in spawn location");
         Country country = new Country(this, countryId, countryName, spawn, available, flag);
         saveCountry(country);
         return country;
