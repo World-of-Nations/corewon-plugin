@@ -5,16 +5,18 @@ import com.massivecraft.factions.Faction;
 import fr.world.nations.util.FactionUtil;
 import org.bukkit.entity.Player;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class AssaultManager {
-    private final List<Assault> assaults;
+    private final Set<Assault> assaults;
     private final List<Assault> pending;
     private final WonAssault plugin;
 
     public AssaultManager(WonAssault plugin) {
         this.plugin = plugin;
-        this.assaults = Lists.newArrayList();
+        this.assaults = new HashSet<>();
         this.pending = Lists.newArrayList();
     }
 
@@ -47,13 +49,16 @@ public class AssaultManager {
     }
 
     public List<Assault> getAssaults() {
-        return assaults;
+        return assaults.stream().toList();
     }
 
     public void startAssault(Faction attacker, Faction defendant, boolean explosions) {
         Assault assault = new Assault(plugin, attacker, defendant, explosions);
         assault.run();
-        assaults.add(assault);
+        boolean added = assaults.add(assault);
+        if (!added) {
+            new Exception("Tried to add already existing assault").printStackTrace();
+        }
     }
 
     public void remove(Assault assault) {

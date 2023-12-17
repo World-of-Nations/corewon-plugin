@@ -117,7 +117,7 @@ public class KothModel {
                         player.sendMessage(msg
                                 .replace("%area_name%", kothName)
                                 .replace("%faction1%", bestFaction.getTag())
-                                .replace("%faction1%", currentFaction.getTag())
+                                .replace("%faction2%", currentFaction.getTag())
                                 .replace("%current_controller%", currentFaction.getTag())
                                 .replace("%control%", String.valueOf(this.capPercentage))
                         );
