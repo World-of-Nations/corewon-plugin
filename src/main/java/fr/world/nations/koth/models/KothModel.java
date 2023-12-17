@@ -163,6 +163,8 @@ public class KothModel {
         }
         int futureCapPercentage = Math.min(newCapPercentage, 100);
         if (this.capPercentage < 50 && futureCapPercentage >= 50) {
+            //Pour afficher un beau nombre pour tout le monde :) même si le vrai pourcentage est 51 ou plus
+            capPercentage = 50;
             broadcastStatus();
         }
 
@@ -185,6 +187,7 @@ public class KothModel {
                     );
                 }
             }
+            return;
         }
         capPercentage = futureCapPercentage;
         sendCaptureUpdate(bestFaction);
