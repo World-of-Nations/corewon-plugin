@@ -31,7 +31,10 @@ public class KothHandler {
 
                 final KothModel kothModel = new KothModel();
                 kothModel.setKothName(name);
-                kothModel.setKothCuboid(((CuboidRegion) selector.getRegion()).clone());
+                CuboidRegion cuboidRegion = ((CuboidRegion) selector.getRegion()).clone();
+                assert selector.getWorld() != null;
+                cuboidRegion.setWorld(selector.getWorld());
+                kothModel.setKothCuboid(cuboidRegion);
 
                 WonKoth plugin = WonKoth.getInstance();
                 if (plugin.getKothManager().getKothFromCache(kothModel.getKothName()) != null) {
