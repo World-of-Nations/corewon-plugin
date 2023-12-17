@@ -5,8 +5,12 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.sk89q.worldedit.WorldEdit;
+import com.sk89q.worldedit.bukkit.BukkitWorld;
+import com.sk89q.worldedit.command.argument.WorldConverter;
 import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
+import com.sk89q.worldedit.world.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
@@ -21,7 +25,9 @@ public class CuboidDeserializer extends JsonDeserializer<CuboidRegion> {
         final String worldName = jsonNode.get("world").textValue();
         final Location loc1 = this.buildLocation(worldName, jsonNode.get("pos1"));
         final Location loc2 = this.buildLocation(worldName, jsonNode.get("pos2"));
-        return new CuboidRegion(Vector3.toBlockPoint(loc1.getX(), loc1.getY(), loc1.getZ()), Vector3.toBlockPoint(loc2.getX(), loc2.getY(), loc2.getZ()));
+        CuboidRegion region = new CuboidRegion(Vector3.toBlockPoint(loc1.getX(), loc1.getY(), loc1.getZ()), Vector3.toBlockPoint(loc2.getX(), loc2.getY(), loc2.getZ()));
+        region.setWorld(new BukkitWorld(Bukkit.getWorld(worldName)));
+        return region;
     }
 
     private Location buildLocation(final String worldName, final JsonNode posNode) {

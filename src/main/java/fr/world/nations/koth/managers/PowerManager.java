@@ -129,7 +129,6 @@ public class PowerManager {
                 percentage *= stepFactor;
             }
             return percentage;
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

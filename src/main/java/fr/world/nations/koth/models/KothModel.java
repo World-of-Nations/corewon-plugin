@@ -219,7 +219,7 @@ public class KothModel {
                 if ((faction.getPowerBoost() + rewardAmount) > 300) {
                     rewardAmount = 300 - faction.getPowerBoost();
                 }
-                faction.setPowerBoost(faction.getPowerBoost() + rewardAmount);
+//                faction.setPowerBoost(faction.getPowerBoost() + rewardAmount);
                 PowerManager.getInstance().addPower(new PowerAddedModel(faction.getId(), System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1), rewardAmount));
                 double power = faction.getPower();
                 for (FPlayer uPlayer : faction.getFPlayers()) {
