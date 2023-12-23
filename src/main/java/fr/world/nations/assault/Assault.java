@@ -240,69 +240,67 @@ public class Assault {
                 plugin.addAttackCoolDown(attacker, defendant);
                 saveDB("");
             }
-            return;
         }
+        else {
+            //Comportement selon le gagnant
+            Faction fWinner = attackerPoints > defendantPoints ? attacker : defendant;
+            Faction fLoser = attackerPoints > defendantPoints ? defendant : attacker;
+            String winner = attackerPoints > defendantPoints ? "Attaquants" : "Défenseurs";
+            winner += " (" + fWinner.getTag() + ")";
 
-        defendant.setPeacefulExplosionsEnabled(initExplosionAllowed);
+            //Stats plugin principal
+            StatsManager statsManager = Core.getInstance().getModuleManager().getModule(WonStats.class).getStatsManager();
 
-        //Comportement selon le gagnant
+            FactionData winnerData = statsManager.getFactionData(fWinner);
+            FactionData loserData = statsManager.getFactionData(fLoser);
 
-        Faction fWinner = attackerPoints > defendantPoints ? attacker : defendant;
-        Faction fLoser = attackerPoints > defendantPoints ? defendant : attacker;
-        String winner = attackerPoints > defendantPoints ? "Attaquants" : "Défenseurs";
-        winner += " (" + fWinner.getTag() + ")";
-
-        //Stats plugin principal
-        StatsManager statsManager = Core.getInstance().getModuleManager().getModule(WonStats.class).getStatsManager();
-
-        FactionData winnerData = statsManager.getFactionData(fWinner);
-        FactionData loserData = statsManager.getFactionData(fLoser);
-
-        int bankTransferPercentage = 0;
-        double toTransfer = 0;
-        if (!force) {
-            winnerData.addAssaultWin();
-            loserData.addAssaultLose();
-            bankTransferPercentage = plugin.getDefaultConfig().getInt("assault.bank-transfer-percentage");
-            double winnerBalance = fWinner.getFactionBalance();
-            double loserBalance = fLoser.getFactionBalance();
-            toTransfer = (bankTransferPercentage / 100d) * fLoser.getFactionBalance();
-            fWinner.setFactionBalance(winnerBalance + toTransfer);
-            fLoser.setFactionBalance(loserBalance - toTransfer);
-        }
+            int bankTransferPercentage = 0;
+            double toTransfer = 0;
+            if (!force) {
+                winnerData.addAssaultWin();
+                loserData.addAssaultLose();
+                bankTransferPercentage = plugin.getDefaultConfig().getInt("assault.bank-transfer-percentage");
+                double winnerBalance = fWinner.getFactionBalance();
+                double loserBalance = fLoser.getFactionBalance();
+                toTransfer = (bankTransferPercentage / 100d) * fLoser.getFactionBalance();
+                fWinner.setFactionBalance(winnerBalance + toTransfer);
+                fLoser.setFactionBalance(loserBalance - toTransfer);
+            }
 
 
-        broadcastRaw("§4" + StringUtil.mult("-", msgLength));
-        broadcastRaw("");
-        broadcastRaw("§4Assaut terminé");
-        broadcastRaw("");
-        broadcastRaw("§4A" + getFormattedScore() + "§4D");
-        broadcastRaw("§6Gagnants : §c" + winner);
-        if (!force) {
+            broadcastRaw("§4" + StringUtil.mult("-", msgLength));
             broadcastRaw("");
-            broadcastRaw("§6" + bankTransferPercentage + "% de la banque du pays §c" + fLoser.getTag());
-            broadcastRaw("§6leur a été transféré");
-        }
-        broadcastRaw("");
-        broadcastRaw("§4" + StringUtil.mult("-", msgLength));
+            broadcastRaw("§4Assaut terminé");
+            broadcastRaw("");
+            broadcastRaw("§4A" + getFormattedScore() + "§4D");
+            broadcastRaw("§6Gagnants : §c" + winner);
+            if (!force) {
+                broadcastRaw("");
+                broadcastRaw("§6" + bankTransferPercentage + "% de la banque du pays §c" + fLoser.getTag());
+                broadcastRaw("§6leur a été transféré");
+            }
+            broadcastRaw("");
+            broadcastRaw("§4" + StringUtil.mult("-", msgLength));
 
-        if (!force) {
-            fWinner.msg("§a" + ((int) toTransfer) + "$ ont été ajoutés à votre banque de pays");
-            fLoser.msg("§c" + ((int) toTransfer) + "$ ont été retirés de votre banque de pays");
+            if (!force) {
+                fWinner.msg("§a" + ((int) toTransfer) + "$ ont été ajoutés à votre banque de pays");
+                fLoser.msg("§c" + ((int) toTransfer) + "$ ont été retirés de votre banque de pays");
 
-            plugin.addAttackCoolDown(attacker, defendant);
+                plugin.addAttackCoolDown(attacker, defendant);
 
-            //Database
-            saveDB(fWinner.getTag());
+                //Database
+                saveDB(fWinner.getTag());
 
 
-            if (loserData.getAssaultScore() <= -30) {
-                broadcast("§cLe pays §6" + fLoser.getTag() + " §ca un score de §6-30§c, il est donc réduit à néant !");
+                if (loserData.getAssaultScore() <= -30) {
+                    broadcast("§cLe pays §6" + fLoser.getTag() + " §ca un score de §6-30§c, il est donc réduit à néant !");
 
-                fLoser.disband(fLoser.getFPlayerLeader().getPlayer());
+                    fLoser.disband(fLoser.getFPlayerLeader().getPlayer());
+                }
             }
         }
 
+        defendant.setPeacefulExplosionsEnabled(initExplosionAllowed);
         plugin.getAssaultManager().remove(this);
     }
 
