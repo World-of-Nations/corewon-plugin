@@ -403,7 +403,7 @@ public class Assault {
             @Override
             public void run() {
                 broadcast("§6" + player.getName() + " §cs'est déconecté depuis plus de §6" + logoutPenTime + " §cminutes !");
-                onDeath(player);
+                onDeath(player, null);
             }
         }.runTaskLater(plugin.getLoader(), (long) (logoutPenTime * 60 * 20)).getTaskId();
 
@@ -411,12 +411,12 @@ public class Assault {
     }
 
     public void onDeath(Player killed) {
-        onDeath(killed, null);
+        onDeath(killed, killed.getKiller());
     }
 
     public void onDeath(Player killed, Player killer) {
         if (!contains(killed)) return;
-        if (!contains(killer) && killer != null) return;
+        if (!contains(killer)) killer = null;
         Faction faction = FactionUtil.getFaction(killed);
         if (attackerList.contains(faction)) {
             attackerDeaths.add(killed.getName());

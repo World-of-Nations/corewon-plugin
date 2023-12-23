@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -50,20 +51,8 @@ public class AssaultListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player killed = event.getEntity();
         if (!plugin.getAssaultManager().isInAssault(killed)) return;
-        Player killer = killed.getKiller();
-        if (killer == null) return;
         Assault assault = plugin.getAssaultManager().getAssault(killed);
-        Faction killedFaction = FactionUtil.getFaction(killed);
-        Faction killerFaction = FactionUtil.getFaction(killer);
-        if (assault.getDefendantList().contains(killedFaction)) {
-            if (!assault.getAttackerList().contains(killerFaction)) return;
-            assault.onDeath(killed, killer);
-            return;
-        }
-        if (assault.getAttackerList().contains(killedFaction)) {
-            if (!assault.getDefendantList().contains(killerFaction)) return;
-            assault.onDeath(killed, killer);
-        }
+        assault.onDeath(killed);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
