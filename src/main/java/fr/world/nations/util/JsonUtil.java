@@ -78,6 +78,10 @@ public class JsonUtil {
     }
 
     public static ObjectNode wrapLocation(Location location, boolean includeYawPitch) {
+        return wrapLocation(location, includeYawPitch, true);
+    }
+
+    public static ObjectNode wrapLocation(Location location, boolean includeYawPitch, boolean throwErrorIfWorldNull) {
         ObjectNode objectNode = JsonNodeFactory.instance.objectNode();
         if (location == null) return objectNode;
         objectNode.put("x", location.getX());
@@ -90,6 +94,8 @@ public class JsonUtil {
         World world = location.getWorld();
         if (world != null) {
             objectNode.put("world_name", location.getWorld().getName());
+        } else if (throwErrorIfWorldNull) {
+            new IllegalArgumentException("Wrapped Location with null world ! This is a bug and MUST be rapidly fixed !").printStackTrace();
         }
         return objectNode;
     }

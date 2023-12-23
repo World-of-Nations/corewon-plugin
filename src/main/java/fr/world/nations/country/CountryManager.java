@@ -81,7 +81,7 @@ public class CountryManager {
         objectNode.put("id", country.getId());
         objectNode.put("name", country.getName());
         objectNode.put("available", country.isAvailable());
-        objectNode.put("spawn_location", JsonUtil.wrapLocation(country.getSpawn(), true));
+        objectNode.put("spawn_location", JsonUtil.wrapLocation(country.getSpawn(), true, true));
         try {
             objectNode.put("flag", new ObjectMapper().writeValueAsString(country.getFlag()));
         } catch (IOException e) {
