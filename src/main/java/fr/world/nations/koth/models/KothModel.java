@@ -13,6 +13,7 @@ import fr.world.nations.koth.WonKoth;
 import fr.world.nations.koth.managers.PowerManager;
 import fr.world.nations.stats.WonStats;
 import fr.world.nations.stats.data.FactionData;
+import fr.world.nations.util.FactionUtil;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -89,7 +90,10 @@ public class KothModel {
 //    }
 
     public void newCheck() {
-        List<Faction> bestFactions = getContainedPlayers().stream()
+        // Used only for comparison : if a wilderness player is in the zone,
+        // then it is considered that more that 1 faction is there, even
+        // if wilderness is not considered as a faction in clashes
+        List<Faction> containedFactions = getContainedPlayers().stream()
                 //Simple message if player does not belong to any faction
                 .peek(p -> {
                     if (!FPlayers.getInstance().getByPlayer(p).hasFaction()) {
@@ -98,6 +102,9 @@ public class KothModel {
                 })
                 .map(player -> FPlayers.getInstance().getByPlayer(player).getFaction())
                 .distinct()
+                .toList();
+        // Filtering and sorting contained factions
+        List<Faction> bestFactions = containedFactions.stream()
                 .sorted(Comparator.comparingLong(
                         faction -> getContainedPlayers((Faction) faction).size()).reversed()
                 )
@@ -126,7 +133,7 @@ public class KothModel {
                 return;
             }
         }
-        int playerDifference = bestFactions.size() > 1 ? 1 : getContainedPlayers().size();
+        int playerDifference = containedFactions.size() > 1 ? 1 : getContainedPlayers().size();
         boolean shouldIncreasePercentage = bestFaction == currentFaction;
         int newCapPercentage;
         if (shouldIncreasePercentage) {
@@ -146,9 +153,30 @@ public class KothModel {
                 return;
             }
             this.capPercentage = newCapPercentage;
-            List<Player> players = new ArrayList<>(getContainedPlayers());
-            players.addAll(getCapturingFaction().getOnlinePlayers());
-            for (Player player : players) {
+            for (Player player : getCapturingFaction().getOnlinePlayers()) {
+                for (String msg : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.faction-lose-control")) {
+                    player.sendMessage(msg
+                            .replace("%area_name%", kothName)
+                            .replace("%faction%", bestFaction.getTag())
+                            .replace("%control%", String.valueOf(this.capPercentage))
+                    );
+                }
+            }
+            for (Player player : getContainedPlayers(bestFaction)) {
+                for (String msg : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.area-status-decrease")) {
+                    player.sendMessage(msg
+                            .replace("%area_name%", kothName)
+                            .replace("%faction%", getCapturingFaction().getTag())
+                            .replace("%control%", String.valueOf(this.capPercentage))
+                    );
+                }
+            }
+
+            List<Player> otherPlayers = getContainedPlayers().stream()
+                    .filter(player -> FactionUtil.getFaction(player) != bestFaction
+                            && FactionUtil.getFaction(player) != getCapturingFaction())
+                    .toList();
+            for (Player player : otherPlayers) {
                 //Sends message saying that bestFaction is stealing this zone
                 for (String msg : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.faction-steal-zone")) {
                     player.sendMessage(msg
@@ -180,7 +208,7 @@ public class KothModel {
             }
             if (capPercentage < 100 && futureCapPercentage == 100) {
                 //Sends message saying that bestFaction is now fully controlling the zone
-                for (String msg : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.faction-full-control")) {
+                for (String msg : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.faction-end-control")) {
                     Bukkit.broadcastMessage(msg
                             .replace("%area_name%", kothName)
                             .replace("%faction%", getCapturingFaction().getTag())
