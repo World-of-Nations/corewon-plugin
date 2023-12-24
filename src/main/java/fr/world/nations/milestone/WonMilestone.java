@@ -31,8 +31,10 @@ import java.util.*;
 public final class WonMilestone extends WonModule {
 
     private static WonMilestone instance;
-    private File file;
+    private File maxMilestoneReachedFile;
+    private File xpBonusFile;
     private int regularCheckTaskId;
+    private Map<String, Integer> maxMilestoneReached = new HashMap<>();
 
     public WonMilestone(Plugin loader, String name) {
         super(loader, name);
@@ -56,7 +58,7 @@ public final class WonMilestone extends WonModule {
     }
 
     public double getXpBonus(Faction faction, String fieldName) {
-        JsonNode node = JsonUtil.readFile(file);
+        JsonNode node = JsonUtil.readFile(xpBonusFile);
         if (!node.has(faction.getTag())) return 0;
         JsonNode factionNode = node.get(faction.getTag());
         if (!factionNode.has(fieldName)) return 0;
@@ -64,7 +66,7 @@ public final class WonMilestone extends WonModule {
     }
 
     public void setXpBonus(Faction faction, String fieldName, double modif) {
-        ObjectNode node = JsonUtil.getObjectNode(file);
+        ObjectNode node = JsonUtil.getObjectNode(xpBonusFile);
         ObjectNode factionNode;
         if (node.has(faction.getTag())) {
             factionNode = (ObjectNode) node.get(faction.getTag());
@@ -74,7 +76,7 @@ public final class WonMilestone extends WonModule {
         factionNode.put(fieldName, modif);
         node.put(faction.getTag(), factionNode);
         try {
-            new ObjectMapper().writeValue(file, node);
+            new ObjectMapper().writeValue(xpBonusFile, node);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -85,7 +87,7 @@ public final class WonMilestone extends WonModule {
     }
 
     public Map<String, Double> getBonuses(Faction faction) {
-        ObjectNode node = JsonUtil.getObjectNode(file);
+        ObjectNode node = JsonUtil.getObjectNode(xpBonusFile);
         JsonNode factionNode = node.get(faction.getTag());
         if (factionNode == null) return Maps.newHashMap();
         Map<String, Double> map = Maps.newHashMap();
@@ -116,10 +118,22 @@ public final class WonMilestone extends WonModule {
             }
 
 
-            file = new File(dataFolder, "xp_bonus.json");
-            if (!file.exists()) {
-                file.createNewFile();
-                new ObjectMapper().writeValue(file, JsonNodeFactory.instance.objectNode());
+            xpBonusFile = new File(dataFolder, "xp_bonus.json");
+            if (!xpBonusFile.exists()) {
+                xpBonusFile.createNewFile();
+                new ObjectMapper().writeValue(xpBonusFile, JsonNodeFactory.instance.objectNode());
+            }
+            maxMilestoneReachedFile = new File(dataFolder, "max_milestone_reached.json");
+            if (!maxMilestoneReachedFile.exists()) {
+                maxMilestoneReachedFile.createNewFile();
+                new ObjectMapper().writeValue(maxMilestoneReachedFile, JsonNodeFactory.instance.objectNode());
+            }
+            else {
+                JsonNode node = JsonUtil.readFile(maxMilestoneReachedFile);
+                for (Iterator<String> it = node.fieldNames(); it.hasNext(); ) {
+                    String fieldName = it.next();
+                    maxMilestoneReached.put(fieldName, node.get(fieldName).asInt());
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -129,28 +143,26 @@ public final class WonMilestone extends WonModule {
         if (delay < 1) delay = 1;
 
         BukkitTask task = new BukkitRunnable() {
-            final HashMap<String, Integer> map = new HashMap<>();
-
             @Override
             public void run() {
                 try {
                     List<String> toRemove = new ArrayList<>();
-                    for (String factionId : map.keySet()) {
-                        if (Factions.getInstance().getFactionById(factionId) == null) {
+                    for (String factionId : maxMilestoneReached.keySet()) {
+                        if (!Factions.getInstance().isValidFactionId(factionId)) {
                             toRemove.add(factionId);
                         }
                     }
-                    toRemove.forEach(map::remove);
+                    toRemove.forEach(maxMilestoneReached::remove);
                     for (Faction faction : FactionUtil.getAllPlayerFactions()) {
                         String factionName = faction.getTag();
                         String factionId = faction.getId();
                         int currentMilestone = getMilestoneData(faction).getMilestone();
                         faction.setWarpsLimit(getDefaultConfig().getInt("warps.limit." + currentMilestone));
-                        if (!map.containsKey(factionId)) {
-                            map.put(factionId, currentMilestone);
+                        if (!maxMilestoneReached.containsKey(factionId)) {
+                            maxMilestoneReached.put(factionId, currentMilestone);
                             continue;
                         }
-                        if (currentMilestone > map.get(factionId)) {
+                        if (currentMilestone > maxMilestoneReached.get(factionId)) {
                             if (currentMilestone == 5) {
                                 Bukkit.broadcastMessage("§cLe pays §e" + factionName + " §cpasse au §ePalier V §c! C'est désormais un §4§oEmpire §6!");
                                 for (Player player : Bukkit.getOnlinePlayers()) {
@@ -158,10 +170,13 @@ public final class WonMilestone extends WonModule {
                                 }
                             }
                             faction.sendMessage("§aVotre pays est passé au palier supérieur !");
+                            MilestoneAccess milestoneAccess = MilestoneAccess.fromLevel(currentMilestone);
+                            faction.sendMessage("§aRécompense : §d" + milestoneAccess.getPowerReward() + " power");
+                            faction.setPowerBoost(faction.getPowerBoost() + milestoneAccess.powerReward);
                             for (Player player : faction.getOnlinePlayers()) {
                                 player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
                             }
-                            map.put(factionId, currentMilestone);
+                            maxMilestoneReached.put(factionId, currentMilestone);
                         }
                     }
                 } catch (Exception e) {
@@ -175,6 +190,12 @@ public final class WonMilestone extends WonModule {
     @Override
     public void unload() {
         Bukkit.getScheduler().cancelTask(regularCheckTaskId);
+        ObjectNode node = JsonNodeFactory.instance.objectNode();
+        for (String factionId : maxMilestoneReached.keySet()) {
+            if (!Factions.getInstance().isValidFactionId(factionId)) continue;
+            node.put(factionId, maxMilestoneReached.get(factionId));
+        }
+        JsonUtil.write(xpBonusFile, node);
     }
 
     @Override

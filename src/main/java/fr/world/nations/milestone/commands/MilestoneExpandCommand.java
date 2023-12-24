@@ -13,6 +13,7 @@ import com.massivecraft.factions.zcore.fperms.PermissableAction;
 import com.massivecraft.factions.zcore.util.TL;
 import com.massivecraft.factions.zcore.util.TextUtil;
 import fr.world.nations.Core;
+import fr.world.nations.milestone.MilestoneAccess;
 import fr.world.nations.milestone.MilestoneCalculator;
 import fr.world.nations.milestone.WonMilestone;
 import org.bukkit.Bukkit;
@@ -47,8 +48,8 @@ public class MilestoneExpandCommand extends FCommand {
             return;
         }
         MilestoneCalculator data = plugin.getMilestoneData(commandContext.faction);
-        if (data.getMilestone() < 4) {
-            commandContext.sender.sendMessage("§cVous devez être au moins au Palier 4 pour exécuter cette commande ! " +
+        if (MilestoneAccess.fromLevel(data.getMilestone()).isExpandAccess()) {
+            commandContext.sender.sendMessage("§cVous devez être au moins au Palier " + MilestoneAccess.getMinimumLevelForExpand() + " pour exécuter cette commande ! " +
                     "Palier actuel : " + data.getMilestone());
             return;
         }
