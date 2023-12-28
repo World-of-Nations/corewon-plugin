@@ -127,8 +127,7 @@ public final class WonMilestone extends WonModule {
             if (!maxMilestoneReachedFile.exists()) {
                 maxMilestoneReachedFile.createNewFile();
                 new ObjectMapper().writeValue(maxMilestoneReachedFile, JsonNodeFactory.instance.objectNode());
-            }
-            else {
+            } else {
                 JsonNode node = JsonUtil.readFile(maxMilestoneReachedFile);
                 for (Iterator<String> it = node.fieldNames(); it.hasNext(); ) {
                     String fieldName = it.next();

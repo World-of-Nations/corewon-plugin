@@ -240,8 +240,7 @@ public class Assault {
                 plugin.addAttackCoolDown(attacker, defendant);
                 saveDB("");
             }
-        }
-        else {
+        } else {
             //Comportement selon le gagnant
             Faction fWinner = attackerPoints > defendantPoints ? attacker : defendant;
             Faction fLoser = attackerPoints > defendantPoints ? defendant : attacker;

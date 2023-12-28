@@ -3,11 +3,11 @@ package fr.world.nations.milestone;
 import lombok.Getter;
 
 public enum MilestoneAccess {
-    FIRST(1,1,9,50,false),
-    SECOND(2,2,9,50,false),
-    THIRD(3,3,9,50,false),
-    FOURTH(4,4,9,50,false),
-    FIFTH(5,5,9,50,false);
+    FIRST(1, 1, 9, 50, false),
+    SECOND(2, 2, 9, 50, false),
+    THIRD(3, 3, 9, 50, false),
+    FOURTH(4, 4, 9, 50, false),
+    FIFTH(5, 5, 9, 50, false);
 
     @Getter
     final int level;
@@ -37,7 +37,7 @@ public enum MilestoneAccess {
     }
 
     public static int getMinimumLevelForExpand() {
-        for (int i = 1; i < values().length+1; i++) {
+        for (int i = 1; i < values().length + 1; i++) {
             if (fromLevel(i).expandAccess) return i;
         }
         return -1;

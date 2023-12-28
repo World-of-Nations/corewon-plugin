@@ -26,12 +26,12 @@ public class DamagerListener implements Listener {
     @EventHandler
     public void EntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
         Entity bullet = event.getDamager();
-        if(!bullet.getName().contains("entity.cgm.projectile")) return;
+        if (!bullet.getName().contains("entity.cgm.projectile")) return;
 
         Player shooter = bulletShooter.get(bullet);
-        if(shooter == null) return;
+        if (shooter == null) return;
 
-        if(!(event.getEntity() instanceof Player damaged)) return;
+        if (!(event.getEntity() instanceof Player damaged)) return;
 
 
         this.onPlayerIsHitByBullet(damaged, shooter, event);
@@ -42,10 +42,10 @@ public class DamagerListener implements Listener {
     public void EntitySpawnEvent(EntitySpawnEvent event) {
         Entity entity = event.getEntity();
 
-        if(!entity.getName().contains("entity.cgm.projectile")) return;
+        if (!entity.getName().contains("entity.cgm.projectile")) return;
 
         Player shooter = (Player) entity.getNearbyEntities(0, 0, 0).stream().filter(e -> e instanceof Player).findFirst().orElse(null);
-        if(shooter == null) return;
+        if (shooter == null) return;
 
         bulletShooter.add(entity, shooter);
     }
@@ -59,27 +59,27 @@ public class DamagerListener implements Listener {
         Faction atDamagedFaction = Board.getInstance().getFactionAt(FLocation.wrap(damaged.getLocation()));
         Faction atShooterFaction = Board.getInstance().getFactionAt(FLocation.wrap(shooter.getLocation()));
 
-        if(damagedFaction.equals(shooterFaction)) {
+        if (damagedFaction.equals(shooterFaction)) {
             e.setCancelled(true);
             return;
         }
 
-        if(relation.equals(Relation.ALLY) || relation.equals(Relation.TRUCE)) {
+        if (relation.equals(Relation.ALLY) || relation.equals(Relation.TRUCE)) {
             e.setCancelled(true);
             return;
         }
 
-        if(relation.equals(Relation.NEUTRAL)) {
-            if(damagedFaction.equals(atDamagedFaction)) {
+        if (relation.equals(Relation.NEUTRAL)) {
+            if (damagedFaction.equals(atDamagedFaction)) {
                 e.setCancelled(true);
                 return;
             }
         }
 
-        if(relation.equals(Relation.ENEMY)) {
+        if (relation.equals(Relation.ENEMY)) {
             Assault assault = plugin.getAssaultManager().getAssault(damagedFaction);
-            if(assault == null || !assault.contains(shooterFaction)) {
-                if(damagedFaction.equals(atDamagedFaction)) {
+            if (assault == null || !assault.contains(shooterFaction)) {
+                if (damagedFaction.equals(atDamagedFaction)) {
                     e.setCancelled(true);
                     return;
                 }
