@@ -3,6 +3,7 @@ package fr.world.nations;
 import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.cmd.Aliases;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
@@ -61,21 +62,16 @@ public class FactionCommandsInterferer implements Listener {
         toBlock.addAll(Aliases.vault);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onCommand(PlayerCommandPreprocessEvent event) {
         if (FPlayers.getInstance().getByPlayer(event.getPlayer()).isAdminBypassing()) return;
-        String msg = event.getMessage();
+        String msg = event.getMessage().substring(1);
         String[] args = msg.split(" ");
         if (!args[0].equalsIgnoreCase("f")) return;
         String cmdName = args[1].toLowerCase();
         if (Aliases.show_show.contains(cmdName) || cmdName.equalsIgnoreCase("f")) {
             event.setCancelled(true);
             //TODO ouvrir interface
-            return;
-        }
-        if (Aliases.warp.contains(cmdName) || Aliases.setWarp.contains(cmdName)) {
-            event.setCancelled(true);
-            //TODO warps
             return;
         }
         if (toBlock.contains(cmdName)) {
