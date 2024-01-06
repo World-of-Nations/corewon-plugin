@@ -8,7 +8,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
+import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.cmd.FCommand;
+import com.massivecraft.factions.util.CC;
 import fr.world.nations.Core;
 import fr.world.nations.milestone.commands.MilestoneExpandCommand;
 import fr.world.nations.milestone.commands.MilestoneHelpCommand;
@@ -31,10 +33,10 @@ import java.util.*;
 public final class WonMilestone extends WonModule {
 
     private static WonMilestone instance;
+    private final Map<String, Integer> currentMilestone = new HashMap<>();
     private File maxMilestoneReachedFile;
     private File xpBonusFile;
     private int regularCheckTaskId;
-    private Map<String, Integer> maxMilestoneReached = new HashMap<>();
 
     public WonMilestone(Plugin loader, String name) {
         super(loader, name);
@@ -131,7 +133,7 @@ public final class WonMilestone extends WonModule {
                 JsonNode node = JsonUtil.readFile(maxMilestoneReachedFile);
                 for (Iterator<String> it = node.fieldNames(); it.hasNext(); ) {
                     String fieldName = it.next();
-                    maxMilestoneReached.put(fieldName, node.get(fieldName).asInt());
+                    currentMilestone.put(fieldName, node.get(fieldName).asInt());
                 }
             }
         } catch (IOException e) {
@@ -146,37 +148,35 @@ public final class WonMilestone extends WonModule {
             public void run() {
                 try {
                     List<String> toRemove = new ArrayList<>();
-                    for (String factionId : maxMilestoneReached.keySet()) {
+                    for (String factionId : currentMilestone.keySet()) {
                         if (!Factions.getInstance().isValidFactionId(factionId)) {
                             toRemove.add(factionId);
                         }
                     }
-                    toRemove.forEach(maxMilestoneReached::remove);
+                    toRemove.forEach(currentMilestone::remove);
                     for (Faction faction : FactionUtil.getAllPlayerFactions()) {
-                        String factionName = faction.getTag();
                         String factionId = faction.getId();
                         int currentMilestone = getMilestoneData(faction).getMilestone();
-                        faction.setWarpsLimit(getDefaultConfig().getInt("warps.limit." + currentMilestone));
-                        if (!maxMilestoneReached.containsKey(factionId)) {
-                            maxMilestoneReached.put(factionId, currentMilestone);
+                        if (WonMilestone.this.currentMilestone.containsKey(factionId)
+                                && WonMilestone.this.currentMilestone.get(factionId) == currentMilestone) {
                             continue;
                         }
-                        if (currentMilestone > maxMilestoneReached.get(factionId)) {
+                        if (currentMilestone > WonMilestone.this.currentMilestone.get(factionId)) {
                             if (currentMilestone == 5) {
-                                Bukkit.broadcastMessage("§cLe pays §e" + factionName + " §cpasse au §ePalier V §c! C'est désormais un §4§oEmpire §6!");
+                                Bukkit.broadcastMessage("§cLe pays §e" + faction.getTag() + " §cpasse au §ePalier V §c! C'est désormais un §4§oEmpire §6!");
                                 for (Player player : Bukkit.getOnlinePlayers()) {
                                     player.playSound(player.getLocation(), Sound.ENTITY_WITHER_SPAWN, 1, 1);
                                 }
                             }
-                            faction.sendMessage("§aVotre pays est passé au palier supérieur !");
-                            MilestoneAccess milestoneAccess = MilestoneAccess.fromLevel(currentMilestone);
-                            faction.sendMessage("§aRécompense : §d" + milestoneAccess.getPowerReward() + " power");
-                            faction.setPowerBoost(faction.getPowerBoost() + milestoneAccess.powerReward);
-                            for (Player player : faction.getOnlinePlayers()) {
-                                player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
-                            }
-                            maxMilestoneReached.put(factionId, currentMilestone);
+                            onFactionIncreaseLevel(faction, currentMilestone);
+                        } else {
+                            onFactionDecreaseLevel(faction, currentMilestone);
                         }
+                        faction.setUpgrade("Chest", currentMilestone);
+                        updateChests(faction);
+                        faction.setUpgrade("Warps", currentMilestone);
+                        updateWarps(faction);
+                        WonMilestone.this.currentMilestone.put(factionId, currentMilestone);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -186,15 +186,57 @@ public final class WonMilestone extends WonModule {
         regularCheckTaskId = task.getTaskId();
     }
 
+    private void onFactionIncreaseLevel(Faction faction, int level) {
+        faction.sendMessage("§aVotre pays " + faction.getTag() + " est passé au palier §2" + level + "§a !");
+        MilestoneAccess milestoneAccess = MilestoneAccess.fromLevel(level);
+        faction.sendMessage("§aRécompense : §d" + milestoneAccess.getPowerReward() + " power");
+        faction.setPowerBoost(faction.getPowerBoost() + milestoneAccess.powerReward);
+        for (Player player : faction.getOnlinePlayers()) {
+            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+        }
+    }
+
+    private void onFactionDecreaseLevel(Faction faction, int level) {
+        faction.sendMessage("§cVotre pays " + faction.getTag() + " est redescendu au palier §4" + level + "§c...");
+        MilestoneAccess prevMilestoneAccess = MilestoneAccess.fromLevel(level + 1);
+        int powerToRemove = prevMilestoneAccess.powerReward;
+        faction.setPowerBoost(faction.getPowerBoost() - powerToRemove);
+        for (Player player : faction.getOnlinePlayers()) {
+            player.playSound(player.getLocation(), Sound.ENTITY_WOLF_WHINE, 1, 1);
+        }
+    }
+
+    private void updateChests(Faction faction) {
+        String invName = CC.translate(FactionsPlugin.getInstance().getConfig().getString("fchest.Inventory-Title"));
+        for (Player player : faction.getOnlinePlayers()) {
+            if (player.getOpenInventory().getTitle().equalsIgnoreCase(invName)) player.closeInventory();
+        }
+        int level = faction.getUpgrade("Chest");
+        int size = FactionsPlugin.getInstance().getFileManager()
+                .getUpgrades().getConfig().getInt("fupgrades.MainMenu.Chest.Chest-Size.level-" + level);
+        try {
+            faction.setChestSize(size * 9);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateWarps(Faction faction) {
+        int level = faction.getUpgrade("Warps");
+        int size = FactionsPlugin.getInstance().getFileManager()
+                .getUpgrades().getConfig().getInt("fupgrades.MainMenu.Warps.warp-limit.level-" + level);
+        faction.setWarpsLimit(size);
+    }
+
     @Override
     public void unload() {
         Bukkit.getScheduler().cancelTask(regularCheckTaskId);
         ObjectNode node = JsonNodeFactory.instance.objectNode();
-        for (String factionId : maxMilestoneReached.keySet()) {
+        for (String factionId : currentMilestone.keySet()) {
             if (!Factions.getInstance().isValidFactionId(factionId)) continue;
-            node.put(factionId, maxMilestoneReached.get(factionId));
+            node.put(factionId, currentMilestone.get(factionId));
         }
-        JsonUtil.write(xpBonusFile, node);
+        JsonUtil.write(maxMilestoneReachedFile, node);
     }
 
     @Override
