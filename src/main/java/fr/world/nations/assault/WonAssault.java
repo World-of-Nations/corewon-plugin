@@ -5,7 +5,6 @@ import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.cmd.FCommand;
 import fr.world.nations.Core;
 import fr.world.nations.assault.cmd.AssaultCommand;
-import fr.world.nations.assault.damager.DamagerListener;
 import fr.world.nations.assault.explosion.ExplosionListener;
 import fr.world.nations.assault.explosion.ExplosionManager;
 import fr.world.nations.modules.WonModule;
@@ -90,7 +89,7 @@ public final class WonAssault extends WonModule {
 
     @Override
     public List<Listener> registerListeners() {
-        return Lists.newArrayList(new AssaultListener(this), new ExplosionListener(this), new DamagerListener(this));
+        return Lists.newArrayList(new AssaultListener(this), new ExplosionListener(this));
     }
 
     public AssaultManager getAssaultManager() {
