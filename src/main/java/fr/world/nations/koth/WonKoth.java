@@ -46,39 +46,24 @@ public class WonKoth extends WonModule {
             try {
                 configFile.createNewFile();
                 FileConfiguration configuration = getDefaultConfig();
-                configuration.set("messages.players.no-faction",
-                        List.of("Sorry, you must have a faction.", "§8§m----------------------"));
-                configuration.set("messages.players.faction-start-control",
-                        List.of("Faction %faction% start to take control of the area %area_name%",
-                                "§8§m-------------------------------------------"));
-                configuration.set("messages.players.faction-end-control",
-                        List.of("Faction %faction% has finished taking control of the area %area_name%",
-                                "§8§m-------------------------------------------"));
-                configuration.set("messages.players.faction-lose-control",
-                        List.of("Faction %faction% steal an area you control (%area_name%) (%control% %) ",
-                                "§8§m-------------------------------------------"));
-                configuration.set("messages.players.area-status",
-                        List.of("Faction %faction% has control of the area %area_name% (%control% %)",
-                                "§8§m-------------------------------------------"));
-                configuration.set("messages.players.area-status-decrease",
-                        List.of("Decrease in possession of %faction% in progress %control% %",
-                                "§8§m-------------------------------------------"));
-                configuration.set("messages.players.tp-warzone-noarmor",
-                        List.of("You must be equipped to enter into the warzone"));
-                configuration.set("messages.admins.koth-already-exists",
-                        List.of("Area %area_name% already exists."));
-                configuration.set("messages.admins.koth-created",
-                        List.of("area %area_name% has created."));
-                configuration.set("messages.admins.no-koth",
-                        List.of("Area %area_name% doesn't exists."));
-                configuration.set("messages.admins.koth-delete",
-                        List.of("Area %area_name% is deleted."));
-                configuration.set("messages.admins.koth-spawn-set",
-                        List.of("Spawn area of %area_name% has been set."));
-                configuration.set("messages.admins.koth-reward-set",
-                        List.of("The reward has been set for area %area_name%"));
+
+                configuration.set("messages.players.no-faction", List.of("Sorry, you must have a faction.", "§8§m----------------------"));
+                configuration.set("messages.players.faction-start-control", List.of("Faction %faction% start to take control of the area %area_name%", "§8§m-------------------------------------------"));
+                configuration.set("messages.players.faction-lose-control", List.of("Faction %faction% is capturing your zone %area_name% (%control% %)", "§8§m-------------------------------------------"));
+                configuration.set("messages.players.faction-end-control", List.of("Faction %faction% has finished taking control of the area %area_name%", "§8§m-------------------------------------------"));
+                configuration.set("messages.players.faction-steal-zone", List.of("Faction %faction% steals an area that faction %victim% controls (%area_name%) (%control% %)", "§8§m-------------------------------------------"));
+                configuration.set("messages.players.area-status", List.of("Faction %faction% has control of the area %area_name% (%control% %)", "§8§m-------------------------------------------"));
+                configuration.set("messages.players.area-status-decrease", List.of("Decrease in possession of %faction% in progress %control% %", "§8§m-------------------------------------------"));
+                configuration.set("messages.players.factions-clash", List.of("Faction %faction1% clashes with %faction2% in area %area_name%. Current controller is %current_controller% (%control% %)", "§8§m-------------------------------------------"));
+                configuration.set("messages.admins.koth-already-exists", List.of("Area %area_name% already exists."));
+                configuration.set("messages.admins.koth-created", List.of("area %area_name% has created."));
+                configuration.set("messages.admins.no-koth", List.of("Area %area_name% doesn't exists."));
+                configuration.set("messages.admins.koth-delete", List.of("Area %area_name% is deleted."));
+                configuration.set("messages.admins.koth-spawn-set", List.of("Spawn area of %area_name% has been set."));
+                configuration.set("messages.admins.koth-reward-set", List.of("The reward has been set for area %area_name%"));
 
                 configuration.save(configFile);
+
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException(e);
