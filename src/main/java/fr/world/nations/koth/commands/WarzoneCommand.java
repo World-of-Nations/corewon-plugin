@@ -135,7 +135,6 @@ public class WarzoneCommand implements CommandExecutor {
             if (args.length == 2) {
 
                 if (sender instanceof Player player) {
-
                     if (args[0].equalsIgnoreCase("create")) {
                         KothHandler.createKothFromRegion(args[1], player);
                         player.sendMessage("Une warzone a été créée à votre emplacement ! (" + args[1] + ")");

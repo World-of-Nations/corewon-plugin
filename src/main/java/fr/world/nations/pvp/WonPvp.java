@@ -26,7 +26,8 @@ public class WonPvp extends WonModule {
     }
 
     @Override
-    public void unload() {    }
+    public void unload() {
+    }
 
     @Override
     public List<Listener> registerListeners() {

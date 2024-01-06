@@ -27,7 +27,7 @@ public class PvpManager {
 
     public void startCountdown(Player player) {
 
-        if(!isPvp(player)) {
+        if (!isPvp(player)) {
             player.sendMessage(plugin.getDefaultConfig().getString("pvp_message", (String) plugin.getDefaultConfigValues().get("pvp_message")));
         }
 
@@ -51,7 +51,7 @@ public class PvpManager {
 
     }
 
-    public void startCountdown(Player ...players) {
+    public void startCountdown(Player... players) {
         for (Player player : players) {
             startCountdown(player);
         }
@@ -71,7 +71,7 @@ public class PvpManager {
 
     }
 
-    public void stopCountdown(Player ...players) {
+    public void stopCountdown(Player... players) {
         for (Player player : players) {
             stopCountdown(player);
         }
