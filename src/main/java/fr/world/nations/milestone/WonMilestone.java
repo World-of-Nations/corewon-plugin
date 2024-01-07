@@ -157,20 +157,18 @@ public final class WonMilestone extends WonModule {
                     for (Faction faction : FactionUtil.getAllPlayerFactions()) {
                         String factionId = faction.getId();
                         int currentMilestone = getMilestoneData(faction).getMilestone();
-                        if (WonMilestone.this.currentMilestone.containsKey(factionId)
-                                && WonMilestone.this.currentMilestone.get(factionId) == currentMilestone) {
-                            continue;
-                        }
-                        if (currentMilestone > WonMilestone.this.currentMilestone.get(factionId)) {
-                            if (currentMilestone == 5) {
-                                Bukkit.broadcastMessage("§cLe pays §e" + faction.getTag() + " §cpasse au §ePalier V §c! C'est désormais un §4§oEmpire §6!");
-                                for (Player player : Bukkit.getOnlinePlayers()) {
-                                    player.playSound(player.getLocation(), Sound.ENTITY_WITHER_SPAWN, 1, 1);
+                        if (WonMilestone.this.currentMilestone.containsKey(factionId)) {
+                            if (currentMilestone > WonMilestone.this.currentMilestone.get(factionId)) {
+                                if (currentMilestone == 5) {
+                                    Bukkit.broadcastMessage("§cLe pays §e" + faction.getTag() + " §cpasse au §ePalier V §c! C'est désormais un §4§oEmpire §6!");
+                                    for (Player player : Bukkit.getOnlinePlayers()) {
+                                        player.playSound(player.getLocation(), Sound.ENTITY_WITHER_SPAWN, 1, 1);
+                                    }
                                 }
+                                onFactionIncreaseLevel(faction, currentMilestone);
+                            } else if (WonMilestone.this.currentMilestone.get(factionId) < currentMilestone) {
+                                onFactionDecreaseLevel(faction, currentMilestone);
                             }
-                            onFactionIncreaseLevel(faction, currentMilestone);
-                        } else {
-                            onFactionDecreaseLevel(faction, currentMilestone);
                         }
                         faction.setUpgrade("Chest", currentMilestone);
                         updateChests(faction);
