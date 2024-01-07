@@ -23,6 +23,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Assault {
 
@@ -43,6 +44,7 @@ public class Assault {
     private final Map<UUID, Nametag> cTags = new HashMap<>();
     */
     private final String SHOULD_CLEAR_PREFIX = "CLEAR";
+    private final AssaultScoreboard scoreboard;
     private long assaultStartedMillis;
     private int taskId;
     private FLocation targetedClaim;
@@ -74,10 +76,24 @@ public class Assault {
         if (explosionsAllowed) {
             defendant.setPeacefulExplosionsEnabled(true);
         }
+        scoreboard = new AssaultScoreboard(this);
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    public WonAssault getPlugin() {
+        return plugin;
+    }
+
+    public AssaultScoreboard getScoreboard() {
+        return scoreboard;
     }
 
     public void run() {
         running = true;
+        scoreboard.start();
         Bukkit.broadcastMessage("§4[Assaut] §cUn assaut entre §6" + attacker.getTag() + " §cet §6" + defendant.getTag() + "§c a commencé !");
         broadcastRaw("§4" + StringUtil.mult("-", msgLength));
         broadcastRaw("");
@@ -306,14 +322,21 @@ public class Assault {
     private void saveDB(String winnerName) {
         try {
             final Connection connection = DatabaseManager.WON_DB.getDatabaseAccess().getConnection();
-            final PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO `woncore_assaults` (attackerName, defenderName, attackerKill, defenderKill, winner, date_time) VALUES (?, ?, ?, ?, ?, ?)");
+            final PreparedStatement preparedStatement = connection.prepareStatement(
+                    "INSERT INTO `woncore_assaults` " +
+                            "(attacker_name, defender_name, attacker_points, defender_points, " +
+                            "captured_chunk, explosions_allowed, winner_name, date_time) " +
+                            "VALUES " +
+                            "(?, ?, ?, ?, ?, ?, ?, ?)");
 
             preparedStatement.setString(1, attacker.getTag());
             preparedStatement.setString(2, defendant.getTag());
             preparedStatement.setInt(3, attackerPoints);
             preparedStatement.setInt(4, defendantPoints);
-            preparedStatement.setString(5, winnerName);
-            preparedStatement.setLong(6, Instant.now().getEpochSecond());
+            preparedStatement.setBoolean(5, targetedClaimSuccess);
+            preparedStatement.setBoolean(6, explosionsAllowed);
+            preparedStatement.setString(7, winnerName);
+            preparedStatement.setLong(8, Instant.now().getEpochSecond());
 
             preparedStatement.executeUpdate();
             preparedStatement.close();
@@ -567,9 +590,7 @@ public class Assault {
             players.addAll(faction.getOnlinePlayers());
         }
         players.addAll(moderators);
-        List<Player> finalList = Lists.newArrayList();
-        players.stream().filter(Player::isOnline).forEach(finalList::add);
-        return finalList;
+        return players.stream().filter(Player::isOnline).collect(Collectors.toList());
     }
 
     public void onFactionQuit(Faction faction) {
