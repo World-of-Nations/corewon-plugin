@@ -211,7 +211,7 @@ public final class WonMilestone extends WonModule {
         }
         int level = faction.getUpgrade("Chest");
         int size = FactionsPlugin.getInstance().getFileManager()
-                .getUpgrades().getConfig().getInt("fupgrades.MainMenu.Chest.Chest-Size.level-" + level);
+                .getUpgrades().getConfig().getInt("fupgrades.MainMenu.Chest.Chest-Size.level-" + level, 6);
         try {
             faction.setChestSize(size * 9);
         } catch (Exception e) {
