@@ -41,6 +41,7 @@ public class WonPvp extends WonModule {
         values.put("countdown", 90);
         values.put("commands_disabled", Lists.newArrayList("/tp", "/tpa", "/tpaccept", "/warp", "/home", "/spawn", "/back", "/f home"));
         values.put("pvp_message", "&cVous êtes désormais en combat !");
+        values.put("pvp_bar_message", "&cVous êtes en combat !");
         values.put("command_blocked_message", "&cVous ne pouvez pas faire cette commande en combat !");
         values.put("deco_combat_message", "&cVous avez quitté le serveur pendant un combat, vous êtes donc mort !");
         return values;

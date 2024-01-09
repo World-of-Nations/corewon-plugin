@@ -19,7 +19,7 @@ public class PvpListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
         Player player = e.getPlayer();
-        if (pvpManager.isPvp(player)) return;
+        if (!pvpManager.isPvp(player)) return;
 
         player.setHealth(0);
         player.kickPlayer(plugin.getDefaultConfig().getString("deco_combat_message", (String) plugin.getDefaultConfigValues().get("deco_combat_message")));
@@ -29,7 +29,7 @@ public class PvpListener implements Listener {
     @EventHandler
     public void onPlayerExecuteCommand(PlayerCommandPreprocessEvent e) {
         Player player = e.getPlayer();
-        if (pvpManager.isPvp(player)) return;
+        if (!pvpManager.isPvp(player)) return;
         if (pvpManager.commandIsBlocked(e.getMessage())) {
             e.setCancelled(true);
             player.sendMessage(plugin.getDefaultConfig().getString("command_blocked_message", (String) plugin.getDefaultConfigValues().get("command_blocked_message")));
