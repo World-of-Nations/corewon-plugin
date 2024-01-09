@@ -36,7 +36,6 @@ public class WeaponListener implements Listener {
 
         if (!(event.getEntity() instanceof Player damaged)) return;
 
-
         this.onPlayerIsHitByBullet(damaged, shooter, event);
     }
 

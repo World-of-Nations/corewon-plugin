@@ -14,6 +14,7 @@ import com.massivecraft.factions.util.CC;
 import fr.world.nations.Core;
 import fr.world.nations.milestone.commands.MilestoneExpandCommand;
 import fr.world.nations.milestone.commands.MilestoneHelpCommand;
+import fr.world.nations.milestone.commands.MilestoneRefreshCommand;
 import fr.world.nations.milestone.commands.xp.*;
 import fr.world.nations.modules.WonModule;
 import fr.world.nations.util.FactionUtil;
@@ -204,7 +205,7 @@ public final class WonMilestone extends WonModule {
         }
     }
 
-    private void updateChests(Faction faction) {
+    public void updateChests(Faction faction) {
         String invName = CC.translate(FactionsPlugin.getInstance().getConfig().getString("fchest.Inventory-Title"));
         for (Player player : faction.getOnlinePlayers()) {
             if (player.getOpenInventory().getTitle().equalsIgnoreCase(invName)) player.closeInventory();
@@ -219,7 +220,7 @@ public final class WonMilestone extends WonModule {
         }
     }
 
-    private void updateWarps(Faction faction) {
+    public void updateWarps(Faction faction) {
         int level = faction.getUpgrade("Warps");
         int size = FactionsPlugin.getInstance().getFileManager()
                 .getUpgrades().getConfig().getInt("fupgrades.MainMenu.Warps.warp-limit.level-" + level);
@@ -247,7 +248,8 @@ public final class WonMilestone extends WonModule {
                 new MilestoneTopCommand(this),
                 new MilestoneHelpCommand(),
                 new MilestoneDiagnosisCommand(this),
-                new MilestoneExpandCommand(this));
+                new MilestoneExpandCommand(this),
+                new MilestoneRefreshCommand(this));
     }
 
     @Override

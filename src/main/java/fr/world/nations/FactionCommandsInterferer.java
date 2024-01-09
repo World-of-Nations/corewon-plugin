@@ -48,7 +48,6 @@ public class FactionCommandsInterferer implements Listener {
         toBlock.addAll(Aliases.setTnt);
         toBlock.addAll(Aliases.scoreboard);
         toBlock.addAll(Aliases.setBanner);
-        toBlock.addAll(Aliases.setWarp);
         toBlock.addAll(Aliases.spawnerlock);
         toBlock.addAll(Aliases.stealth);
         toBlock.addAll(Aliases.strikes_strikes);
@@ -75,6 +74,7 @@ public class FactionCommandsInterferer implements Listener {
             return;
         }
         if (toBlock.contains(cmdName)) {
+            event.getPlayer().sendMessage("§cCette commande n'est pas disponible !");
             event.setCancelled(true);
         }
     }
