@@ -29,11 +29,13 @@ public class PvpManager {
 
         if (!isPvp(player)) {
             player.sendMessage(plugin.getDefaultConfig().getString("pvp_message", (String) plugin.getDefaultConfigValues().get("pvp_message")));
+        } else {
+            cancelBossBar(player);
         }
 
         countdown_pvp.put(player, System.currentTimeMillis());
 
-        BossBar bossBar = Bukkit.createBossBar("§cVous êtes en combat !", BarColor.RED, BarStyle.SOLID);
+        BossBar bossBar = Bukkit.createBossBar(plugin.getDefaultConfig().getString("pvp_bar_message", (String) plugin.getDefaultConfigValues().get("pvp_bar_message")), BarColor.RED, BarStyle.SOLID);
         bossBar.addPlayer(player);
         bossBar.setVisible(true);
 
@@ -41,7 +43,7 @@ public class PvpManager {
             if (!isPvp(player)) {
                 stopCountdown(player);
             } else {
-                bossBar.setTitle("§cVous êtes en combat ! §7(" + getCountdown(player) + "s)");
+                bossBar.setTitle(plugin.getDefaultConfig().getString("pvp_bar_message", (String) plugin.getDefaultConfigValues().get("pvp_bar_message")) + "§7(" + getCountdown(player) + "s)");
             }
         }, 0, 20);
 
@@ -59,16 +61,7 @@ public class PvpManager {
 
     public void stopCountdown(Player player) {
         countdown_pvp.remove(player);
-
-        if (countdown_visual.containsKey(player)) {
-            for (BossBar bossBar : countdown_visual.get(player).keySet()) {
-                bossBar.setVisible(false);
-                bossBar.removeAll();
-                countdown_visual.get(player).get(bossBar).cancel();
-                countdown_visual.get(player).remove(bossBar);
-            }
-        }
-
+        cancelBossBar(player);
     }
 
     public void stopCountdown(Player... players) {
@@ -77,12 +70,23 @@ public class PvpManager {
         }
     }
 
+    public void cancelBossBar(Player player) {
+        if (countdown_visual.containsKey(player)) {
+            for (BossBar bossBar : countdown_visual.get(player).keySet()) {
+                bossBar.setVisible(false);
+                bossBar.removeAll();
+                countdown_visual.get(player).get(bossBar).cancel();
+                countdown_visual.get(player).remove(bossBar);
+            }
+        }
+    }
+
     public int getCountdown(Player player) {
-        return (int) ((countdown_pvp.getOrDefault(player, 0L) + countdown) - System.currentTimeMillis());
+        return countdown - (int) ((System.currentTimeMillis() - countdown_pvp.get(player)) / 1000);
     }
 
     public boolean isPvp(Player player) {
-        return !countdown_pvp.containsKey(player) || getCountdown(player) > 0;
+        return countdown_pvp.containsKey(player) && getCountdown(player) > 0;
     }
 
     public boolean commandIsBlocked(String command) {
