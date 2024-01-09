@@ -55,6 +55,7 @@ public class PvpManager {
 
     public void startCountdown(Player... players) {
         for (Player player : players) {
+            if(player.isOp()) return;
             startCountdown(player);
         }
     }
@@ -90,8 +91,8 @@ public class PvpManager {
     }
 
     public boolean commandIsBlocked(String command) {
-        for (String cmd : commands) {
-            if (command.startsWith(cmd) || command.equalsIgnoreCase(cmd)) {
+        for (String cmd : this.commands) {
+            if (command.startsWith(cmd + " ") || command.equalsIgnoreCase(cmd)) {
                 return true;
             }
         }
