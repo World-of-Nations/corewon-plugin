@@ -93,7 +93,9 @@ public class Assault {
 
     public void run() {
         running = true;
-        scoreboard.start();
+        for (Player player : getOnlinePlayers()) {
+            scoreboard.setScoreboardActive(player);
+        }
         Bukkit.broadcastMessage("§4[Assaut] §cUn assaut entre §6" + attacker.getTag() + " §cet §6" + defendant.getTag() + "§c a commencé !");
         broadcastRaw("§4" + StringUtil.mult("-", msgLength));
         broadcastRaw("");
@@ -223,18 +225,9 @@ public class Assault {
     }
 
     public void end(boolean force, boolean calculateChunkPoints) {
+        running = false;
         //Au cas où l'assaut devait être annulé
         Bukkit.getScheduler().cancelTask(taskId);
-
-        /*for (Player player : getOnlinePlayers()) {
-            UUID uniqueId = player.getUniqueId();
-            if (cTags.containsKey(uniqueId)) {
-                NametagEdit.getApi().setNametag(player, cTags.get(uniqueId).getPrefix(), cTags.get(uniqueId).getSuffix());
-                cTags.remove(uniqueId);
-            } else {
-                NametagEdit.getApi().clearNametag(player);
-            }
-        }*/
 
         //Si le chunk n'a pas réussi à être capturé
         if (!targetedClaimSuccess && calculateChunkPoints) {
@@ -428,7 +421,6 @@ public class Assault {
                 onDeath(player, null);
             }
         }.runTaskLater(plugin.getLoader(), (long) (logoutPenTime * 60 * 20)).getTaskId();
-
         logoutTaskIds.put(player.getUniqueId(), taskId);
     }
 
@@ -488,41 +480,10 @@ public class Assault {
             defendantList.add(arrivant);
             broadcast("§cLa faction §6" + arrivant.getTag() + " §ca rejoint les défenseurs !");
         }
+        for (Player player : arrivant.getOnlinePlayers()) {
+            scoreboard.setScoreboardActive(player);
+        }
     }
-
-    /*private void setPrefixes(Faction faction) {
-        faction.getOnlinePlayers().forEach(this::setAssaultCTag);
-    }*/
-
-    /*private void setAssaultCTag(Player player) {
-        String attackerPrefix = "&4[&cAttaquant&4] &c";
-        String defenderPrefix = "&2[&aDefenseur&2] &a";
-        Nametag playerNt = NametagEdit.getApi().getNametag(player);
-        if (playerNt != null && !(playerNt.getPrefix().equals("") && playerNt.getSuffix().equals(""))) {
-            cTags.put(player.getUniqueId(), playerNt);
-        } else {
-            cTags.put(player.getUniqueId(), new Nametag(SHOULD_CLEAR_PREFIX, ""));
-        }
-
-        if (isAttacker(player)) {
-            NametagEdit.getApi().setPrefix(player, attackerPrefix);
-        } else {
-            NametagEdit.getApi().setPrefix(player, defenderPrefix);
-        }
-    }*/
-
-    /*public boolean removeCTag(Player player) {
-        UUID uniqueId = player.getUniqueId();
-        if (!cTags.containsKey(uniqueId)) return false;
-        Nametag nametag = cTags.get(uniqueId);
-        if (nametag.getPrefix().equals(SHOULD_CLEAR_PREFIX)) {
-            NametagEdit.getApi().clearNametag(player);
-        } else {
-            NametagEdit.getApi().setNametag(player, cTags.get(uniqueId).getPrefix(), cTags.get(uniqueId).getSuffix());
-        }
-        cTags.remove(uniqueId);
-        return true;
-    }*/
 
     public FLocation getTargetedClaim() {
         return targetedClaim;
@@ -650,6 +611,7 @@ public class Assault {
                 }
             }
         }
+        scoreboard.setScoreboardActive(player);
     }
 
     public boolean isAttacker(Player player) {
