@@ -20,6 +20,7 @@ public class CountryCommand extends FCommand {
         addSubCommand(new CountryPosCommand(countryManager));
         addSubCommand(new CountryRemoveCommand(countryManager));
         addSubCommand(new CountrySetidCommand(countryManager));
+        addSubCommand(new CountrySetSpawnsWorld(countryManager));
         this.requirements = new CommandRequirements.Builder(Permission.ADMIN)
                 .playerOnly()
                 .brigadier(CountryBrigadier.class)
