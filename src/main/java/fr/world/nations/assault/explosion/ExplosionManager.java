@@ -118,13 +118,19 @@ public class ExplosionManager {
         return System.currentTimeMillis() - enemyStartedMillis;
     }
 
-    public void setEnemies(Faction f1, Faction f2) {
+    public void setEnemies(Faction f1, Faction f2, boolean flag) {
         FileConfiguration enemyConfig = YamlConfiguration.loadConfiguration(enemyFile);
+        long newValue = flag ? System.currentTimeMillis() : -1;
         long enemyStartedMillis = enemyConfig.getLong(f1.getId() + "-" + f2.getId(), -1);
         if (enemyStartedMillis < 0) {
-            enemyConfig.set(f2.getId() + "-" + f1.getId(), System.currentTimeMillis());
+            enemyConfig.set(f2.getId() + "-" + f1.getId(), newValue);
         } else {
-            enemyConfig.set(f1.getId() + "-" + f2.getId(), System.currentTimeMillis());
+            enemyConfig.set(f1.getId() + "-" + f2.getId(), newValue);
+        }
+        try {
+            enemyConfig.save(enemyFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

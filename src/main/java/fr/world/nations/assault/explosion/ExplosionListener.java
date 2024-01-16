@@ -21,8 +21,12 @@ public class ExplosionListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onEnemy(FactionRelationEvent event) {
+        if (event.getOldRelation() == Relation.ENEMY && event.getRelation() != Relation.ENEMY) {
+            plugin.getExplosionManager().setEnemies(event.getFaction(), event.getTargetFaction(), false);
+            return;
+        }
         if (event.getRelation() != Relation.ENEMY) return;
-        plugin.getExplosionManager().setEnemies(event.getFaction(), event.getTargetFaction());
+        plugin.getExplosionManager().setEnemies(event.getFaction(), event.getTargetFaction(), true);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
