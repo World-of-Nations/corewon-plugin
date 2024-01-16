@@ -83,31 +83,40 @@ public class AssaultStartCommand extends FCommand {
         System.out.println(tokenOk + " " + enemyOk);
         String explosionArg = commandContext.argAsString(1);
         if (explosionArg != null) {
-            if (List.of("yes", "true", "explosion", "explosions").contains(explosionArg.toLowerCase())) {
+            explosionArg = explosionArg.toLowerCase();
+            if (List.of("yes", "true", "explosion", "explosions").contains(explosionArg)) {
+                explosions = true;
+            } else if (!List.of("no", "false", "normal").contains(explosionArg)) {
+                commandContext.sender.sendMessage("§cMauvais argument ! Faites sois §e/f assault " + faction.getTag()
+                        + " true§c, sois §e/f assault " + faction.getTag() + " false§c.");
+                return;
+            }
+            if (explosions) {
                 if (!enemyOk) {
-                    long daysRequired = rootCmd.getPlugin().getDefaultConfig().getLong("explosions.enemy-required-time-days");
-                    DateFormat format = new SimpleDateFormat("dd hh mm");
-                    String time = format.format(new Date(rootCmd.getPlugin().getExplosionManager().enemySinceMillis(commandContext.faction, faction)));
+                    double daysRequired = rootCmd.getPlugin().getDefaultConfig().getDouble("explosions.enemy-required-time-days");
+                    long milliseconds = rootCmd.getPlugin().getExplosionManager().enemySinceMillis(commandContext.faction, faction);
+                    long second = (milliseconds / 1000) % 60;
+                    long minute = (milliseconds / (1000 * 60)) % 60;
+                    long hour = (milliseconds / (1000 * 60 * 60)) % 24;
+                    long days = milliseconds / (1000 * 60 * 60 * 24);
+                    String time = String.format("%d jours %02d heures %02d minutes %02d secondes", days, hour, minute, second);
                     commandContext.sender.sendMessage("§cVos deux pays doivent être ennemis depuis au moins §6" + daysRequired + " §cjours !");
                     commandContext.sender.sendMessage("§6Vous §cet §6" + faction.getTag() + " §cl'êtes depuis seulement §6" + time + " §c !");
-                } else explosions = true;
-            } else if (!List.of("no", "false", "normal").contains(explosionArg.toLowerCase()) && enemyOk && tokenOk) {
-                commandContext.sender.sendMessage("§cMauvais argument ! Faites sois §e/f assault " + faction.getTag()
-                        + " true§c, sois §e/f assault " + faction.getTag() + " no§c.");
-                return;
+                    return;
+                }
+                if (!tokenOk) {
+                    commandContext.sender.sendMessage("§cVous n'avez plus de token disponible ! " +
+                            "Attendez la semaine prochaine pour en récupérer !");
+                    return;
+                }
             }
         } else if (tokenOk && enemyOk) {
             commandContext.sender.sendMessage("§cLes explosions sont disponibles dans cet assaut ! Voulez-vous les utiliser ? Si " +
-                    "c'est le cas faites : §e/f assault " + faction.getTag() + " explosions§c,");
+                    "c'est le cas faites : §e/f assault " + faction.getTag() + " true§c,");
             commandContext.sender.sendMessage("§csinon faites §e/f assault " + faction.getTag() + " false§c.");
             return;
         }
-        if (explosions) {
-            if (!rootCmd.getPlugin().getExplosionManager().withdrawToken(commandContext.faction)) {
-                commandContext.sender.sendMessage("§cVous n'avez plus de token disponible ! Attendez la semaine prochaine pour en récupérer !");
-                return;
-            }
-        }
+        rootCmd.getPlugin().getExplosionManager().withdrawToken(commandContext.faction);
         rootCmd.getPlugin().getAssaultManager().startAssault(commandContext.faction, faction, explosions);
     }
 
