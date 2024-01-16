@@ -22,7 +22,7 @@ public class WonPvp extends WonModule {
 
     @Override
     public void load() {
-        pvpManager = new PvpManager(this, getDefaultConfig().getInt("countdown", 90), getDefaultConfig().getStringList("commands_disabled"));
+        pvpManager = new PvpManager(this, getDefaultConfig().getInt("countdown", (int) getDefaultConfigValues().get("countdown")), getDefaultConfig().getStringList("commands_disabled"));
     }
 
     @Override
@@ -40,10 +40,9 @@ public class WonPvp extends WonModule {
         Map<String, Object> values = new HashMap<>();
         values.put("countdown", 90);
         values.put("commands_disabled", Lists.newArrayList("/tp", "/tpa", "/tpaccept", "/warp", "/home", "/spawn", "/back", "/f home"));
-        values.put("pvp_message", "&cVous êtes désormais en combat !");
-        values.put("pvp_bar_message", "&cVous êtes en combat !");
-        values.put("command_blocked_message", "&cVous ne pouvez pas faire cette commande en combat !");
-        values.put("deco_combat_message", "&cVous avez quitté le serveur pendant un combat, vous êtes donc mort !");
+        values.put("pvp_message", "§cVous êtes désormais en combat !");
+        values.put("pvp_bar_message", "§cVous êtes en combat !");
+        values.put("command_blocked_message", "§cVous ne pouvez pas faire cette commande en combat !");
         return values;
     }
 }
