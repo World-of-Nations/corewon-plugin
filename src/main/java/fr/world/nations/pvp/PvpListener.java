@@ -39,7 +39,7 @@ public class PvpListener implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
         Player player = e.getEntity();
-        if(!pvpManager.isPvp(player)) return;
+        if (!pvpManager.isPvp(player)) return;
 
         pvpManager.stopCountdown(player);
 

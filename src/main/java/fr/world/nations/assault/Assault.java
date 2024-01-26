@@ -69,12 +69,12 @@ public class Assault {
         this.defendantPoints = 0;
         this.moderators = Lists.newArrayList();
         this.explosionsAllowed = explosionsAllowed;
-        this.initExplosionAllowed = defendant.getPeacefulExplosionsEnabled();
+        this.initExplosionAllowed = defendant.getExplosionsEnabled();
         this.targetedClaimSuccess = false;
         this.targetedClaim = null;
         this.targetedClaimPercentage = 0;
         if (explosionsAllowed) {
-            defendant.setPeacefulExplosionsEnabled(true);
+            defendant.setExplosionsEnabled(true);
         }
         scoreboard = new AssaultScoreboard(this);
     }
@@ -89,6 +89,14 @@ public class Assault {
 
     public AssaultScoreboard getScoreboard() {
         return scoreboard;
+    }
+
+    public boolean claimCaptured() {
+        return targetedClaimSuccess;
+    }
+
+    public double getChunkCapturePercentage() {
+        return targetedClaimPercentage;
     }
 
     public void run() {
@@ -147,7 +155,6 @@ public class Assault {
                     }
                     if (!targetedClaimSuccess) {
                         double targetChunkStartDelayMins = plugin.getDefaultConfig().getDouble("assault.target-chunk-start-delay-mins");
-                        //System.out.println("targetChunkStartDelayMins : " + targetChunkStartDelayMins);
                         long targetChunkStartDelayMillis = (long) (targetChunkStartDelayMins * 60 * 1000);
                         if (TimerUtil.deltaUpMillis(assaultStartedMillis, targetChunkStartDelayMillis)) {
                             if (targetedClaim == null) {
@@ -308,7 +315,7 @@ public class Assault {
             }
         }
 
-        defendant.setPeacefulExplosionsEnabled(initExplosionAllowed);
+        defendant.setExplosionsEnabled(initExplosionAllowed);
         plugin.getAssaultManager().remove(this);
     }
 
@@ -617,6 +624,10 @@ public class Assault {
     public boolean isAttacker(Player player) {
         Faction faction = FactionUtil.getFaction(player);
         if (faction == null) return false;
+        return isAttacker(faction);
+    }
+
+    public boolean isAttacker(Faction faction) {
         return attackerList.contains(faction);
     }
 }

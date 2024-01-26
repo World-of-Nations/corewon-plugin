@@ -55,7 +55,7 @@ public class PvpManager {
 
     public void startCountdown(Player... players) {
         for (Player player : players) {
-            if(player.isOp()) return;
+            if (player.isOp()) return;
             startCountdown(player);
         }
     }

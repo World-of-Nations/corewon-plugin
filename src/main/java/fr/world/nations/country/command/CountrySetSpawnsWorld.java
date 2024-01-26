@@ -32,7 +32,7 @@ public class CountrySetSpawnsWorld extends FCommand {
             return;
         }
         for (Country country : countryManager.getAllCountries()) {
-            if (country.getSpawn() == null) return;
+            if (country.getSpawn() == null) continue;
             Location spawn = country.getSpawn();
             country.setSpawn(new Location(world, spawn.getX(), spawn.getY(), spawn.getZ()));
         }
@@ -41,6 +41,6 @@ public class CountrySetSpawnsWorld extends FCommand {
 
     @Override
     public TL getUsageTranslation() {
-        return null;
+        return TL.COMMAND_AUTOHELP_HELPFOR;
     }
 }

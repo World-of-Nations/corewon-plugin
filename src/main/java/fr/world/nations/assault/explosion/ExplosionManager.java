@@ -80,7 +80,7 @@ public class ExplosionManager {
     }
 
     public boolean tokenAvailable(Faction faction) {
-        return getTokenAmount(faction) == 0;
+        return getTokenAmount(faction) > 0;
     }
 
     private boolean shouldResetTokens(Faction faction) {
@@ -169,6 +169,9 @@ public class ExplosionManager {
             tokens.put(field.getKey(), tokenAmount);
             lastUpdated.put(field.getKey(), lastUpdatedMillis);
         }
+    }
 
+    public void giveToken(Faction faction, int amount) {
+        tokens.put(faction.getId(), getTokenAmount(faction) + amount);
     }
 }

@@ -48,7 +48,7 @@ public class MilestoneExpandCommand extends FCommand {
             return;
         }
         MilestoneCalculator data = plugin.getMilestoneData(commandContext.faction);
-        if (MilestoneAccess.fromLevel(data.getMilestone()).isExpandAccess()) {
+        if (!MilestoneAccess.fromLevel(data.getMilestone()).isExpandAccess()) {
             commandContext.sender.sendMessage("§cVous devez être au moins au Palier " + MilestoneAccess.getMinimumLevelForExpand() + " pour exécuter cette commande ! " +
                     "Palier actuel : " + data.getMilestone());
             return;
@@ -100,7 +100,7 @@ public class MilestoneExpandCommand extends FCommand {
 
     @Override
     public TL getUsageTranslation() {
-        return null;
+        return TL.COMMAND_AUTOHELP_HELPFOR;
     }
 
     public boolean tryClaim(CommandContext commandContext, FPlayer uPlayer, Faction newFaction, FLocation ps) {

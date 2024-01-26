@@ -33,7 +33,7 @@ public class CountryCommand extends FCommand {
 
     @Override
     public TL getUsageTranslation() {
-        return null;
+        return TL.COMMAND_AUTOHELP_HELPFOR;
     }
 
     public static class CountryBrigadier implements BrigadierProvider {

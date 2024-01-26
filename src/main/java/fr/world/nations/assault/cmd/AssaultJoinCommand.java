@@ -63,6 +63,12 @@ public class AssaultJoinCommand extends FCommand {
             commandContext.sender.sendMessage("§cLa faction §6" + faction.getTag() + " §cn'est actuellement pas en assaut !");
             return;
         }
+        Assault assault = rootCmd.getPlugin().getAssaultManager().getAssault(faction);
+        Faction oppositeFaction = assault.isAttacker(faction) ? assault.getDefendant() : assault.getAttacker();
+        if (oppositeFaction.getRelationTo(commandContext.faction) != Relation.ENEMY) {
+            commandContext.msg("§cVotre faction doit être ennemie avec " + oppositeFaction.getTag() + ",  la faction opposée à votre allié !");
+            return;
+        }
         if (rootCmd.getJoinRequests().containsKey(commandContext.faction)) {
             String forceArg = commandContext.argAsString(1, "false");
             if (List.of("true", "yes", "force").contains(forceArg)) {
@@ -87,6 +93,6 @@ public class AssaultJoinCommand extends FCommand {
 
     @Override
     public TL getUsageTranslation() {
-        return null;
+        return TL.COMMAND_AUTOHELP_HELPFOR;
     }
 }

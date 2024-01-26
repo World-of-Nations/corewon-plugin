@@ -60,7 +60,7 @@ public class StatsCommand extends FCommand {
 
     @Override
     public TL getUsageTranslation() {
-        return null;
+        return TL.COMMAND_AUTOHELP_HELPFOR;
     }
 
 

@@ -30,6 +30,8 @@ public class AssaultCommand extends FCommand {
         this.addSubCommand(new AssaultStartCommand(this));
         this.addSubCommand(new AssaultStopCommand(this));
         this.addSubCommand(new AssaultTokensCommand(this));
+        this.addSubCommand(new AssaultGiveTokenCommand(this));
+//        this.addSubCommand(new AssaultDebugCmd());
     }
 
     public HashMap<Faction, Faction> getJoinRequests() {
@@ -48,6 +50,6 @@ public class AssaultCommand extends FCommand {
 
     @Override
     public TL getUsageTranslation() {
-        return null;
+        return TL.COMMAND_AUTOHELP_HELPFOR;
     }
 }

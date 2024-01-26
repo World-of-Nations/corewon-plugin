@@ -80,7 +80,6 @@ public class AssaultStartCommand extends FCommand {
         boolean explosions = false;
         boolean tokenOk = rootCmd.getPlugin().getExplosionManager().tokenAvailable(commandContext.faction);
         boolean enemyOk = rootCmd.getPlugin().getExplosionManager().enemiesSinceSufficientTime(commandContext.faction, faction);
-        System.out.println(tokenOk + " " + enemyOk);
         String explosionArg = commandContext.argAsString(1);
         if (explosionArg != null) {
             explosionArg = explosionArg.toLowerCase();
@@ -122,6 +121,6 @@ public class AssaultStartCommand extends FCommand {
 
     @Override
     public TL getUsageTranslation() {
-        return null;
+        return TL.COMMAND_AUTOHELP_HELPFOR;
     }
 }

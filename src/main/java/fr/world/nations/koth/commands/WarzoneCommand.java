@@ -23,6 +23,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -43,7 +44,192 @@ public class WarzoneCommand implements CommandExecutor {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+//        if (args.length == 0) {
+//            if (!sender.hasPermission("koth-won.warzone")) {
+//                sender.sendMessage("§cVous n'avez pas la permission de faire ça !");
+//                return true;
+//            }
+//            if (sender.hasPermission("koth-won.warzone")) {
+//                if (sender instanceof Player) {
+//                    new WarzoneInventory().open((Player) sender);
+//                }
+//                return true;
+//            }
+//        }
+//        if (args.length == 1) {
+//            if (args[0].equalsIgnoreCase("stats")) {
+//                if (!sender.hasPermission("koth-won.warzone")) {
+//                    sender.sendMessage("§cVous n'avez pas la permission de faire ça !");
+//                    return true;
+//                }
+//                if (sender instanceof Player) {
+//                    Bukkit.getScheduler().runTask(Core.getInstance(), () -> {
+//                        List<FactionData> factionDatas = Core.getInstance().getModuleManager().getModule(WonStats.class).getStatsManager().getFactionDatas();
+//                        factionDatas.sort(Collections.reverseOrder(Comparator.comparingDouble(FactionData::getScoreZone)));
+//                        FPlayer uplayer = FPlayers.getInstance().getByPlayer((Player) sender);
+//                        String playerFactionName = uplayer.getFaction().getTag();
+//                        boolean topContainPlayerFaction = false;
+//                        sender.sendMessage("§c-= §6Classement Warzone §c=-");
+//
+//                        int i = 0;
+//                        for (FactionData factionData : factionDatas) {
+//                            int pos = i + 1;
+//
+//                            if (pos >= 11) {
+//                                System.out.println("Pos breaked");
+//                                break;
+//                            }
+//
+//                            Factions factions = Factions.getInstance();
+//
+//                            if (factionData.getFaction() == factions.getWilderness()
+//                                    || factionData.getFaction() == factions.getSafeZone()
+//                                    || factionData.getFaction() == factions.getWarZone()) {
+//                                continue;
+//                            }
+//
+//                            if (factionData.getFaction() == uplayer.getFaction())
+//                                topContainPlayerFaction = true;
+//
+//                            String points = new DecimalFormat("###.##").format(factionData.getScoreZone());
+//
+//                            if (pos == 1)
+//                                sender.sendMessage("§b" + pos + ". " + factionData.getFaction().getTag() + ' ' + points + " Points");
+//                            else if (pos == 2)
+//                                sender.sendMessage("§e" + pos + ". " + factionData.getFaction().getTag() + ' ' + points + " Points");
+//                            else if (pos == 3)
+//                                sender.sendMessage("§7" + pos + ". " + factionData.getFaction().getTag() + ' ' + points + " Points");
+//                            else
+//                                sender.sendMessage("§f" + pos + ". " + factionData.getFaction().getTag() + ' ' + points + " Points");
+//                            ++i;
+//                        }
+//
+//                        int j = 1;
+//                        if (!topContainPlayerFaction && uplayer.hasFaction()) {
+//                            for (FactionData factionData : factionDatas) {
+//                                if (factionData.getFaction().getTag().equalsIgnoreCase(playerFactionName)) {
+//                                    sender.sendMessage("§c" + j + ". " + factionData.getFaction().getTag() + " " + factionData.getScoreZone() + " Points");
+//                                    return;
+//                                }
+//                                j++;
+//                            }
+//                        }
+//                    });
+//                }
+//            }
+//            if (args[0].equalsIgnoreCase("help")) {
+//                if (!sender.hasPermission("koth-won.warzone.admin")) {
+//                    sender.sendMessage("§cVous n'avez pas la permission de faire ça !");
+//                    return true;
+//                }
+//                sendHelpMessage(sender);
+//                return true;
+//            }
+//            if (args[0].equalsIgnoreCase("list")) {
+//                if (!sender.hasPermission("koth-won.warzone.admin")) {
+//                    sender.sendMessage("§cVous n'avez pas la permission de faire ça !");
+//                    return true;
+//                }
+//                for (KothModel model : plugin.getKothManager().getKothModelList())
+//                    sender.sendMessage(model.getKothName());
+//                return true;
+//            }
+//        }
+//        if (args.length == 2) {
+//            if (sender instanceof Player player) {
+//                if (args[0].equalsIgnoreCase("create")) {
+//                    KothHandler.createKothFromRegion(args[1], player);
+//                    player.sendMessage("Une warzone a été créée à votre emplacement ! (" + args[1] + ")");
+//                    return true;
+//                }
+//
+//                if (args[0].equalsIgnoreCase("settp")) {
+//
+//                    KothModel kothModel = plugin.getKothManager().getKothFromCache(args[1]);
+//                    if (kothModel == null) {
+//                        sender.sendMessage(plugin.getDefaultConfig().getString("messages.admins.no-koth").replace("%area_name%", args[1]));
+//                        return false;
+//                    }
+//                    kothModel.setTeleportPoint(player.getLocation());
+//                    plugin.getKothManager().saveKoth(kothModel, false);
+//                    sender.sendMessage(plugin.getDefaultConfig().getString("messages.admins.koth-spawn-set").replace("%area_name%", args[1]));
+//
+//                    return true;
+//                }
+//
+//                if (args[0].equalsIgnoreCase("start")) {
+//
+//                    KothModel kothModel = plugin.getKothManager().getKothFromCache(args[1]);
+//                    if (kothModel == null) {
+//                        sender.sendMessage(plugin.getDefaultConfig().getString("messages.admins.no-koth").replace("%area_name%", args[1]));
+//                        return false;
+//                    }
+//                    if (kothModel.isStarted()) {
+//                        sender.sendMessage("§cKoth already started");
+//                        return false;
+//                    }
+//
+//                    kothModel.start();
+//                    sender.sendMessage("§aKoth started");
+//
+//                    return true;
+//                }
+//
+//                if (args[0].equalsIgnoreCase("resettimer")) {
+//                    Faction faction = getFaction(args[1]);
+//                    if (faction == null) {
+//                        sender.sendMessage("§cCette faction n'existe pas !");
+//                        return true;
+//                    }
+//                    long result = PowerManager.getInstance().resetTimer(faction);
+//                    if (result < 0) {
+//                        player.sendMessage("§cLa faction " + args[1] + " n'a jamais reçu de récompense koth !");
+//                        return true;
+//                    }
+//                    player.sendMessage("La faction " + args[1] + " reçoit à nouveau le maximum de power par récompense ! ");
+//                }
+//
+//                if (args[0].equalsIgnoreCase("deletetimer")) {
+//                    Faction faction = getFaction(args[1]);
+//                    if (faction == null) {
+//                        sender.sendMessage("§cCette faction n'existe pas !");
+//                        return true;
+//                    }
+//                    long result = PowerManager.getInstance().deleteTimer(faction);
+//                    player.sendMessage("Le timer de la faction " + args[1] + " recommencera dès que celle-ci recevra sa prochaine récompense KOTH ! ");
+//                    return true;
+//                }
+//            }
+//
+//            if (args[0].equalsIgnoreCase("stop")) {
+//
+//                KothModel kothModel = plugin.getKothManager().getKothFromCache(args[1]);
+//                if (kothModel == null) {
+//                    sender.sendMessage(plugin.getDefaultConfig().getString("messages.admins.no-koth").replace("%area_name%", args[1]));
+//                    return false;
+//                }
+//                if (!kothModel.isStarted()) {
+//                    sender.sendMessage("§cKoth is not started");
+//                    return false;
+//                }
+//
+//                kothModel.stop();
+//                sender.sendMessage("§aKoth stopped");
+//
+//                return true;
+//            }
+//
+//            if (args[0].equalsIgnoreCase("delete")) {
+//                KothModel kothModel = plugin.getKothManager().getKothFromCache(args[1]);
+//                if (kothModel == null) {
+//                    sender.sendMessage(plugin.getDefaultConfig().getString("messages.admins.no-koth").replace("%area_name%", args[1]));
+//                    return false;
+//                }
+//                KothHandler.deleteKothFromName(args[1], sender);
+//                return true;
+//            }
+//        }
         if (sender.hasPermission("koth-won.warzone")) {
 
             //Open gui
@@ -96,7 +282,7 @@ public class WarzoneCommand implements CommandExecutor {
                                     sender.sendMessage("§7" + pos + ". " + factionData.getFaction().getTag() + ' ' + points + " Points");
                                 else
                                     sender.sendMessage("§f" + pos + ". " + factionData.getFaction().getTag() + ' ' + points + " Points");
-                                i = ++i;
+                                ++i;
                             }
 
                             int j = 1;
@@ -181,21 +367,9 @@ public class WarzoneCommand implements CommandExecutor {
                         }
                         long result = PowerManager.getInstance().resetTimer(faction);
                         if (result < 0) {
-//                            BaseComponent component = new TextComponent("§cLa faction " + args[1] + " n'a jamais reçu de récompense koth !");
-//                            ClickEvent clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "warzone settiming " + args[1] + " " + System.currentTimeMillis());
-//                            BaseComponent component1 = new TextComponent("§e[Lancer tout de même le décompte maintenant]");
-//                            component1.setClickEvent(clickEvent);
-//                            component.addExtra(component1);
-//                            player.spigot().sendMessage(component);
                             player.sendMessage("§cLa faction " + args[1] + " n'a jamais reçu de récompense koth !");
                             return true;
                         }
-//                        BaseComponent component = new TextComponent("La faction " + args[1] + " reçoit à nouveau le maximum de power par récompense ! ");
-//                        ClickEvent clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "warzone settiming " + args[1] + " " + result);
-//                        BaseComponent component1 = new TextComponent("§c[Annuler]");
-//                        component1.setClickEvent(clickEvent);
-//                        component.addExtra(component1);
-//                        player.spigot().sendMessage(component);
                         player.sendMessage("La faction " + args[1] + " reçoit à nouveau le maximum de power par récompense ! ");
                     }
 
@@ -206,14 +380,6 @@ public class WarzoneCommand implements CommandExecutor {
                             return true;
                         }
                         long result = PowerManager.getInstance().deleteTimer(faction);
-//                        BaseComponent component = new TextComponent("Le timer de la faction " + args[1] + " recommencera dès que celle-ci recevra sa prochaine récompense KOTH ! ");
-//                        if (result > 0) {
-//                            ClickEvent clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "warzone settiming " + args[1] + " " + result);
-//                            BaseComponent component1 = new TextComponent("§c[Annuler]");
-//                            component1.setClickEvent(clickEvent);
-//                            component.addExtra(component1);
-//                        }
-//                        player.spigot().sendMessage(component);
                         player.sendMessage("Le timer de la faction " + args[1] + " recommencera dès que celle-ci recevra sa prochaine récompense KOTH ! ");
                         return true;
                     }

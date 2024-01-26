@@ -44,8 +44,8 @@ public class FactionListener implements Listener {
         if (event.getReason().equals(FPlayerJoinEvent.PlayerJoinReason.CREATE)) {
             Country country = countryManager.getCountry(event.getFaction().getTag());
             if (country != null) {
-                event.getFaction().setHome(country.getSpawn());
                 Board.getInstance().setFactionAt(event.getFaction(), FLocation.wrap(country.getSpawn()));
+                event.getFaction().setHome(country.getSpawn());
             }
         }
     }

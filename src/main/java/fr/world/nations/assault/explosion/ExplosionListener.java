@@ -1,6 +1,7 @@
 package fr.world.nations.assault.explosion;
 
 import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.cmd.Aliases;
 import com.massivecraft.factions.event.FactionRelationEvent;
 import com.massivecraft.factions.struct.Relation;
 import fr.world.nations.assault.Assault;
@@ -32,12 +33,10 @@ public class ExplosionListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onFlagChange(PlayerCommandPreprocessEvent event) {
         String[] args = event.getMessage().split(" ");
-        if (args.length < 5) return;
+        if (args.length < 2) return;
         if (!args[0].equalsIgnoreCase("/f")) return;
-        if (!args[1].equalsIgnoreCase("flag")) return;
-        if (!args[3].toLowerCase().contains("explosion")) return;
-        String factionName = args[2];
-        Faction faction = FactionUtil.getFaction(factionName);
+        if (!Aliases.boom.contains(args[1].toLowerCase())) return;
+        Faction faction = FactionUtil.getFaction(event.getPlayer());
         if (faction == null) return;
         if (!plugin.getAssaultManager().isInAssault(faction)) return;
         Assault assault = plugin.getAssaultManager().getAssault(faction);

@@ -28,6 +28,13 @@ repositories {
         name = "Codemc Public"
         url = "https://repo.codemc.io/repository/maven-public/"
     }
+    maven {
+        name = "jordanosterberg-repo"
+        url = "https://nexus-repo.jordanosterberg.com/repository/maven-releases/"
+    }
+    flatDir {
+        dirs 'libs'
+    }
 }
 
 configurations {
@@ -40,12 +47,16 @@ configurations {
 dependencies {
     compileOnly "org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT"
     compileOnly "com.sk89q.worldedit:worldedit-bukkit:7.2.15"
-    compileOnly group: 'com.massivecraft', name: 'Factions', version: '1.6.9.5-4.1.3-STABLE'
+//    compileOnly group: 'com.massivecraft', name: 'Factions', version: '1.6.9.5-4.1.3-STABLE'
 
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.0.1'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.1'
     implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.42.0.0'
+
+    compileOnly name: 'TAB_v4.0.7', ext: 'jar'
+    compileOnly name: 'SaberFactions', ext: 'jar'
+    implementation name: 'JScoreboards-2.1.5-RELEASE', ext: 'jar'
 
     compileOnly 'org.projectlombok:lombok:1.18.26'
     annotationProcessor 'org.projectlombok:lombok:1.18.26'
