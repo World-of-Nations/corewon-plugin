@@ -7,7 +7,6 @@ website: https://github.com/Holo795
 depend:
   - Factions
   - Vault
-  - TabAPI
 commands:
   warzone:
     description: warzone
