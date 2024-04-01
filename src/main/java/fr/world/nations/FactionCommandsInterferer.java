@@ -17,8 +17,6 @@ public class FactionCommandsInterferer implements Listener {
     public FactionCommandsInterferer() {
         toBlock.addAll(Aliases.alts_alts);
         toBlock.addAll(Aliases.alts_list);
-        toBlock.addAll(Aliases.alts_invite);
-        toBlock.addAll(Aliases.alts_kick);
         toBlock.addAll(Aliases.weewoo);
         toBlock.addAll(Aliases.corner_list);
         toBlock.addAll(Aliases.logout);
