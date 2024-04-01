@@ -43,8 +43,8 @@ public class AssaultScoreboard {
                     String attackerSuffix = assault.getAttacker().getTag() +
                             (assault.getAttackerList().size() == 1 ? "" : " (+" + (assault.getAttackerList().size() - 1) + ")");
                     String attackerPointSuffix = "" + assault.getAttackerPoints();
-                    String defenderSuffix = assault.getAttacker().getTag() +
-                            (assault.getAttackerList().size() == 1 ? "" : " (+" + (assault.getAttackerList().size() - 1) + ")");
+                    String defenderSuffix = assault.getDefendant().getTag() +
+                            (assault.getDefendantList().size() == 1 ? "" : " (+" + (assault.getDefendantList().size() - 1) + ")");
                     String defenderPointSuffix = "" + assault.getDefendantPoints();
                     lines.add("§c> Attaquant :§r " + attackerSuffix);
                     lines.add("§6> Score :§r " + attackerPointSuffix);
