@@ -93,7 +93,7 @@ public class FactionCommandsInterferer implements Listener {
                 if(countryName.equalsIgnoreCase("list")){
                     event.setCancelled(true);
                     int number = 1;
-                    if(args.length == 4) {
+                    if(args.length >= 4) {
                         Bukkit.getServer().getLogger().info("Creation list command by " + event.getPlayer().getName() +
                                 ": /f " + cmdName + " " + args[2] + " " + args[3]);
                         number = Integer.parseInt(args[3]);
