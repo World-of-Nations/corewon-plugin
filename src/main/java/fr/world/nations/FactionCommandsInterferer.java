@@ -87,9 +87,10 @@ public class FactionCommandsInterferer implements Listener {
 
         if(Aliases.create.contains(cmdName)){
             if(args.length >= 3) {
+                String countryName = args[2];
 
                 //f create list <number>
-                if(args[2].equalsIgnoreCase("list")){
+                if(countryName.equalsIgnoreCase("list")){
                     event.setCancelled(true);
                     int number = 1;
                     if(args.length == 4) {
@@ -98,21 +99,13 @@ public class FactionCommandsInterferer implements Listener {
                         number = Integer.parseInt(args[3]);
                     }
                     printList(number, event.getPlayer());
-                    return;
                 }
-
-                String countryName = args[2];
-                if (!CountryManager.getInstance().getAvailableCountryNames().contains(countryName)){
+                else if (!CountryManager.getInstance().getAvailableCountryNames().contains(countryName)){
                     event.setCancelled(true);
                     event.getPlayer().sendMessage("Ce pays n'est pas disponible.");
+                    printList(1, event.getPlayer());
                 }
-
-                //If we are here, so a pays is created.
-                else return;
             }
-
-
-            printList(1, event.getPlayer());
         }
     }
 
