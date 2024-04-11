@@ -21,8 +21,10 @@ public class CountryManager {
     private final Map<String, Country> countryMap = new HashMap<>();
     private final File folder;
     private int emergencyIdNumb = 0;
+    private static CountryManager instance;
 
     public CountryManager(WonContry module) {
+        instance = this;
         folder = new File(module.getConfigFolder(), "storage");
         if (!folder.exists()) {
             folder.mkdir();
@@ -44,6 +46,14 @@ public class CountryManager {
             }
         }
         saveData();
+    }
+
+    public static CountryManager getInstance() {
+        return instance;
+    }
+
+    public static void setInstance(CountryManager instance) {
+        CountryManager.instance = instance;
     }
 
     public void saveData() {

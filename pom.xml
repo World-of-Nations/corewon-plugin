@@ -3,10 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <groupId>fr.world.nations</groupId>
     <artifactId>WonCore</artifactId>
-
     <name>WonCore</name>
-
+    <version>1.0</version>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,8 +20,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <source>16</source>
+                    <target>16</target>
                 </configuration>
             </plugin>
 
@@ -41,16 +41,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-
-            <!-- Plugin pour changer le répertoire de sortie du JAR -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.0</version>
-                <configuration>
-                    <outputDirectory>${project.basedir}/../plugins</outputDirectory>
-                </configuration>
             </plugin>
         </plugins>
 
@@ -79,6 +69,10 @@
             <id>sk89q-repo</id>
             <url>https://maven.enginehub.org/repo/</url>
         </repository>
+        <repository>
+            <id>jordanosterberg-repo</id>
+            <url>https://nexus-repo.jordanosterberg.com/repository/maven-releases/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -89,15 +83,23 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.massivecraft</groupId>
-            <artifactId>Factions</artifactId>
-            <version>1.6.9.5-4.1.2-STABLE</version>
-            <scope>provided</scope>
+            <groupId>com.github.SaberLL</groupId>
+            <artifactId>Saber-Factions</artifactId>
+            <version>4.1.4-STABLE</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/SaberFactions.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.14.1</version>
+            <version>2.17.0</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.24</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
@@ -110,16 +112,24 @@
             <version>3.42.0.0</version>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
             <version>7.2.15</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>dev.jcsoftware</groupId>
+            <artifactId>JScoreboards</artifactId>
+            <version>2.1.5-RELEASE</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/JScoreboards-2.1.5-RELEASE.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>me.neznami</groupId>
+            <artifactId>tab</artifactId>
+            <version>4.0.7</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/libs/TAB_v4.0.7.jar</systemPath>
         </dependency>
     </dependencies>
 </project>
