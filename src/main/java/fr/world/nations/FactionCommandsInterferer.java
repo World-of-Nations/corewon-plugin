@@ -73,7 +73,7 @@ public class FactionCommandsInterferer implements Listener {
         if (FPlayers.getInstance().getByPlayer(event.getPlayer()).isAdminBypassing()) return;
         String msg = event.getMessage().substring(1);
         String[] args = msg.split(" ");
-        //if (!args[0].equalsIgnoreCase("f")) return;
+        if (args.length==0) return;
         String cmdName = args[1].toLowerCase();
         //if (Aliases.show_show.contains(cmdName) || cmdName.equalsIgnoreCase("f")) {
         //    event.setCancelled(true);
@@ -105,7 +105,7 @@ public class FactionCommandsInterferer implements Listener {
                     event.getPlayer().sendMessage("Ce pays n'est pas disponible.");
                     printList(1, event.getPlayer());
                 }
-            }
+            } else printList(1, event.getPlayer());
         }
     }
 
