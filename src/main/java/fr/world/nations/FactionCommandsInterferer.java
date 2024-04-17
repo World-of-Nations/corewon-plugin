@@ -75,11 +75,11 @@ public class FactionCommandsInterferer implements Listener {
         String[] args = msg.split(" ");
         if (args.length==0) return;
         String cmdName = args[1].toLowerCase();
-        //if (Aliases.show_show.contains(cmdName) || cmdName.equalsIgnoreCase("f")) {
-        //    event.setCancelled(true);
+        if (Aliases.show_show.contains(cmdName) || cmdName.equalsIgnoreCase("f")) {
+            event.setCancelled(true);
             //TODO ouvrir interface
-        //    return;
-        //}
+            return;
+        }
         if (toBlock.contains(cmdName)) {
             event.getPlayer().sendMessage("§cCette commande n'est pas disponible !");
             event.setCancelled(true);
