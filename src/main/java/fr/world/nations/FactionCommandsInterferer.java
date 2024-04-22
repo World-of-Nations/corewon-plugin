@@ -17,6 +17,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FactionCommandsInterferer implements Listener {
@@ -118,9 +119,12 @@ public class FactionCommandsInterferer implements Listener {
         Bukkit.getServer().getLogger().info("Printing creation list page " + page + " for " + player.getName());
         List<String> countryList = CountryManager.getInstance().getAvailableCountryNames();
 
+        Object[] list = countryList.toArray();
+        Arrays.sort(list);
+
         player.sendMessage("\n§6-= Liste des pays disponibles =- \n");
         for(int c=(page-1)*10; c<page*10; c++){
-            String name = countryList.get(c);
+            String name = (String) list[c];
             TextComponent country = new TextComponent("  §6● §e" + name + " [§a+§e]");
             country.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§6⇨ Créer le pays §e" + name).create()));
             country.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/f create " + name));
