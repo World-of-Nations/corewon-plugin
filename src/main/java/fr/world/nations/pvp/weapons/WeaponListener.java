@@ -61,6 +61,8 @@ public class WeaponListener implements Listener {
         Faction atDamagedFaction = Board.getInstance().getFactionAt(FLocation.wrap(damaged.getLocation()));
         Faction atShooterFaction = Board.getInstance().getFactionAt(FLocation.wrap(shooter.getLocation()));
 
+        if(damagedFaction.isWilderness()) return;
+
         if (damagedFaction.equals(shooterFaction)) {
             e.setCancelled(true);
             return;
