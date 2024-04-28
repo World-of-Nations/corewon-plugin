@@ -1,6 +1,7 @@
 package fr.world.nations;
 
 import com.massivecraft.factions.FPlayers;
+import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.cmd.Aliases;
 import fr.world.nations.country.CountryManager;
 import net.md_5.bungee.api.ChatMessageType;
@@ -9,6 +10,7 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -71,7 +73,10 @@ public class FactionCommandsInterferer implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCommand(PlayerCommandPreprocessEvent event) {
-        if (FPlayers.getInstance().getByPlayer(event.getPlayer()).isAdminBypassing()) return;
+        if(event.isCancelled()) return;
+
+        Player player = event.getPlayer();
+        if (FPlayers.getInstance().getByPlayer(player).isAdminBypassing()) return;
         String msg = event.getMessage().substring(1);
         String[] args = msg.split(" ");
         if(!(args[0].equalsIgnoreCase("f") || args[0].equalsIgnoreCase("faction"))) return;
@@ -86,11 +91,20 @@ public class FactionCommandsInterferer implements Listener {
         //}
 
         if (toBlock.contains(cmdName)) {
-            event.getPlayer().sendMessage("§cCette commande n'est pas disponible !");
+            player.sendMessage("§cCette commande n'est pas disponible !");
             event.setCancelled(true);
         }
 
-        if(Aliases.create.contains(cmdName)){
+        else if(Aliases.home.contains(cmdName)){
+            if(player.hasPermission("faction.home.bypass-cooldown")){
+                event.setCancelled(true);
+                Location home = FPlayers.getInstance().getByPlayer(player).getFaction().getHome();
+                player.teleport(home);
+                player.sendMessage("§eYou have been teleported to §aFaction home§e.");
+            }
+        }
+
+        else if(Aliases.create.contains(cmdName)){
             if(args.length >= 3) {
                 String countryName = args[2];
 
@@ -98,19 +112,16 @@ public class FactionCommandsInterferer implements Listener {
                 if(countryName.equalsIgnoreCase("list")){
                     event.setCancelled(true);
                     int number = 1;
-                    if(args.length >= 4) {
-                        Bukkit.getServer().getLogger().info("Creation list command by " + event.getPlayer().getName() +
-                                ": /f " + cmdName + " " + args[2] + " " + args[3]);
+                    if(args.length >= 4)
                         number = Integer.parseInt(args[3]);
-                    }
-                    printList(number, event.getPlayer());
+                    printList(number, player);
                 }
                 else if (!CountryManager.getInstance().getAvailableCountryNames().contains(countryName)){
                     event.setCancelled(true);
-                    event.getPlayer().sendMessage("Ce pays n'est pas disponible.");
-                    printList(1, event.getPlayer());
+                    player.sendMessage("Ce pays n'est pas disponible.");
+                    printList(1, player);
                 }
-            } else printList(1, event.getPlayer());
+            } else printList(1, player);
         }
     }
 
