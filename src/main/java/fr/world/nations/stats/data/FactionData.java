@@ -19,7 +19,7 @@ public class FactionData {
 
     public FactionData(Faction faction, StatsManager statsManager) {
         this.faction = faction;
-        statsManager.saveData(this);
+        // statsManager.saveData(this);
     }
 
     public Faction getFaction() {

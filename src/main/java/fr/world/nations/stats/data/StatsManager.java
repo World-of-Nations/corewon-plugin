@@ -11,9 +11,9 @@ import java.util.Map;
 
 public class StatsManager {
 
-    protected final List<FactionData> factions = new ArrayList<>();
+    protected static final List<FactionData> factions = new ArrayList<>();
 
-    protected SQLRequests sqlRequests = new SQLRequests();
+    protected static SQLRequests sqlRequests = new SQLRequests();
 
 
     public StatsManager() {
@@ -21,7 +21,6 @@ public class StatsManager {
     }
 
     private void loadFactions() {
-
         Factions.getInstance().getAllFactions().forEach(faction -> {
             if (!faction.isWilderness() && !faction.isSafeZone() && !faction.isWarZone()) {
                 factions.add(new FactionData(faction, this));
@@ -38,9 +37,9 @@ public class StatsManager {
                 if (resultSet.next()) {
                     factionData.setKills(resultSet.getInt("kills"));
                     factionData.setDeaths(resultSet.getInt("deaths"));
-//                    factionData.setAssaultWin(resultSet.getInt("assault_win"));
-//                    factionData.setAssaultLose(resultSet.getInt("assault_lose"));
-//                    factionData.setScoreZone(resultSet.getInt("scorezone"));
+                    factionData.setAssaultWin(resultSet.getInt("assault_win"));
+                    factionData.setAssaultLose(resultSet.getInt("assault_lose"));
+                    factionData.setScoreZone(resultSet.getInt("scorezone"));
                 } else {
                     sqlRequests.createFaction(factionData.getFaction().getTag());
                 }
@@ -79,7 +78,7 @@ public class StatsManager {
         }
     }
 
-    public void saveData() {
+    public static void saveAllData() {
         for (FactionData factionData : factions) {
             Map<String, Object> map = factionData.getAsMap();
             for (String column : map.keySet()) {

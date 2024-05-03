@@ -2,12 +2,14 @@ package fr.world.nations;
 
 import com.massivecraft.factions.FactionsPlugin;
 import fr.world.nations.assault.WonAssault;
+import fr.world.nations.country.SQLManager;
 import fr.world.nations.country.WonContry;
 import fr.world.nations.koth.WonKoth;
 import fr.world.nations.milestone.WonMilestone;
 import fr.world.nations.modules.ModuleManager;
 import fr.world.nations.pvp.WonPvp;
 import fr.world.nations.stats.WonStats;
+import fr.world.nations.stats.data.StatsManager;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -49,6 +51,7 @@ public class Core extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        StatsManager.saveAllData();
         unloadModules();
         getServer().getLogger().info("WonCore | Plugin désactivé !");
     }
