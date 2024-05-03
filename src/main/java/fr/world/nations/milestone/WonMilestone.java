@@ -181,7 +181,7 @@ public final class WonMilestone extends WonModule {
                     e.printStackTrace();
                 }
             }
-        }.runTaskTimerAsynchronously(Core.getInstance(), delay, delay);
+        }.runTaskTimer(Core.getInstance(), delay, delay);
         regularCheckTaskId = task.getTaskId();
     }
 

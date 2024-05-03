@@ -13,6 +13,7 @@ import fr.world.nations.stats.data.StatsManager;
 import fr.world.nations.util.FactionUtil;
 import fr.world.nations.util.StringUtil;
 import fr.world.nations.util.TimerUtil;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -28,6 +29,7 @@ import java.util.stream.Collectors;
 public class Assault {
 
     private final int msgLength = 30;
+    @Getter
     private final WonAssault plugin;
     private final Faction defendant;
     private final List<Faction> defendantList;
@@ -44,6 +46,7 @@ public class Assault {
     private final Map<UUID, Nametag> cTags = new HashMap<>();
     */
     private final String SHOULD_CLEAR_PREFIX = "CLEAR";
+    @Getter
     private final AssaultScoreboard scoreboard;
     private long assaultStartedMillis;
     private int taskId;
@@ -53,6 +56,7 @@ public class Assault {
     private int defendantPoints;
     private int attackerPoints;
     private int stopTaskId = 0;
+    @Getter
     private boolean running = false;
 
     public Assault(WonAssault plugin, Faction attacker, Faction defendant, boolean explosionsAllowed) {
@@ -77,18 +81,6 @@ public class Assault {
             defendant.setExplosionsEnabled(true);
         }
         scoreboard = new AssaultScoreboard(this);
-    }
-
-    public boolean isRunning() {
-        return running;
-    }
-
-    public WonAssault getPlugin() {
-        return plugin;
-    }
-
-    public AssaultScoreboard getScoreboard() {
-        return scoreboard;
     }
 
     public boolean claimCaptured() {

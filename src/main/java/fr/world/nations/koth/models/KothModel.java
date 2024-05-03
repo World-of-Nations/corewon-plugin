@@ -224,20 +224,26 @@ public class KothModel {
     }
 
     public void sendRewards() {
-        if (rewardType == null || rewardType.isEmpty()) return;
+        Bukkit.getServer().getLogger().info("Sending KOTH rewards...");
+        if (rewardType == null || rewardType.isEmpty()) {
+            Bukkit.getServer().getLogger().warning("No reward type.");
+            return;
+        }
         if (!RewardType.exists(rewardType)) {
             Core.getInstance().getLogger().warning("KOTH reward type \"" + rewardType + "\" does not exist ! Possible reward types : "
                     + String.join(", ", Arrays.stream(RewardType.values()).map(type -> type.name().toLowerCase()).toList()));
             return;
         }
+
         Faction faction = getCapturingFaction();
+        Bukkit.getServer().getLogger().info("Giving " + rewardAmount + rewardType + " to " + faction.getTag());
         double rewardAmount = (int) Math.floor(getRewardAmount() * PowerManager.getInstance().getFactionFactor(faction, true));
         if (rewardType.equalsIgnoreCase("power")) {
             if (faction.getPowerBoost() < 300) {
                 if ((faction.getPowerBoost() + rewardAmount) > 300) {
                     rewardAmount = 300 - faction.getPowerBoost();
                 }
-//                faction.setPowerBoost(faction.getPowerBoost() + rewardAmount);
+                faction.setPowerBoost(faction.getPowerBoost() + rewardAmount);
                 PowerManager.getInstance().addPower(new PowerAddedModel(faction.getId(), System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1), rewardAmount));
                 double power = faction.getPower();
                 for (FPlayer uPlayer : faction.getFPlayers()) {
@@ -249,10 +255,16 @@ public class KothModel {
                                 .replace("%total_power%", String.valueOf(power)));
                     }
                 }
+                Bukkit.getServer().getLogger().info("Given!");
             }
+            else Bukkit.getServer().getLogger().info("Not Given: Powerboost > 300");
         } else if (rewardType.equalsIgnoreCase("money")) {
-            String cmd = "f ecogivef " + ((int) (rewardAmount)) + " " + faction.getTag();
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
+            /*String cmd = "f ecogivef " + ((int) (rewardAmount)) + " " + faction.getTag();
+            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);*/
+
+            int reward = (int)rewardAmount;
+            faction.setFactionBalance(faction.getFactionBalance() + reward);
+
             double money = faction.getFactionBalance();
             for (FPlayer mPlayer : faction.getFPlayers()) {
                 if (!mPlayer.isOnline()) continue;
@@ -263,6 +275,7 @@ public class KothModel {
                             .replace("%total_money%", String.valueOf(money)));
                 }
             }
+            Bukkit.getServer().getLogger().info("Given!");
         }
     }
 
