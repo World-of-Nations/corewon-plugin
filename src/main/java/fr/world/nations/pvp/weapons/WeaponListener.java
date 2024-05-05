@@ -1,15 +1,7 @@
 package fr.world.nations.pvp.weapons;
 
-import com.massivecraft.factions.Board;
-import com.massivecraft.factions.FLocation;
-import com.massivecraft.factions.Faction;
-import com.massivecraft.factions.struct.Relation;
-import fr.world.nations.Core;
-import fr.world.nations.assault.Assault;
-import fr.world.nations.assault.WonAssault;
 import fr.world.nations.pvp.PvpManager;
 import fr.world.nations.pvp.WonPvp;
-import fr.world.nations.util.FactionUtil;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -36,7 +28,7 @@ public class WeaponListener implements Listener {
 
         if (!(event.getEntity() instanceof Player damaged)) return;
 
-        this.onPlayerIsHitByBullet(damaged, shooter, event);
+        pvpManager.onPlayerIsHitByPlayer(shooter, damaged, event);
     }
 
 
@@ -50,50 +42,6 @@ public class WeaponListener implements Listener {
         if (shooter == null) return;
 
         bulletShooter.add(entity, shooter);
-    }
-
-    public void onPlayerIsHitByBullet(Player damaged, Player shooter, EntityDamageByEntityEvent e) {
-        Faction damagedFaction = FactionUtil.getFaction(damaged);
-        Faction shooterFaction = FactionUtil.getFaction(shooter);
-
-        Relation relation = damagedFaction.getRelationTo(shooterFaction);
-
-        Faction atDamagedFaction = Board.getInstance().getFactionAt(FLocation.wrap(damaged.getLocation()));
-        Faction atShooterFaction = Board.getInstance().getFactionAt(FLocation.wrap(shooter.getLocation()));
-
-        if(damagedFaction.isWilderness()) return;
-
-        if (damagedFaction.equals(shooterFaction)) {
-            e.setCancelled(true);
-            return;
-        }
-
-        if (relation.equals(Relation.ALLY) || relation.equals(Relation.TRUCE)) {
-            e.setCancelled(true);
-            return;
-        }
-
-        if (relation.equals(Relation.NEUTRAL)) {
-            if (damagedFaction.equals(atDamagedFaction)) {
-                e.setCancelled(true);
-                return;
-            }
-        }
-
-        if (relation.equals(Relation.ENEMY)) {
-            WonAssault wonAssault = Core.getInstance().getModuleManager().getModule(WonAssault.class);
-            if (wonAssault == null) return;
-
-            Assault assault = wonAssault.getAssaultManager().getAssault(damagedFaction);
-            if (assault == null || !assault.contains(shooterFaction)) {
-                if (damagedFaction.equals(atDamagedFaction)) {
-                    e.setCancelled(true);
-                    return;
-                }
-            }
-        }
-
-        pvpManager.startCountdown(damaged, shooter);
     }
 
 }

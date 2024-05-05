@@ -1,11 +1,19 @@
 package fr.world.nations.pvp;
 
+import com.massivecraft.factions.Board;
+import com.massivecraft.factions.FLocation;
+import com.massivecraft.factions.Faction;
+import com.massivecraft.factions.struct.Relation;
 import fr.world.nations.Core;
+import fr.world.nations.assault.Assault;
+import fr.world.nations.assault.WonAssault;
+import fr.world.nations.util.FactionUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
@@ -97,6 +105,49 @@ public class PvpManager {
             }
         }
         return false;
+    }
+
+    public void onPlayerIsHitByPlayer(Player damaged, Player shooter, EntityDamageByEntityEvent e) {
+        Faction damagedFaction = FactionUtil.getFaction(damaged);
+        Faction shooterFaction = FactionUtil.getFaction(shooter);
+
+        Relation relation = damagedFaction.getRelationTo(shooterFaction);
+
+        Faction atDamagedFaction = Board.getInstance().getFactionAt(FLocation.wrap(damaged.getLocation()));
+        Faction atShooterFaction = Board.getInstance().getFactionAt(FLocation.wrap(shooter.getLocation()));
+
+        if(atDamagedFaction.isSafeZone() || atShooterFaction.isSafeZone()) {
+            if (e != null) e.setCancelled(true);
+            return;
+        }
+
+        if (damagedFaction.isWilderness()) {
+            startCountdown(damaged, shooter);
+            return;
+        }
+
+        if (damagedFaction.equals(shooterFaction)) {
+            if (e != null) e.setCancelled(true);
+            return;
+        }
+
+        if (relation.equals(Relation.ALLY) || relation.equals(Relation.TRUCE)) {
+            if (e != null) e.setCancelled(true);
+            return;
+        }
+
+        if (relation.equals(Relation.NEUTRAL)) {
+            if (damagedFaction.equals(atDamagedFaction)) {
+                if (e != null) e.setCancelled(true);
+                return;
+            }
+        }
+
+        startCountdown(damaged, shooter);
+    }
+
+    public void onPlayerIsHitByPlayer(Player damaged, Player shooter) {
+        onPlayerIsHitByPlayer(damaged, shooter, null);
     }
 
 }
