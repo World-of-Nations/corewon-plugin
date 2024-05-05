@@ -256,13 +256,12 @@ public class KothModel {
                     }
                 }
                 Bukkit.getServer().getLogger().info("Given!");
-            }
-            else Bukkit.getServer().getLogger().info("Not Given: Powerboost > 300");
+            } else Bukkit.getServer().getLogger().info("Not Given: Powerboost > 300");
         } else if (rewardType.equalsIgnoreCase("money")) {
             /*String cmd = "f ecogivef " + ((int) (rewardAmount)) + " " + faction.getTag();
             Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);*/
 
-            int reward = (int)rewardAmount;
+            int reward = (int) rewardAmount;
             faction.setFactionBalance(faction.getFactionBalance() + reward);
 
             double money = faction.getFactionBalance();

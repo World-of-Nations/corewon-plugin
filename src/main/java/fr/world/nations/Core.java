@@ -2,7 +2,6 @@ package fr.world.nations;
 
 import com.massivecraft.factions.FactionsPlugin;
 import fr.world.nations.assault.WonAssault;
-import fr.world.nations.country.SQLManager;
 import fr.world.nations.country.WonContry;
 import fr.world.nations.koth.WonKoth;
 import fr.world.nations.milestone.WonMilestone;

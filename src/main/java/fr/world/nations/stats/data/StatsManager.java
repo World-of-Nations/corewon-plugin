@@ -20,6 +20,17 @@ public class StatsManager {
         loadData();
     }
 
+    public static void saveAllData() {
+        for (FactionData factionData : factions) {
+            Map<String, Object> map = factionData.getAsMap();
+            for (String column : map.keySet()) {
+                sqlRequests.updateFaction(factionData.getFaction().getTag(), column, map.get(column).toString());
+            }
+//            sqlRequests.updateFaction(factionData.getFaction().getTag(), "kills", factionData.getKills());
+//            sqlRequests.updateFaction(factionData.getFaction().getTag(), "deaths", factionData.getDeaths());
+        }
+    }
+
     private void loadFactions() {
         Factions.getInstance().getAllFactions().forEach(faction -> {
             if (!faction.isWilderness() && !faction.isSafeZone() && !faction.isWarZone()) {
@@ -75,17 +86,6 @@ public class StatsManager {
         Map<String, Object> map = data.getAsMap();
         for (String column : map.keySet()) {
             sqlRequests.updateFaction(data.getFaction().getTag(), column, map.get(column).toString());
-        }
-    }
-
-    public static void saveAllData() {
-        for (FactionData factionData : factions) {
-            Map<String, Object> map = factionData.getAsMap();
-            for (String column : map.keySet()) {
-                sqlRequests.updateFaction(factionData.getFaction().getTag(), column, map.get(column).toString());
-            }
-//            sqlRequests.updateFaction(factionData.getFaction().getTag(), "kills", factionData.getKills());
-//            sqlRequests.updateFaction(factionData.getFaction().getTag(), "deaths", factionData.getDeaths());
         }
     }
 

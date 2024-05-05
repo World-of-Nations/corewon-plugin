@@ -1,10 +1,8 @@
 package fr.world.nations;
 
 import com.massivecraft.factions.FPlayers;
-import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.cmd.Aliases;
 import fr.world.nations.country.CountryManager;
-import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -17,7 +15,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -73,50 +70,45 @@ public class FactionCommandsInterferer implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onCommand(PlayerCommandPreprocessEvent event) {
-        if(event.isCancelled()) return;
+        if (event.isCancelled()) return;
 
         Player player = event.getPlayer();
         if (FPlayers.getInstance().getByPlayer(player).isAdminBypassing()) return;
         String msg = event.getMessage().substring(1);
         String[] args = msg.split(" ");
-        if(!(args[0].equalsIgnoreCase("f") || args[0].equalsIgnoreCase("faction"))) return;
-        if (args.length==1) return;
+        if (!(args[0].equalsIgnoreCase("f") || args[0].equalsIgnoreCase("faction"))) return;
+        if (args.length == 1) return;
         String cmdName = args[1].toLowerCase();
 
         //FOR INTERFACES:
         //if (Aliases.show_show.contains(cmdName) || cmdName.equalsIgnoreCase("f")) {
         //    event.setCancelled(true);
-            //TODO ouvrir interface
+        //TODO ouvrir interface
         //    return;
         //}
 
         if (toBlock.contains(cmdName)) {
             player.sendMessage("§cCette commande n'est pas disponible !");
             event.setCancelled(true);
-        }
-
-        else if(Aliases.home.contains(cmdName)){
-            if(player.hasPermission("faction.home.bypass-cooldown")){
+        } else if (Aliases.home.contains(cmdName)) {
+            if (player.hasPermission("faction.home.bypass-cooldown")) {
                 event.setCancelled(true);
                 Location home = FPlayers.getInstance().getByPlayer(player).getFaction().getHome();
                 player.teleport(home);
                 player.sendMessage("§eYou have been teleported to §aFaction home§e.");
             }
-        }
-
-        else if(Aliases.create.contains(cmdName)){
-            if(args.length >= 3) {
+        } else if (Aliases.create.contains(cmdName)) {
+            if (args.length >= 3) {
                 String countryName = args[2];
 
                 //f create list <number>
-                if(countryName.equalsIgnoreCase("list")){
+                if (countryName.equalsIgnoreCase("list")) {
                     event.setCancelled(true);
                     int number = 1;
-                    if(args.length >= 4)
+                    if (args.length >= 4)
                         number = Integer.parseInt(args[3]);
                     printList(number, player);
-                }
-                else if (!CountryManager.getInstance().getAvailableCountryNames().contains(countryName)){
+                } else if (!CountryManager.getInstance().getAvailableCountryNames().contains(countryName)) {
                     event.setCancelled(true);
                     player.sendMessage("Ce pays n'est pas disponible.");
                     printList(1, player);
@@ -126,7 +118,7 @@ public class FactionCommandsInterferer implements Listener {
     }
 
     //1 page = 10 pays
-    private void printList(int page, Player player){
+    private void printList(int page, Player player) {
         Bukkit.getServer().getLogger().info("Printing creation list page " + page + " for " + player.getName());
         List<String> countryList = CountryManager.getInstance().getAvailableCountryNames();
 
@@ -134,14 +126,14 @@ public class FactionCommandsInterferer implements Listener {
         Arrays.sort(list);
 
         player.sendMessage("\n§6-= Liste des pays disponibles =- \n");
-        for(int c=(page-1)*10; c<page*10; c++){
+        for (int c = (page - 1) * 10; c < page * 10; c++) {
             String name = (String) list[c];
             TextComponent country = new TextComponent("  §6● §e" + name + " [§a+§e]");
             country.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ComponentBuilder("§6⇨ Créer le pays §e" + name).create()));
             country.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/f create " + name));
             player.spigot().sendMessage(country);
         }
-        int nextPageNumber = page+1;
+        int nextPageNumber = page + 1;
         TextComponent nextPage = new TextComponent("   >> §6Page suivante [" + nextPageNumber + "] §f<<");
         nextPage.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/f create list " + nextPageNumber));
         player.spigot().sendMessage(nextPage);

@@ -18,10 +18,10 @@ import java.util.Map;
 
 public class CountryManager {
 
+    private static CountryManager instance;
     private final Map<String, Country> countryMap = new HashMap<>();
     private final File folder;
     private int emergencyIdNumb = 0;
-    private static CountryManager instance;
 
     public CountryManager(WonContry module) {
         instance = this;
