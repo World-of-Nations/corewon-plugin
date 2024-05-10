@@ -24,8 +24,6 @@ public class FactionCommandsInterferer implements Listener {
     private final List<String> toBlock = new ArrayList<>();
 
     public FactionCommandsInterferer() {
-        toBlock.addAll(Aliases.alts_alts);
-        toBlock.addAll(Aliases.alts_list);
         toBlock.addAll(Aliases.weewoo);
         toBlock.addAll(Aliases.corner_list);
         toBlock.addAll(Aliases.logout);
