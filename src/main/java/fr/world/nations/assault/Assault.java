@@ -73,12 +73,12 @@ public class Assault {
         this.defendantPoints = 0;
         this.moderators = Lists.newArrayList();
         this.explosionsAllowed = explosionsAllowed;
-        this.initExplosionAllowed = defendant.getExplosionsEnabled();
+        this.initExplosionAllowed = !defendant.noExplosionsInTerritory(); //TODO : A FIX pour les explosions
         this.targetedClaimSuccess = false;
         this.targetedClaim = null;
         this.targetedClaimPercentage = 0;
         if (explosionsAllowed) {
-            defendant.setExplosionsEnabled(true);
+            //defendant.setExplosionsEnabled(true); //TODO : A patcher pour les explosions
         }
         scoreboard = new AssaultScoreboard(this);
     }
@@ -307,7 +307,7 @@ public class Assault {
             }
         }
 
-        defendant.setExplosionsEnabled(initExplosionAllowed);
+        //defendant.setExplosionsEnabled(initExplosionAllowed); //TODO : A patcher pour les explosions
         plugin.getAssaultManager().remove(this);
     }
 

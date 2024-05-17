@@ -19,7 +19,7 @@ public class AssaultDisableexplosionsCommand extends FCommand {
         }
         List<String> affectedFactions = new ArrayList<>();
         for (Faction faction1 : FactionUtil.getAllPlayerFactions()) {
-            faction1.setExplosionsEnabled(false);
+            //faction1.setExplosionsEnabled(false); //TODO : A FIX pour les explosions
             affectedFactions.add(faction1.getTag());
         }
         commandContext.sender.sendMessage("Explosions désactivées pour les factions : " + String.join(" ", affectedFactions));
