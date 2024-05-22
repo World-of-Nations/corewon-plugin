@@ -9,7 +9,7 @@ import fr.world.nations.util.FactionUtil;
 public class MilestoneInfoCommand extends FCommand {
 
     public MilestoneInfoCommand() {
-        aliases.add("level");
+        aliases.add("palier");
         optionalArgs.put("faction", "you");
 //        this.setVisibilityMode(VisibilityMode.VISIBLE);
     }
@@ -28,9 +28,9 @@ public class MilestoneInfoCommand extends FCommand {
 
         if (!FactionUtil.isPlayerFaction(faction)) {
             if (faction == commandContext.faction) {
-                commandContext.sender.sendMessage("§cVous n'avez pas de faction !");
+                commandContext.sender.sendMessage("§cVous n'avez pas de pays !");
             } else {
-                commandContext.sender.sendMessage("§cLa faction " + commandContext.argAsString(0) + " n'existe pas !");
+                commandContext.sender.sendMessage("§cLe pays " + commandContext.argAsString(0) + " n'existe pas !");
             }
             return;
         }
