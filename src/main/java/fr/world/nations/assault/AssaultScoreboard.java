@@ -144,9 +144,9 @@ public class AssaultScoreboard {
             previousPrefixes.put(p.getUniqueId(), nameTagManager.getCustomPrefix(tabPlayer));
         String prefix;
         if (assault.isAttacker(p)) {
-            prefix = assault.getPlugin().getDefaultConfig().getString("assault-attacker-prefix", "%img_attaque% ");
+            prefix = assault.getPlugin().getDefaultConfig().getString("assault-attacker-prefix", "[Assaut - attaquant] ");
         } else {
-            prefix = assault.getPlugin().getDefaultConfig().getString("assault-defender-prefix", "%img_defense% ");
+            prefix = assault.getPlugin().getDefaultConfig().getString("assault-defender-prefix", "[Assaut - défenseur] ");
         }
         nameTagManager.setPrefix(tabPlayer, prefix);
         tabListFormatManager.setPrefix(tabPlayer, prefix);
