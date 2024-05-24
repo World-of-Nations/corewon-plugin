@@ -229,6 +229,7 @@ public class AssaultScoreboard {
         TabPlayer tabPlayer = tabAPI.getPlayer(p.getUniqueId());
         String newPrefix = previousPrefixes.get(p.getUniqueId());
         if (newPrefix == null) newPrefix = "";
+        assert tabPlayer != null;
         nameTagManager.setPrefix(tabPlayer, newPrefix);
         tabListFormatManager.setPrefix(tabPlayer, newPrefix);
     }
