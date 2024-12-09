@@ -30,6 +30,7 @@ public class MilestoneExpandCommand extends FCommand {
 
     public MilestoneExpandCommand(WonMilestone plugin) {
         this.plugin = plugin;
+        this.requirements.permission = Permission.HELP;
         aliases.add("expand");
         optionalArgs.put("radius", "1");
         optionalArgs.put("faction", "you");

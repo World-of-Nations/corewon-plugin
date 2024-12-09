@@ -9,6 +9,7 @@ import fr.world.nations.assault.explosion.ExplosionListener;
 import fr.world.nations.assault.explosion.ExplosionManager;
 import fr.world.nations.modules.WonModule;
 import fr.world.nations.util.CoolDownManager;
+import lombok.Getter;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
@@ -22,18 +23,17 @@ import java.util.Map;
 
 public final class WonAssault extends WonModule {
 
+    @Getter
     private static WonAssault instance;
     public FileConfiguration databaseConfig;
     private CoolDownManager coolDownManager;
+    @Getter
     private ExplosionManager explosionManager;
+    @Getter
     private AssaultManager assaultManager;
 
     public WonAssault(Plugin loader) {
         super(loader, "Assault");
-    }
-
-    public static WonAssault getInstance() {
-        return instance;
     }
 
     @Override
@@ -90,14 +90,6 @@ public final class WonAssault extends WonModule {
     @Override
     public List<Listener> registerListeners() {
         return Lists.newArrayList(new AssaultListener(this), new ExplosionListener(this));
-    }
-
-    public AssaultManager getAssaultManager() {
-        return assaultManager;
-    }
-
-    public ExplosionManager getExplosionManager() {
-        return explosionManager;
     }
 
     public void addAttackCoolDown(Faction attacker, Faction defendant) {

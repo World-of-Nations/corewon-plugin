@@ -16,6 +16,7 @@ public class CountryCommand extends FCommand {
     public CountryCommand(CountryManager countryManager) {
         super();
         this.aliases.addAll(Arrays.asList("country", "co"));
+        this.requirements.permission = Permission.HELP;
         addSubCommand(new CountryAddCommand(countryManager));
         addSubCommand(new CountryPosCommand(countryManager));
         addSubCommand(new CountryRemoveCommand(countryManager));

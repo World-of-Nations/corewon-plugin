@@ -5,6 +5,7 @@ import com.massivecraft.factions.FPlayers;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.cmd.CommandContext;
 import com.massivecraft.factions.cmd.FCommand;
+import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Role;
 import com.massivecraft.factions.zcore.fperms.Access;
 import com.massivecraft.factions.zcore.fperms.PermissableAction;
@@ -17,6 +18,7 @@ public class MilestoneHelpCommand extends FCommand {
 
     public MilestoneHelpCommand() {
         super();
+        this.requirements.permission = Permission.HELP;
         this.aliases.add("mhelp");
 
     }

@@ -22,6 +22,7 @@ import java.util.Map;
 @Getter
 public class WonKoth extends WonModule {
 
+    @Getter
     private static WonKoth instance;
     private KothManager kothManager;
 
@@ -29,12 +30,11 @@ public class WonKoth extends WonModule {
         super(loader, "Warzones");
     }
 
-    public static WonKoth getInstance() {
-        return instance;
-    }
-
     @Override
     public void load() {
+
+
+
         instance = this;
         kothManager = new KothManager(this);
         kothManager.loadKoths();

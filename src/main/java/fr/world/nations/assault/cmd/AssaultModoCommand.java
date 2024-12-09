@@ -3,6 +3,7 @@ package fr.world.nations.assault.cmd;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.cmd.CommandContext;
 import com.massivecraft.factions.cmd.FCommand;
+import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.zcore.util.TL;
 import fr.world.nations.assault.Assault;
 
@@ -13,6 +14,7 @@ public class AssaultModoCommand extends FCommand {
     public AssaultModoCommand(AssaultCommand rootCmd) {
         aliases.add("modo");
         requiredArgs.add("faction");
+        this.requirements.permission = Permission.HELP;
         this.rootCmd = rootCmd;
     }
 

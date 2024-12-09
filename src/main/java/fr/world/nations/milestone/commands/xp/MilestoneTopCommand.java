@@ -4,6 +4,7 @@ import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.cmd.CommandContext;
 import com.massivecraft.factions.cmd.FCommand;
+import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.zcore.util.TL;
 import fr.world.nations.milestone.MilestoneCalculator;
 import fr.world.nations.milestone.WonMilestone;
@@ -18,6 +19,7 @@ public class MilestoneTopCommand extends FCommand {
 
     public MilestoneTopCommand(WonMilestone plugin) {
         this.plugin = plugin;
+        this.requirements.permission = Permission.HELP;
         aliases.addAll(List.of("mtop", "milestonetop", "top"));
         optionalArgs.put("page", "1");
 //        this.setVisibilityMode(VisibilityMode.VISIBLE);

@@ -26,10 +26,10 @@ import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Getter
 public class Assault {
 
     private final int msgLength = 30;
-    @Getter
     private final WonAssault plugin;
     private final Faction defendant;
     private final List<Faction> defendantList;
@@ -39,14 +39,13 @@ public class Assault {
     private final List<String> defendantDeaths;
     private final List<Player> moderators;
     private final boolean explosionsAllowed;
-    private final boolean initExplosionAllowed;
+    //private final boolean initExplosionAllowed;
     private final Map<UUID, Integer> logoutTaskIds = new HashMap<>();
     /*
     @Getter
     private final Map<UUID, Nametag> cTags = new HashMap<>();
     */
     private final String SHOULD_CLEAR_PREFIX = "CLEAR";
-    @Getter
     private final AssaultScoreboard scoreboard;
     private long assaultStartedMillis;
     private int taskId;
@@ -56,7 +55,6 @@ public class Assault {
     private int defendantPoints;
     private int attackerPoints;
     private int stopTaskId = 0;
-    @Getter
     private boolean running = false;
 
     public Assault(WonAssault plugin, Faction attacker, Faction defendant, boolean explosionsAllowed) {
@@ -73,12 +71,13 @@ public class Assault {
         this.defendantPoints = 0;
         this.moderators = Lists.newArrayList();
         this.explosionsAllowed = explosionsAllowed;
-        this.initExplosionAllowed = !defendant.noExplosionsInTerritory(); //TODO : A FIX pour les explosions
+        //this.initExplosionAllowed = !defendant.noExplosionsInTerritory(); //TODO : A FIX pour les explosions
         this.targetedClaimSuccess = false;
         this.targetedClaim = null;
         this.targetedClaimPercentage = 0;
         if (explosionsAllowed) {
-            //defendant.setExplosionsEnabled(true); //TODO : A patcher pour les explosions
+            defendant.setExplosionsEnabled(true); //TODO : A patcher pour les explosions
+            defendant.setPeacefulExplosionsEnabled(true);
         }
         scoreboard = new AssaultScoreboard(this);
     }
@@ -274,6 +273,8 @@ public class Assault {
                 fLoser.setFactionBalance(loserBalance - toTransfer);
             }
 
+            defendant.setExplosionsEnabled(false);
+            defendant.setPeacefulExplosionsEnabled(false);
 
             broadcastRaw("§4" + StringUtil.mult("-", msgLength));
             broadcastRaw("");
@@ -403,7 +404,7 @@ public class Assault {
             return;
         Faction faction = FactionUtil.getFaction(player);
         if (faction != null) {
-            if (faction.getOnlinePlayers().size() == 0) {
+            if (faction.getOnlinePlayers().isEmpty()) {
                 broadcast("§6" + player.getName() + " §cs'est déconecté !");
                 broadcast("§4[Assaut] §cLe pays §6" + faction.getTag() + " §cn'a plus assez de joueur en ligne pour participer " +
                         "à l'assaut ! Il en est donc retiré !");
@@ -484,22 +485,6 @@ public class Assault {
         }
     }
 
-    public FLocation getTargetedClaim() {
-        return targetedClaim;
-    }
-
-    public List<Faction> getAttackerList() {
-        return attackerList;
-    }
-
-    public List<Faction> getDefendantList() {
-        return defendantList;
-    }
-
-    public List<Player> getModerators() {
-        return moderators;
-    }
-
     public void addModerator(Player player) {
         if (!player.hasPermission("assault.modo")) return;
         moderators.add(player);
@@ -511,34 +496,6 @@ public class Assault {
         moderators.remove(player);
         Bukkit.getServer().broadcastMessage("§4[Assaut] §6" + player.getName() + " §cne surveille plus l'assaut §6"
                 + attacker.getTag() + "§c VS §6" + defendant.getTag() + "§c !");
-    }
-
-    public long getAssaultStartedMillis() {
-        return assaultStartedMillis;
-    }
-
-    public Faction getAttacker() {
-        return attacker;
-    }
-
-    public Faction getDefendant() {
-        return defendant;
-    }
-
-    public int getAttackerPoints() {
-        return attackerPoints;
-    }
-
-    public int getDefendantPoints() {
-        return defendantPoints;
-    }
-
-    public float getTargetedClaimPercentage() {
-        return targetedClaimPercentage;
-    }
-
-    public boolean isExplosionsAllowed() {
-        return explosionsAllowed;
     }
 
     public List<Player> getOnlinePlayers() {

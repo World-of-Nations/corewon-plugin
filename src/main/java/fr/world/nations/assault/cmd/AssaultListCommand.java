@@ -2,6 +2,7 @@ package fr.world.nations.assault.cmd;
 
 import com.massivecraft.factions.cmd.CommandContext;
 import com.massivecraft.factions.cmd.FCommand;
+import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.zcore.util.TL;
 import fr.world.nations.assault.Assault;
 import org.bukkit.ChatColor;
@@ -16,6 +17,7 @@ public class AssaultListCommand extends FCommand {
 
     public AssaultListCommand(AssaultCommand rootCmd) {
         aliases.add("list");
+        this.requirements.permission = Permission.HELP;
         this.rootCmd = rootCmd;
     }
 

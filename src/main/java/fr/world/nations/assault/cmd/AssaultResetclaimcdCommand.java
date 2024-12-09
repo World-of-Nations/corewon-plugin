@@ -3,6 +3,7 @@ package fr.world.nations.assault.cmd;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.cmd.CommandContext;
 import com.massivecraft.factions.cmd.FCommand;
+import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.zcore.util.TL;
 
 public class AssaultResetclaimcdCommand extends FCommand {
@@ -12,6 +13,7 @@ public class AssaultResetclaimcdCommand extends FCommand {
     public AssaultResetclaimcdCommand(AssaultCommand rootCmd) {
         aliases.add("resetattackcd");
         requiredArgs.add("faction");
+        this.requirements.permission = Permission.HELP;
         this.rootCmd = rootCmd;
     }
 

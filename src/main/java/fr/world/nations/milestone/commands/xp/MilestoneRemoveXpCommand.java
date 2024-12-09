@@ -3,6 +3,7 @@ package fr.world.nations.milestone.commands.xp;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.cmd.CommandContext;
 import com.massivecraft.factions.cmd.FCommand;
+import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.zcore.util.TL;
 import fr.world.nations.milestone.WonMilestone;
 
@@ -14,6 +15,7 @@ public class MilestoneRemoveXpCommand extends FCommand {
 
     public MilestoneRemoveXpCommand(WonMilestone plugin) {
         this.plugin = plugin;
+        this.requirements.permission = Permission.HELP;
         aliases.addAll(List.of("removemxp", "removexp"));
         requiredArgs.add("amount");
         optionalArgs.put("faction", "you");

@@ -4,6 +4,7 @@ import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.cmd.CommandContext;
 import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
+import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.zcore.util.TL;
 import fr.world.nations.Core;
 import fr.world.nations.milestone.MilestoneCalculator;
@@ -21,6 +22,7 @@ public class StatsCommand extends FCommand {
     public StatsCommand() {
         super();
         this.aliases.addAll(Arrays.asList("stats", "s"));
+        this.requirements.permission = Permission.HELP;
         this.optionalArgs.put("faction", "yours");
         this.requirements = new CommandRequirements.Builder(null)
                 .memberOnly()

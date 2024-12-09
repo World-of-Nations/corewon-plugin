@@ -1,6 +1,6 @@
 package fr.world.nations.country;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.bukkit.Location;
 
 public class Country {
