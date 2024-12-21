@@ -32,6 +32,10 @@ repositories {
         name = "jordanosterberg-repo"
         url = "https://nexus-repo.jordanosterberg.com/repository/maven-releases/"
     }
+    maven {
+        name = "apache-commons"
+        url = "https://repo.maven.apache.org/maven2/"
+    }
     flatDir {
         dirs 'libs'
     }
@@ -53,6 +57,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.0.1'
     implementation group: 'com.zaxxer', name: 'HikariCP', version: '5.0.1'
     implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.42.0.0'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.14.0'
 
     compileOnly name: 'TAB_v4.0.7', ext: 'jar'
     compileOnly name: 'SaberFactions', ext: 'jar'

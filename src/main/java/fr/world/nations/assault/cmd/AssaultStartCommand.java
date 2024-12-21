@@ -2,6 +2,7 @@ package fr.world.nations.assault.cmd;
 
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.cmd.CommandContext;
+import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Relation;
@@ -19,11 +20,11 @@ public class AssaultStartCommand extends FCommand {
     private final AssaultCommand rootCmd;
 
     public AssaultStartCommand(AssaultCommand rootCmd) {
-        aliases.add("start");
+        getAliases().add("start");
         this.rootCmd = rootCmd;
-        requiredArgs.add("faction");
-        this.requirements.permission = Permission.HELP;
-        optionalArgs.put("enableExplosions", "no");
+        getRequiredArgs().add("faction");
+        this.setRequirements(new CommandRequirements.Builder(Permission.HELP).build());
+        getOptionalArgs().put("enableExplosions", "no");
     }
 
     @Override

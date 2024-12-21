@@ -2,6 +2,7 @@ package fr.world.nations.assault.cmd;
 
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.cmd.CommandContext;
+import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.zcore.util.TL;
@@ -14,11 +15,11 @@ public class AssaultStopCommand extends FCommand {
     private final AssaultCommand rootCmd;
 
     public AssaultStopCommand(AssaultCommand rootCmd) {
-        aliases.add("stop");
+        getAliases().add("stop");
         this.rootCmd = rootCmd;
-        this.requiredArgs.add("faction");
-        this.requirements.permission = Permission.HELP;
-        this.optionalArgs.put("force", "no");
+        this.getRequiredArgs().add("faction");
+        this.setRequirements(new CommandRequirements.Builder(Permission.HELP).build());
+        this.getOptionalArgs().put("force", "no");
     }
 
     @Override

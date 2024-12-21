@@ -1,6 +1,7 @@
 package fr.world.nations.country.command;
 
 import com.massivecraft.factions.cmd.CommandContext;
+import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.zcore.util.TL;
@@ -12,9 +13,10 @@ public class CountryPosCommand extends FCommand {
 
     public CountryPosCommand(CountryManager countryManager) {
         this.countryManager = countryManager;
-        this.aliases.add("pos");
-        this.requirements.permission = Permission.HELP;
-        this.requiredArgs.add("id or name");
+        this.getAliases().add("pos");
+        this.getRequiredArgs().add("id or name");
+        this.setRequirements(new CommandRequirements.Builder(Permission.ADMIN).build());
+
     }
 
     @Override

@@ -3,6 +3,7 @@ package fr.world.nations.milestone.commands;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
 import com.massivecraft.factions.cmd.CommandContext;
+import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.zcore.util.TL;
@@ -14,8 +15,8 @@ public class MilestoneRefreshCommand extends FCommand {
 
     public MilestoneRefreshCommand(WonMilestone plugin) {
         this.plugin = plugin;
-        this.requirements.permission = Permission.HELP;
-        aliases.add("levelrefresh");
+        this.setRequirements(new CommandRequirements.Builder(Permission.HELP).build());
+        getAliases().add("levelrefresh");
     }
 
     @Override

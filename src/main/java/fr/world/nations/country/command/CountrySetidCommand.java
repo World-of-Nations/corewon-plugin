@@ -1,6 +1,7 @@
 package fr.world.nations.country.command;
 
 import com.massivecraft.factions.cmd.CommandContext;
+import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.zcore.util.TL;
@@ -13,11 +14,12 @@ public class CountrySetidCommand extends FCommand {
 
     public CountrySetidCommand(CountryManager countryManager) {
         this.countryManager = countryManager;
-        this.requirements.permission = Permission.HELP;
-        aliases.add("setid");
-        requiredArgs.add("country_name");
-        requiredArgs.add("id");
-        optionalArgs.put("force", "no");
+        getAliases().add("setid");
+        getRequiredArgs().add("country_name");
+        getRequiredArgs().add("id");
+        getOptionalArgs().put("force", "no");
+        this.setRequirements(new CommandRequirements.Builder(Permission.ADMIN).build());
+
     }
 
     @Override

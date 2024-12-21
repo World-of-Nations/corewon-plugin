@@ -21,7 +21,7 @@ public class WarpCommandListener implements Listener {
     public void onWarpCommand(PlayerCommandPreprocessEvent event) {
         String[] args = event.getMessage().split(" ");
         if (!Conf.baseCommandAliases.contains(args[0].toLowerCase())) return;
-        if (!FCmdRoot.instance.cmdFWarp.aliases.contains(args[1].toLowerCase())) return;
+        if (!FCmdRoot.instance.cmdFWarp.getAliases().contains(args[1].toLowerCase())) return;
         FPlayer fPlayer = FPlayers.getInstance().getByPlayer(event.getPlayer());
         if (fPlayer.isAdminBypassing()) return;
         if (!fPlayer.hasFaction()) return;

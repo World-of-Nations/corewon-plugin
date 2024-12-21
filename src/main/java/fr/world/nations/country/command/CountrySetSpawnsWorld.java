@@ -1,6 +1,7 @@
 package fr.world.nations.country.command;
 
 import com.massivecraft.factions.cmd.CommandContext;
+import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.zcore.util.TL;
@@ -16,9 +17,9 @@ public class CountrySetSpawnsWorld extends FCommand {
 
     public CountrySetSpawnsWorld(CountryManager countryManager) {
         this.countryManager = countryManager;
-        this.requirements.permission = Permission.HELP;
-        this.aliases.add("setspawnsworld");
-        this.requiredArgs.add("name");
+        this.setRequirements(new CommandRequirements.Builder(Permission.ADMIN).build());
+        this.getAliases().add("setspawnsworld");
+        this.getRequiredArgs().add("name");
     }
 
     @Override

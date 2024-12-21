@@ -15,17 +15,17 @@ import java.util.Arrays;
 public class CountryCommand extends FCommand {
     public CountryCommand(CountryManager countryManager) {
         super();
-        this.aliases.addAll(Arrays.asList("country", "co"));
-        this.requirements.permission = Permission.HELP;
+        this.getAliases().addAll(Arrays.asList("country", "co"));
+        this.setRequirements(new CommandRequirements.Builder(Permission.ADMIN)
+                .playerOnly()
+                .brigadier(CountryBrigadier.class)
+                .build());
         addSubCommand(new CountryAddCommand(countryManager));
         addSubCommand(new CountryPosCommand(countryManager));
         addSubCommand(new CountryRemoveCommand(countryManager));
         addSubCommand(new CountrySetidCommand(countryManager));
         addSubCommand(new CountrySetSpawnsWorld(countryManager));
-        this.requirements = new CommandRequirements.Builder(Permission.ADMIN)
-                .playerOnly()
-                .brigadier(CountryBrigadier.class)
-                .build();
+
     }
 
     @Override

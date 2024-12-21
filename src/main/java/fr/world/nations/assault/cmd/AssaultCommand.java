@@ -3,6 +3,7 @@ package fr.world.nations.assault.cmd;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.FactionsPlugin;
 import com.massivecraft.factions.cmd.CommandContext;
+import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.zcore.util.TL;
@@ -16,11 +17,10 @@ public class AssaultCommand extends FCommand {
     private final HashMap<Faction, Faction> joinRequests; //Demandant - Demandé
 
     public AssaultCommand(WonAssault plugin) {
-        aliases.add("assault");
+        getAliases().add("assault");
         this.plugin = plugin;
         this.joinRequests = new HashMap<>();
-        this.requirements.permission = Permission.HELP;
-        this.requirements.playerOnly = true;
+        this.setRequirements(new CommandRequirements.Builder(Permission.HELP).playerOnly().build());
         this.addSubCommand(new AssaultAcceptCommand(this));
         this.addSubCommand(new AssaultDisableexplosionsCommand());
         this.addSubCommand(new AssaultHelpCommand());

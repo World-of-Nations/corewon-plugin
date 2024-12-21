@@ -1,7 +1,9 @@
 package fr.world.nations.country.command;
 
 import com.massivecraft.factions.cmd.CommandContext;
+import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
+import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.zcore.util.TL;
 import fr.world.nations.country.CountryManager;
 
@@ -10,9 +12,10 @@ public class CountryAddCommand extends FCommand {
 
     public CountryAddCommand(CountryManager countryManager) {
         this.countryManager = countryManager;
-        this.aliases.add("add");
-        this.requiredArgs.add("id");
-        this.requiredArgs.add("name");
+        this.getAliases().add("add");
+        this.getRequiredArgs().add("id");
+        this.getRequiredArgs().add("name");
+        this.setRequirements(new CommandRequirements.Builder(Permission.ADMIN).build());
     }
 
     @Override

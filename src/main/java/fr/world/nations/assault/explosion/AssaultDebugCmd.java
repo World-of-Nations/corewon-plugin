@@ -10,10 +10,10 @@ import org.bukkit.util.Vector;
 public class AssaultDebugCmd extends FCommand {
 
     public AssaultDebugCmd() {
-        aliases.add("debug");
-        requiredArgs.add("x");
-        requiredArgs.add("y");
-        requiredArgs.add("z");
+        getAliases().add("debug");
+        getRequiredArgs().add("x");
+        getRequiredArgs().add("y");
+        getRequiredArgs().add("z");
     }
 
     @Override

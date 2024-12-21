@@ -1,6 +1,7 @@
 package fr.world.nations.country.command;
 
 import com.massivecraft.factions.cmd.CommandContext;
+import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.zcore.util.TL;
@@ -13,10 +14,11 @@ public class CountryRemoveCommand extends FCommand {
 
     public CountryRemoveCommand(CountryManager countryManager) {
         this.countryManager = countryManager;
-        this.requirements.permission = Permission.HELP;
-        this.aliases.add("remove");
-        this.aliases.add("delete");
-        this.requiredArgs.add("name");
+        this.getAliases().add("remove");
+        this.getAliases().add("delete");
+        this.getRequiredArgs().add("name");
+        this.setRequirements(new CommandRequirements.Builder(Permission.ADMIN).build());
+
     }
 
     @Override

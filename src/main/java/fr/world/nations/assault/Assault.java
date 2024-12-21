@@ -76,7 +76,7 @@ public class Assault {
         this.targetedClaim = null;
         this.targetedClaimPercentage = 0;
         if (explosionsAllowed) {
-            defendant.setExplosionsEnabled(true); //TODO : A patcher pour les explosions
+           // defendant.setExplosionsEnabled(true); //TODO : A patcher pour les explosions
             defendant.setPeacefulExplosionsEnabled(true);
         }
         scoreboard = new AssaultScoreboard(this);
@@ -273,7 +273,7 @@ public class Assault {
                 fLoser.setFactionBalance(loserBalance - toTransfer);
             }
 
-            defendant.setExplosionsEnabled(false);
+            //defendant.setExplosionsEnabled(false);
             defendant.setPeacefulExplosionsEnabled(false);
 
             broadcastRaw("§4" + StringUtil.mult("-", msgLength));

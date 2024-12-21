@@ -1,6 +1,7 @@
 package fr.world.nations.assault.cmd;
 
 import com.massivecraft.factions.cmd.CommandContext;
+import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.zcore.util.TL;
@@ -16,8 +17,8 @@ public class AssaultListCommand extends FCommand {
     private final AssaultCommand rootCmd;
 
     public AssaultListCommand(AssaultCommand rootCmd) {
-        aliases.add("list");
-        this.requirements.permission = Permission.HELP;
+        getAliases().add("list");
+        this.setRequirements(new CommandRequirements.Builder(Permission.HELP).build());
         this.rootCmd = rootCmd;
     }
 

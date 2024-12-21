@@ -2,6 +2,7 @@ package fr.world.nations.assault.cmd;
 
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.cmd.CommandContext;
+import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.struct.Relation;
@@ -18,10 +19,10 @@ public class AssaultJoinCommand extends FCommand {
     private final AssaultCommand rootCmd;
 
     public AssaultJoinCommand(AssaultCommand rootCmd) {
-        aliases.add("join");
-        this.requiredArgs.add("faction");
-        this.optionalArgs.put("force", "no");
-        this.requirements.permission = Permission.RELATION;
+        getAliases().add("join");
+        this.getRequiredArgs().add("faction");
+        this.getOptionalArgs().put("force", "no");
+        this.setRequirements(new CommandRequirements.Builder(Permission.RELATION).build());
         this.rootCmd = rootCmd;
     }
 

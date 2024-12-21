@@ -2,6 +2,7 @@ package fr.world.nations.milestone.commands.xp;
 
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.cmd.CommandContext;
+import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.zcore.util.TL;
@@ -17,9 +18,9 @@ public class MilestoneDiagnosisCommand extends FCommand {
 
     public MilestoneDiagnosisCommand(WonMilestone plugin) {
         this.plugin = plugin;
-        this.requirements.permission = Permission.HELP;
-        aliases.add("diagnosis");
-        optionalArgs.put("faction", "you");
+        this.setRequirements(new CommandRequirements.Builder(Permission.HELP).build());
+        getAliases().add("diagnosis");
+        getOptionalArgs().put("faction", "you");
 //        this.setVisibilityMode(VisibilityMode.VISIBLE);
     }
 

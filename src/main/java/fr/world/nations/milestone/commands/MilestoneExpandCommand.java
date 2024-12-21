@@ -3,6 +3,7 @@ package fr.world.nations.milestone.commands;
 import com.google.common.collect.Lists;
 import com.massivecraft.factions.*;
 import com.massivecraft.factions.cmd.CommandContext;
+import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.event.LandClaimEvent;
 import com.massivecraft.factions.struct.Permission;
@@ -30,10 +31,10 @@ public class MilestoneExpandCommand extends FCommand {
 
     public MilestoneExpandCommand(WonMilestone plugin) {
         this.plugin = plugin;
-        this.requirements.permission = Permission.HELP;
-        aliases.add("expand");
-        optionalArgs.put("radius", "1");
-        optionalArgs.put("faction", "you");
+        this.setRequirements(new CommandRequirements.Builder(Permission.HELP).build());
+        getAliases().add("expand");
+        getOptionalArgs().put("radius", "1");
+        getOptionalArgs().put("faction", "you");
     }
 
     @Override

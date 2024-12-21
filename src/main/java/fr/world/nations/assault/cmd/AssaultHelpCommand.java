@@ -1,6 +1,7 @@
 package fr.world.nations.assault.cmd;
 
 import com.massivecraft.factions.cmd.CommandContext;
+import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.zcore.util.TL;
@@ -11,8 +12,8 @@ import java.util.List;
 public class AssaultHelpCommand extends FCommand {
 
     public AssaultHelpCommand() {
-        aliases.add("help");
-        this.requirements.permission = Permission.HELP;
+        getAliases().add("help");
+        this.setRequirements(new CommandRequirements.Builder(Permission.HELP).build());
     }
 
     @Override

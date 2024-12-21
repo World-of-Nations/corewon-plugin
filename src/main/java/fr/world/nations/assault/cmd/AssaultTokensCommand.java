@@ -2,6 +2,7 @@ package fr.world.nations.assault.cmd;
 
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.cmd.CommandContext;
+import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.zcore.util.TL;
@@ -11,10 +12,10 @@ public class AssaultTokensCommand extends FCommand {
     private final AssaultCommand rootCmd;
 
     public AssaultTokensCommand(AssaultCommand rootCmd) {
-        aliases.add("tokens");
+        getAliases().add("tokens");
         this.rootCmd = rootCmd;
-        this.requirements.permission = Permission.HELP;
-        this.optionalArgs.put("faction", "you");
+        this.setRequirements(new CommandRequirements.Builder(Permission.HELP).build());
+        this.getOptionalArgs().put("faction", "you");
     }
 
     @Override

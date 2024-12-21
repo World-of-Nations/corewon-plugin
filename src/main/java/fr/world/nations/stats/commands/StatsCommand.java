@@ -21,12 +21,9 @@ public class StatsCommand extends FCommand {
 
     public StatsCommand() {
         super();
-        this.aliases.addAll(Arrays.asList("stats", "s"));
-        this.requirements.permission = Permission.HELP;
-        this.optionalArgs.put("faction", "yours");
-        this.requirements = new CommandRequirements.Builder(null)
-                .memberOnly()
-                .build();
+        this.getAliases().addAll(Arrays.asList("stats", "s"));
+        this.setRequirements(new CommandRequirements.Builder(Permission.HELP).memberOnly().build());
+        this.getOptionalArgs().put("faction", "yours");
     }
 
 

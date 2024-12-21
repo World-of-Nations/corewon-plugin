@@ -12,7 +12,7 @@ import java.util.List;
 public class AssaultDisableexplosionsCommand extends FCommand {
     @Override
     public void perform(CommandContext commandContext) {
-        aliases.add("disableexplosions");
+        getAliases().add("disableexplosions");
         if (!commandContext.sender.hasPermission("assault.op")) {
             commandContext.sender.sendMessage("§cVous n'avez pas les permissions !");
             return;

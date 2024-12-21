@@ -2,6 +2,7 @@ package fr.world.nations.milestone.commands.xp;
 
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.cmd.CommandContext;
+import com.massivecraft.factions.cmd.CommandRequirements;
 import com.massivecraft.factions.cmd.FCommand;
 import com.massivecraft.factions.struct.Permission;
 import com.massivecraft.factions.zcore.util.TL;
@@ -10,9 +11,9 @@ import fr.world.nations.util.FactionUtil;
 public class MilestoneInfoCommand extends FCommand {
 
     public MilestoneInfoCommand() {
-        aliases.add("palier");
-        this.requirements.permission = Permission.HELP;
-        optionalArgs.put("faction", "you");
+        getAliases().add("palier");
+        this.setRequirements(new CommandRequirements.Builder(Permission.HELP).build());
+        getOptionalArgs().put("faction", "you");
 //        this.setVisibilityMode(VisibilityMode.VISIBLE);
     }
 

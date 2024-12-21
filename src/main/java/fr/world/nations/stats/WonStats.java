@@ -63,7 +63,7 @@ public final class WonStats extends WonModule {
         ArrayList<Listener> listeners = new ArrayList<>();
         listeners.add(new FactionListener());
         listeners.add(new PlayerListener());
-        FCmdRoot.instance.cmdShow.aliases.add("f");
+        FCmdRoot.instance.cmdShow.getAliases().add("f");
 
         return listeners;
     }
