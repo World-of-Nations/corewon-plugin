@@ -31,11 +31,6 @@ public class FactionCommandsInterferer implements Listener {
         toBlock.addAll(Aliases.corner_list);
         toBlock.addAll(Aliases.logout);
         toBlock.addAll(Aliases.rally);
-        toBlock.addAll(Aliases.points_balance);
-        toBlock.addAll(Aliases.points_points);
-        toBlock.addAll(Aliases.points_add);
-        toBlock.addAll(Aliases.points_remove);
-        toBlock.addAll(Aliases.points_set);
         toBlock.addAll(Aliases.tnt_tnt);
         toBlock.addAll(Aliases.boosters);
         toBlock.addAll(Aliases.giveBooster);
@@ -65,7 +60,6 @@ public class FactionCommandsInterferer implements Listener {
         toBlock.addAll(Aliases.strikes_take);
         toBlock.addAll(Aliases.stuck);
         toBlock.addAll(Aliases.tpBanner);
-        toBlock.addAll(Aliases.upgrades);
         toBlock.addAll(Aliases.vault);
     }
 
@@ -89,7 +83,7 @@ public class FactionCommandsInterferer implements Listener {
         //}
 
         if (toBlock.contains(cmdName)) {
-            player.sendMessage("§cCette commande n'est pas disponible !");
+            player.sendMessage("§4[§cErreur§4] §cCette commande a été désactivée !");
             event.setCancelled(true);
         } else if (Aliases.home.contains(cmdName)) {
             if (player.hasPermission("faction.home.bypass-cooldown")) {
@@ -111,7 +105,7 @@ public class FactionCommandsInterferer implements Listener {
                     printList(number, player);
                 } else if (!CountryManager.getInstance().getAvailableCountryNames().contains(countryName)) {
                     event.setCancelled(true);
-                    player.sendMessage("Ce pays n'est pas disponible.");
+                    player.sendMessage("§4[§cPays§4] §cCe pays n'est pas disponible.");
                     printList(1, player);
                 }
             } else printList(1, player);
