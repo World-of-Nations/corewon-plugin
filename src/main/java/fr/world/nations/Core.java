@@ -60,7 +60,7 @@ public class Core extends JavaPlugin {
         moduleManager.addModule(new WonStats(this, "stats"));
         moduleManager.addModule(new WonKoth(this));
         moduleManager.addModule(new WonAssault(this));
-        moduleManager.addModule(new WonMilestone(this, "milestone"));
+        //moduleManager.addModule(new WonMilestone(this, "milestone"));
         moduleManager.addModule(new WonPvp(this));
 
         moduleManager.loadModules();
