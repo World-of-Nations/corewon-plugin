@@ -7,9 +7,9 @@ import com.fasterxml.jackson.databind.node.MissingNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.massivecraft.factions.Faction;
 import com.massivecraft.factions.Factions;
+import com.massivecraft.factions.FactionsPlugin;
+import com.massivecraft.factions.zcore.frame.fupgrades.UpgradesListener;
 import fr.world.nations.assault.WonAssault;
-import fr.world.nations.milestone.MilestoneCalculator;
-import fr.world.nations.milestone.WonMilestone;
 import fr.world.nations.util.JsonUtil;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -26,6 +26,7 @@ public class ExplosionManager {
     private final WonAssault plugin;
     private final Map<String, Long> lastUpdated;
     private final Map<String, Integer> tokens;
+    private final Map<String, Integer> lastMaxTokens;
     private final File enemyFile;
     private final File tokenFile;
 
@@ -33,6 +34,7 @@ public class ExplosionManager {
         this.plugin = plugin;
         this.lastUpdated = new HashMap<>();
         this.tokens = new HashMap<>();
+        this.lastMaxTokens = new HashMap<>();
         this.enemyFile = new File(plugin.getConfigFolder(), "enemies.yml");
         this.tokenFile = new File(plugin.getConfigFolder(), "tokens.json");
         if (!enemyFile.exists()) {
@@ -50,11 +52,9 @@ public class ExplosionManager {
             }
         }
     }
-
     private int getMaxTokenAmount(Faction faction) {
-        MilestoneCalculator data = WonMilestone.getInstance().getMilestoneData(faction);
-        int milestone = data.getMilestone();
-        return 5 + (milestone > 0 ? milestone - 1 : 0);
+        int level = faction.getUpgrade("ExplosionsTokens");
+        return FactionsPlugin.getInstance().getFileManager().getUpgrades().getConfig().getInt("fupgrades.MainMenu.ExplosionsTokens.Explosions-Tokens.level-" + level, 5);
     }
 
     public int getTokenAmount(Faction faction) {
@@ -62,6 +62,18 @@ public class ExplosionManager {
             int tokenAmount = getMaxTokenAmount(faction);
             tokens.put(faction.getId(), tokenAmount);
         }
+
+        if(!lastMaxTokens.containsKey(faction.getId())) {
+            lastMaxTokens.put(faction.getId(), getMaxTokenAmount(faction));
+        } else {
+            int lastMaxToken = lastMaxTokens.get(faction.getId());
+            int currentMaxToken = getMaxTokenAmount(faction);
+            if(lastMaxToken != currentMaxToken) {
+                tokens.put(faction.getId(), tokens.get(faction.getId()) + (currentMaxToken - lastMaxToken));
+                lastMaxTokens.put(faction.getId(), currentMaxToken);
+            }
+        }
+
         lastUpdated.put(faction.getId(), System.currentTimeMillis());
         return tokens.get(faction.getId());
     }
@@ -150,9 +162,14 @@ public class ExplosionManager {
             data.put("tokenAmount", getTokenAmount(faction));
             objectNode.put(factionId, data);
         }
+        System.out.println("Saving tokens...");
         try {
+            System.out.println("NodeObject" + objectNode);
+            System.out.println("TokenFile" + tokenFile);
+            System.out.println("Writeable" + tokenFile.canWrite());
             new ObjectMapper().writeValue(tokenFile, objectNode);
         } catch (IOException e) {
+            System.out.println("Error saving tokens");
             throw new RuntimeException(e);
         }
     }
