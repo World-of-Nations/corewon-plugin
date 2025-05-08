@@ -20,6 +20,8 @@ public class WeaponListener implements Listener {
 
     @EventHandler
     public void EntityDamageByEntityEvent(EntityDamageByEntityEvent event) {
+        if (event.isCancelled()) return;
+
         Entity bullet = event.getDamager();
         if (!bullet.getName().contains("entity.cgm.projectile")) return;
 

@@ -47,6 +47,7 @@ public class PvpListener implements Listener {
 
     @EventHandler
     public void onPlayerPvp(EntityDamageByEntityEvent e) {
+        if (e.isCancelled()) return;
         if (!(e.getEntity() instanceof Player damaged) || !(e.getDamager() instanceof Player damager)) return;
         pvpManager.onPlayerIsHitByPlayer(damaged, damager);
     }
