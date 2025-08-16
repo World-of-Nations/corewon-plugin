@@ -160,28 +160,35 @@ public class KothModel {
         }
 
         int futureCap = Math.min(newCap, 100);
-        capPercentage = futureCap; // ✅ IMPORTANT : on met à jour AVANT le if
+        boolean justReachedMax = (capPercentage < 100 && futureCap == 100);
+        capPercentage = futureCap;
 
         if (capPercentage == 100) {
             if (rewardTaskId == null || scorezoneTaskId == null) {
                 cancelRewardScoreZoneTasks();
+
+                int rewardTime = this.rewardTime;
+                int scoreTime = WonKoth.getInstance().getDefaultConfig().getInt("score-time", 5);
 
                 rewardTaskId = Bukkit.getScheduler().runTaskTimer(
                         Core.getInstance(), this::sendRewards, 20L * rewardTime, 20L * rewardTime
                 ).getTaskId();
 
                 scorezoneTaskId = Bukkit.getScheduler().runTaskTimer(
-                        Core.getInstance(), this::addScore, 20L * rewardTime, 20L * rewardTime
+                        Core.getInstance(), this::addScore, 20L * scoreTime, 20L * scoreTime
                 ).getTaskId();
 
                 Bukkit.getLogger().info("[KOTH] ➕ Récompenses activées pour " + kothName);
+
+                if (justReachedMax) {
+                    for (String msg : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.faction-end-control")) {
+                        Bukkit.broadcastMessage(msg
+                                .replace("%area_name%", kothName)
+                                .replace("%faction%", getCapturingFaction().getTag()));
+                    }
+                }
             }
 
-            for (String msg : WonKoth.getInstance().getDefaultConfig().getStringList("messages.players.faction-end-control")) {
-                Bukkit.broadcastMessage(msg
-                        .replace("%area_name%", kothName)
-                        .replace("%faction%", getCapturingFaction().getTag()));
-            }
             return;
         }
 
@@ -191,7 +198,6 @@ public class KothModel {
 
         sendCaptureUpdate(bestFaction);
     }
-
 
     public void sendCaptureUpdate(Faction capturer) {
         for (Player player : getContainedPlayers()) {
@@ -270,11 +276,12 @@ public class KothModel {
 
         if (data != null) {
             data.addScoreZone(0.01D);
-            Bukkit.getLogger().info("[KOTH] +0.01 point pour " + tag + " | total: " + data.getScoreZone());
+            Bukkit.getLogger().info("[KOTH] +0.01 point pour " + tag + " (total: " + data.getScoreZone() + ")");
         } else {
             Bukkit.getLogger().warning("[KOTH] FactionData introuvable pour " + tag);
         }
     }
+
 
     private List<Player> getContainedPlayers() {
         return Bukkit.getOnlinePlayers().stream().filter(this::contains).map(v -> (Player) v).toList();

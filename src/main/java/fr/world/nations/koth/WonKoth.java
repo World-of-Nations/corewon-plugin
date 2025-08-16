@@ -62,6 +62,8 @@ public class WonKoth extends WonModule {
                 configuration.set("messages.admins.koth-spawn-set", List.of("Spawn area of %area_name% has been set."));
                 configuration.set("messages.admins.koth-reward-set", List.of("The reward has been set for area %area_name%"));
 
+                getDefaultConfig().addDefault("score-time", 5);
+
                 configuration.save(configFile);
 
             } catch (IOException e) {
