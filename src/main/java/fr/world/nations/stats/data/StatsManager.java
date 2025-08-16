@@ -50,8 +50,9 @@ public class StatsManager {
                     factionData.setDeaths(resultSet.getInt("deaths"));
                     factionData.setAssaultWin(resultSet.getInt("assault_win"));
                     factionData.setAssaultLose(resultSet.getInt("assault_lose"));
-                    factionData.setScoreZone(resultSet.getInt("scorezone"));
-                } else {
+                    factionData.setScoreZone(resultSet.getDouble("score_zone")); // ✅ Fix ici
+                }
+                else {
                     sqlRequests.createFaction(factionData.getFaction().getTag());
                 }
             } catch (Exception e) {
@@ -67,7 +68,6 @@ public class StatsManager {
                 sqlRequests.deleteFaction(faction);
             }
         }
-
     }
 
     public void saveData(String factionTag) {
@@ -107,7 +107,7 @@ public class StatsManager {
     }
 
     public FactionData getFactionData(Faction faction) {
-        return factions.stream().filter(factionData -> factionData.getFaction().equals(faction)).findFirst().orElse(null);
+        return getFactionData(faction.getTag()); // 🔁 plus fiable
     }
 
     public List<FactionData> getFactionDatas() {

@@ -44,15 +44,21 @@ public class PowerManager {
     }
 
     public void loadPower() {
+        final ObjectMapper mapper = new ObjectMapper();
+
         if (file.exists()) {
-            final ObjectMapper mapper = new ObjectMapper();
             try {
-                kothPowerLogger.addAll(mapper.readValue(file, new TypeReference<List<PowerAddedModel>>() {
-                }));
+                // Si le fichier est vide, on ignore le chargement
+                if (file.length() != 0) {
+                    kothPowerLogger.addAll(mapper.readValue(file, new TypeReference<List<PowerAddedModel>>() {}));
+                } else {
+                    System.out.println("[WonCore] powerlogs.json est vide, aucun power à charger.");
+                }
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Erreur lors du chargement de powerlogs.json", e);
             }
         }
+
         if (!factorsFile.exists()) {
             try {
                 factorsFile.createNewFile();
